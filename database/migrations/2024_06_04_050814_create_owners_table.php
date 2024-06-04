@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code', 6)->unique();
+            $table->foreignId('user_id')->references('id')->on('users');
             $table->enum('level', ['free', 'premium', 'vip'])->default('free');
             $table->timestamps();
         });

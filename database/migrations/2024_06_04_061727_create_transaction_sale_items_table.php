@@ -11,18 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('transaction_sale_items', function (Blueprint $table) {
             $table->id();
-            $table->string('employee_code', 6);
-            $table->string('full_name');
-            $table->string('ktp_number', 16);
-            $table->string('ktp_photo');
-            $table->foreignId('user_id')->references('id')->on('users');
-            $table->timestamp('start_working_at');
+            $table->string('product_sku');
+            $table->string('product_name');
+            $table->integer('total_qty');
+            $table->decimal('product_cost', 15, 2);
+            $table->decimal('sale_price', 15, 2);
+            $table->decimal('sale_profit', 15, 2);
             $table->string('store_code');
             $table->timestamps();
 
-            $table->unique(['employee_code', 'store_code']);
             $table->foreign('store_code')->on('stores')->references('code');
         });
     }
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('transaction_sale_items');
     }
 };

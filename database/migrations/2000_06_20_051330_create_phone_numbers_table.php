@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('phone_numbers', function (Blueprint $table) {
             $table->id();
-            $table->string('phone_number');
-            $table->string('phone_code');
+            $table->string('phone_number')->unique();
+            $table->string('phone_code')->nullable();
             $table->string('phone_verify_code')->nullable();
-            $table->timestamp('phone_verified_at');
+            $table->timestamp('phone_verified_at')->nullable();
             $table->timestamps();
         });
     }
