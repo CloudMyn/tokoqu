@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('ktp_number', 16);
             $table->string('ktp_photo');
             $table->foreignId('user_id')->references('id')->on('users');
-            $table->timestamp('start_working_at');
+            $table->string('address');
+            $table->timestamp('date_of_birth');
+            $table->timestamp('date_hired');
             $table->string('store_code');
             $table->timestamps();
 
