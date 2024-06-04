@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('image')->nullable();
             $table->string('code', 6)->unique();
-            $table->foreignId('owner_id')->references('id')->on('owners');
+            $table->foreignId('owner_id')->references('id')->on('owners')->cascadeOnDelete();
             $table->decimal('assets', 15, 2)->default(0);
             $table->string('address');
             $table->string('coordinate_lat')->nullable();
