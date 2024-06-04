@@ -11,19 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('employee_code', 6);
-            $table->string('full_name');
-            $table->string('ktp_number', 16);
-            $table->string('ktp_photo');
-            $table->foreignId('user_id')->references('id')->on('users');
-            $table->timestamp('start_working_at');
+            $table->string('name');
+            $table->string('image')->nullable();
+            $table->string('sku');
+            $table->decimal('sale_price', 15, 2); // 15 total digits, 2 decimal places
+            $table->decimal('prouct_cost', 15, 2);
             $table->string('store_code');
+            $table->integer('stock')->default(0);
+            $table->string('supplier')->nullable();
             $table->timestamps();
 
-            $table->unique(['employee_code', 'store_code']);
             $table->foreign('store_code')->on('stores')->references('code');
+            $table->unique(['sku', 'store_code']);
         });
     }
 
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('products');
     }
 };
