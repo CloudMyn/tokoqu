@@ -14,10 +14,12 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class OwnerStoreResource extends Resource
 {
-    protected static ?string $navigationGroup = 'Manajemen Toko';
+    protected static ?string $navigationGroup = 'Tabel Pengguna';
 
     protected static ?string $modelLabel = 'Pemilik Toko';
 
@@ -26,6 +28,8 @@ class OwnerStoreResource extends Resource
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
+
+    protected static ?string $recordTitleAttribute = 'title';
 
     public static function form(Form $form): Form
     {
@@ -41,7 +45,7 @@ class OwnerStoreResource extends Resource
                     Fieldset::make('Password')->schema([
                         TextInput::make('password')->label('Kata Sandi')->password()->confirmed()->autocomplete(false)->required()->minLength(3)->maxLength(199),
                         TextInput::make('password_confirmation')->label('Konfirmasi Kata Sandi')->password()->autocomplete(false)->required()
-                    ])->columns(1),
+                    ])->columns(1)->hiddenOn('view'),
                 ])->columns(2),
 
                 Section::make('Data pemilik')->relationship('owner_store')->schema([
@@ -91,14 +95,14 @@ class OwnerStoreResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('email'),
+                Tables\Columns\TextColumn::make('name')->label('Nama'),
+                Tables\Columns\TextColumn::make('email')->label('Email'),
                 Tables\Columns\TextColumn::make('phone_number.phone_number')->label('Nomor Telepon'),
-                Tables\Columns\TextColumn::make('role'),
             ])
-            ->filters([
-                //
-            ])
+            ->modifyQueryUsing(function ($query) {
+                return $query->where('role', 'store_owner');
+            })
+            ->filters([])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -113,9 +117,7 @@ class OwnerStoreResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            PhoneNumberRelationManager::class
-        ];
+        return [];
     }
 
     public static function getPages(): array
@@ -130,5 +132,10 @@ class OwnerStoreResource extends Resource
     protected function getTitle(): string
     {
         return 'Edit Custom Post Title'; // Customize your title here
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'email', 'phone_number.phone_number'];
     }
 }
