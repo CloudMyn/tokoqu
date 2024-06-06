@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'photo',
+        'role'
     ];
 
     /**
@@ -42,4 +44,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    protected $with = [
+        'phone_number', 'owner_store'
+    ];
+
+    public function phone_number()
+    {
+        return $this->belongsTo(PhoneNumber::class, 'phone_id');
+    }
+
+    public function owner_store()
+    {
+        return $this->hasOne(Owner::class, 'user_id');
+    }
 }
