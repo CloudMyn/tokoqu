@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Filament\Resources\OwnerStoreResource\Pages;
+namespace App\Filament\Resources\EmployeeResource\Pages;
 
-use App\Filament\Resources\OwnerStoreResource;
-use App\Models\Owner;
+use App\Filament\Resources\EmployeeResource;
+use App\Models\Employee;
 use App\Models\PhoneNumber;
 use App\Models\User;
 use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notification as NotificationsNotification;
 use Illuminate\Support\Facades\DB;
 
-class CreateOwnerStore extends CreateRecord
+class CreateEmployee extends CreateRecord
 {
-    protected static string $resource = OwnerStoreResource::class;
+    protected static string $resource = EmployeeResource::class;
 
     protected function handleRecordCreation(array $data): Model
     {
@@ -24,7 +23,9 @@ class CreateOwnerStore extends CreateRecord
             DB::beginTransaction();
 
             $phone_number_d =   $data['phone_number'];
-            $owner_data     =   $data['owner_store'];
+            $owner_data     =   $data['employee'];
+
+            dd($owner_data);
 
             $phone_number   =   new PhoneNumber();
 
@@ -46,7 +47,7 @@ class CreateOwnerStore extends CreateRecord
 
             $user->save();
 
-            $owner      =   new Owner();
+            $owner      =   new Employee();
 
             $owner->user()->associate($user);
 
