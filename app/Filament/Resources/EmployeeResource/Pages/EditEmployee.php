@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Filament\Resources\OwnerStoreResource\Pages;
+namespace App\Filament\Resources\EmployeeResource\Pages;
 
-use App\Filament\Resources\OwnerStoreResource;
+use App\Filament\Resources\EmployeeResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use Filament\Notifications\Notification;
 
-class EditOwnerStore extends EditRecord
+class EditEmployee extends EditRecord
 {
-    protected static string $resource = OwnerStoreResource::class;
+    protected static string $resource = EmployeeResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -20,25 +19,28 @@ class EditOwnerStore extends EditRecord
         ];
     }
 
+
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
         try {
+
             DB::beginTransaction();
 
             // write code
 
             $phone_number_data = $data['phone_number'];
 
-            $owner_data = $data['owner_store'];
+            $employee_data = $data['employee'];
 
 
-            $owner = $record->owner_store;
+            $employee = $record->employee;
 
-            $owner->name = $owner_data['name'];
-            $owner->code = $owner_data['code'];
-            $owner->level = $owner_data['level'];
+            $employee->full_name = $employee_data['full_name'];
+            $employee->employee_code = $employee_data['employee_code'];
+            $employee->ktp_number = $employee_data['ktp_number'];
+            $employee->start_working_at = $employee_data['start_working_at'];
 
-            $owner->save();
+            $employee->save();
 
             $phone_number = $record->phone_number;
 
@@ -61,17 +63,12 @@ class EditOwnerStore extends EditRecord
 
             DB::commit();
 
-            return $owner;
+            return $employee;
         } catch (\Throwable $th) {
             DB::rollBack();
 
             throw $th;
         }
-    }
-
-    protected function getUpdatedNotification(): ?Notification
-    {
-        return null;
     }
 
     protected function mutateFormDataBeforeSave(array $data): array

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('ktp_photo');
             $table->foreignId('user_id')->references('id')->on('users');
             $table->timestamp('start_working_at');
-            $table->string('store_code');
+            $table->string('store_code', 6);
             $table->timestamps();
 
             $table->unique(['employee_code', 'store_code']);
