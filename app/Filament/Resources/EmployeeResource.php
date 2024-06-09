@@ -4,27 +4,31 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\EmployeeResource\Pages;
 use App\Filament\Resources\EmployeeResource\RelationManagers;
+use App\Models\Store;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Symfony\Component\Console\Input\Input;
+
+use function Laravel\Prompts\form;
 
 class EmployeeResource extends Resource
 {
 
-    protected static ?string $navigationGroup = 'Tabel Pengguna';
-
     protected static ?string $modelLabel = 'Pegawai Toko';
-
-    protected static ?string $navigationLabel = 'Pegawai Toko';
 
     protected static ?string $recordTitleAttribute = 'title';
 
@@ -33,9 +37,54 @@ class EmployeeResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
     protected static ?int $navigationSort = 2;
+    public static function getNavigationLabel(): string
+    {
+        return 'Pegawai Toko';
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        if (get_auth_user()->has_role('store_owner')) {
+            return 'Data Toko';
+        }
+
+        return 'Tabel Pengguna';
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $auth_user = get_auth_user();
+
+        $base_query = parent::getEloquentQuery()->where('role', 'store_employee');
+
+        if ($auth_user->has_role('store_owner')) {
+            return User::whereHas('employee', function ($query) use ($auth_user) {
+                return $query->where('owner_code', $auth_user->owner_store->code);
+            });
+        }
+
+        return $base_query;
+    }
+
 
     public static function form(Form $form): Form
     {
+
+        $auth_user  =   get_auth_user();
+
+        $store_list = [];
+
+        if ($auth_user->has_role('store_owner')) {
+
+            foreach ($auth_user?->owner_store?->store ?? [] as  $value) {
+                $store_list[$value->code]   =   $value->name;
+            }
+        } else if ($auth_user->has_role('admin')) {
+            foreach (Store::all() ?? [] as  $value) {
+                $store_list[$value->code]   =   $value->name;
+            }
+        }
+
         return $form
             ->schema([
 
@@ -68,20 +117,36 @@ class EmployeeResource extends Resource
 
                 Section::make('Data Pegawai')->schema([
 
-                    TextInput::make('employee.employee_code')->label('Kode Pegawai')->required()->length(6),
+                    FileUpload::make('employee.ktp_photo[]')->label('Foto KTP')
+                        ->image()
+                        ->imageEditor()
+                        ->required(fn ($record) => $record === null)
+                        ->directory(get_user_directory('stores_files'))
+                        ->columnSpanFull(),
 
-                    TextInput::make('employee.ktp_number')->label('Nomor KTP')->required()->length(16),
+                    TextInput::make('employee.employee_code')->label('Kode Pegawai')->required()->length(6)->unique('employees', 'employee_code', function ($record) {
+                        return $record->employee;
+                    }),
+
+                    TextInput::make('employee.ktp_number')->label('Nomor KTP')->required()->length(16)->unique('employees', 'ktp_number', function ($record) {
+                        return $record->employee;
+                    }),
 
                     TextInput::make('employee.full_name')->label('Nama Lenkap')->required()->maxLength(199)->columnSpanFull(),
 
                     DatePicker::make('employee.start_working_at')->label('Mulai Bekerja')->required(),
 
-                    TextInput::make('employee.store_code')->label('Kode Toko')->disabled(),
+                    Select::make('employee.store_code')->label('Pilih Toko')
+                        ->options($store_list)
+                        ->required(),
+
 
                 ])->columns(2),
 
 
                 Section::make('Data Pegawai')->hidden()->relationship('employee')->schema([
+
+                    FileUpload::make('employee.ktp_photo'),
 
                     TextInput::make('employee_code'),
 
@@ -91,14 +156,16 @@ class EmployeeResource extends Resource
 
                     DatePicker::make('start_working_at'),
 
-                    TextInput::make('store_code'),
+                    Select::make('store_code'),
 
                 ])->columns(2),
 
 
                 Section::make('Kontak Pengguna')->schema([
                     TextInput::make('phone_number.phone_code')->label('Kode Telepon')->required()->default('+62')->maxLength(5),
-                    TextInput::make('phone_number.phone_number')->label('Nomor Telepon')->required()->maxLength(15)->tel(),
+                    TextInput::make('phone_number.phone_number')->label('Nomor Telepon')->required()->maxLength(15)->tel()->unique('phone_numbers', 'phone_number', function ($record) {
+                        return $record->phone_number;
+                    }),
                 ])->columns(2),
 
                 Section::make('Kontak Pengguna')->hidden()->relationship('phone_number')->schema([
@@ -111,8 +178,7 @@ class EmployeeResource extends Resource
 
     public static function canCreate(): bool
     {
-        // Return false to disable the creation of new resources
-        return false;
+        return get_auth_user()->has_role(['store_owner']);
     }
 
     public static function table(Table $table): Table
@@ -120,6 +186,7 @@ class EmployeeResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('employee.ktp_number')->label('Nomor KTP'),
+                ImageColumn::class::make('employee.ktp_photo')->label('Foto KTP'),
                 Tables\Columns\TextColumn::make('name')->label('Nama'),
                 Tables\Columns\TextColumn::make('email')->label('Email'),
                 Tables\Columns\TextColumn::make('employee.employee_code')->label('Kode Pegawai'),

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Store;
+use App\Models\User;
 
 if (!function_exists('format_rupiah')) {
     /**
@@ -17,6 +18,23 @@ if (!function_exists('format_rupiah')) {
     }
 }
 
+
+if (!function_exists('get_auth_user')) {
+    /**
+     * Generate a 6-digit employee code.
+     *
+     * @param int $number
+     * @return \App\Models\User
+     */
+    function get_auth_user(): User
+    {
+        $user = auth()->user();
+
+        if ($user instanceof User) return $user;
+
+        abort(403, 'Unauthorized');
+    }
+}
 
 if (!function_exists('generate_code')) {
     /**
@@ -92,5 +110,39 @@ if (!function_exists('get_store_by_code')) {
         if ($store instanceof Store) return $store;
 
         return false;
+    }
+}
+
+
+if (!function_exists('get_user_directory')) {
+    /**
+     * Dapatkan toko berdasarkan kode toko
+     *
+     * @return \App\Models\Store|bool
+     */
+    function get_user_directory(string $suffix = null): string
+    {
+        $user = get_auth_user();
+
+        $prefix =   $user->id;
+
+        $sp = DIRECTORY_SEPARATOR;
+
+        return $prefix . $sp . $suffix;
+    }
+}
+
+
+if (!function_exists('get_store_directory')) {
+    /**
+     * Dapatkan toko berdasarkan kode toko
+     *
+     * @return \App\Models\Store|bool
+     */
+    function get_store_directory(Store $store): string
+    {
+        $user_dir = get_user_directory();
+
+        return $user_dir . $store->code;
     }
 }

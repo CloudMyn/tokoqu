@@ -15,4 +15,9 @@ class Owner extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function store()
+    {
+        return $this->hasMany(Store::class, 'owner_id');
+    }
 }

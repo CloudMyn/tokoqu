@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\EmployeeResource\Pages;
 
 use App\Filament\Resources\EmployeeResource;
+use App\Models\Store;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -19,7 +20,6 @@ class EditEmployee extends EditRecord
         ];
     }
 
-
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
         try {
@@ -35,10 +35,16 @@ class EditEmployee extends EditRecord
 
             $employee = $record->employee;
 
-            $employee->full_name = $employee_data['full_name'];
-            $employee->employee_code = $employee_data['employee_code'];
-            $employee->ktp_number = $employee_data['ktp_number'];
-            $employee->start_working_at = $employee_data['start_working_at'];
+            $employee->store()->associate(Store::where('code', $employee_data['store_code'])->firstOrFail());
+
+            if ($employee_data['ktp_photo[]']) {
+                $employee->ktp_photo    =   $employee_data['ktp_photo[]'];
+            }
+
+            $employee->full_name    =   $employee_data['full_name'];
+            $employee->ktp_number   =   $employee_data['ktp_number'];
+            $employee->start_working_at =   $employee_data['start_working_at'];
+            $employee->employee_code    =   $employee_data['employee_code'];
 
             $employee->save();
 

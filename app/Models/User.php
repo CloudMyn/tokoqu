@@ -64,4 +64,15 @@ class User extends Authenticatable
     {
         return $this->hasOne(Employee::class, 'user_id');
     }
+
+    public function has_role($role): bool
+    {
+        if (is_array($role)) {
+            return in_array($this->role, $role);
+        } else {
+            return $this->role == $role;
+        }
+
+        return false;
+    }
 }

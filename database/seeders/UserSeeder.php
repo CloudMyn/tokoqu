@@ -167,6 +167,7 @@ class UserSeeder extends Seeder
 
                 $employee_data['user_id']       =   $_user_employee->id;
                 $employee_data['store_code']    =   $store->code;
+                $employee_data['owner_code']    =   $owner->code;
 
                 Employee::create($employee_data);
             }
