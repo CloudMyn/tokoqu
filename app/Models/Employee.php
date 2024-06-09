@@ -15,4 +15,14 @@ class Employee extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function store()
+    {
+        return $this->belongsTo(Store::class, 'store_code', 'code');
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(Owner::class, 'owner_code', 'code');
+    }
 }

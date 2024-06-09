@@ -142,6 +142,11 @@ class OwnerStoreResource extends Resource
         ];
     }
 
+    public static function canAccess(): bool
+    {
+        return get_auth_user()->has_role(['admin']);
+    }
+
     protected function getTitle(): string
     {
         return 'Edit Custom Post Title'; // Customize your title here

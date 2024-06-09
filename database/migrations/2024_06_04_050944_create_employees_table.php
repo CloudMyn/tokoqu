@@ -17,13 +17,15 @@ return new class extends Migration
             $table->string('full_name');
             $table->string('ktp_number', 16);
             $table->string('ktp_photo');
-            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('user_id')->references('id')->on('users')->unique()->cascadeOnDelete();
             $table->timestamp('start_working_at');
             $table->string('store_code', 6);
+            $table->string('owner_code', 6);
             $table->timestamps();
 
             $table->unique(['employee_code', 'store_code']);
             $table->foreign('store_code')->on('stores')->references('code');
+            $table->foreign('owner_code')->on('owners')->references('code');
         });
     }
 

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\EmployeeResource\Pages;
 use App\Filament\Resources\EmployeeResource;
 use App\Models\Employee;
 use App\Models\PhoneNumber;
+use App\Models\Store;
 use App\Models\User;
 use Filament\Actions;
 use Filament\Notifications\Notification;
@@ -16,16 +17,22 @@ class CreateEmployee extends CreateRecord
 {
     protected static string $resource = EmployeeResource::class;
 
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\CreateAction::make(),
+        ];
+    }
+
     protected function handleRecordCreation(array $data): Model
     {
         try {
-
             DB::beginTransaction();
 
             $phone_number_d =   $data['phone_number'];
-            $owner_data     =   $data['employee'];
 
-            dd($owner_data);
+            $employee_data = $data['employee'];
 
             $phone_number   =   new PhoneNumber();
 
@@ -42,20 +49,24 @@ class CreateEmployee extends CreateRecord
             $user->name     =   $data['name'];
             $user->email    =   $data['email'];
             $user->password =   bcrypt($data['password']);
-            $user->role     =   'store_owner';
+            $user->role     =   'store_employee';
             $user->email_verified_at    =   now();
 
             $user->save();
 
-            $owner      =   new Employee();
+            $employee = new Employee();
 
-            $owner->user()->associate($user);
+            $employee->user()->associate($user);
+            $employee->store()->associate(Store::where('code', $employee_data['store_code'])->firstOrFail());
+            $employee->owner()->associate(get_auth_user()->owner_store);
 
-            $owner->name    =   $owner_data['name'];
-            $owner->code    =   $owner_data['code'];
-            $owner->level   =   $owner_data['level'];
+            $employee->ktp_photo    =   $employee_data['ktp_photo[]'];
+            $employee->full_name    =   $employee_data['full_name'];
+            $employee->ktp_number   =   $employee_data['ktp_number'];
+            $employee->start_working_at =   $employee_data['start_working_at'];
+            $employee->employee_code    =   $employee_data['employee_code'];
 
-            $owner->save();
+            $employee->save();
 
             Notification::make()
                 ->title('Berhasil Menyimpan Data')
@@ -73,6 +84,9 @@ class CreateEmployee extends CreateRecord
         }
     }
 
+    protected function uploadPhotoKTP(array $data): void
+    {
+    }
 
     protected function getCreatedNotification(): ?Notification
     {
