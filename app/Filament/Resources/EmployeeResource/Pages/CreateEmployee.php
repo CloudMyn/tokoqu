@@ -17,6 +17,9 @@ class CreateEmployee extends CreateRecord
 {
     protected static string $resource = EmployeeResource::class;
 
+    protected static ?string $buttonCreateLabel = null;
+
+    protected static bool $canCreateAnother = false;
 
     protected function getHeaderActions(): array
     {

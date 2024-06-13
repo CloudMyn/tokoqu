@@ -24,8 +24,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['employee_code', 'store_code']);
-            $table->foreign('store_code')->on('stores')->references('code');
-            $table->foreign('owner_code')->on('owners')->references('code');
+            $table->foreign('store_code')->on('stores')->references('code')->cascadeOnDelete();
+            $table->foreign('owner_code')->on('owners')->references('code')->cascadeOnDelete();
         });
     }
 

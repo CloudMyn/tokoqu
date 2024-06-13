@@ -6,6 +6,7 @@ use App\Filament\Resources\EmployeeResource\Pages;
 use App\Filament\Resources\EmployeeResource\RelationManagers;
 use App\Models\Store;
 use App\Models\User;
+use Filament\Actions\CreateAction;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
@@ -92,7 +93,9 @@ class EmployeeResource extends Resource
 
                     TextInput::make('name')->label('Nama Lenkap')->required()->maxLength(199),
 
-                    TextInput::make('email')->label('Alamat Email')->required()->email()->maxLength(199),
+                    TextInput::make('email')->label('Alamat Email')->required()->email()->maxLength(199)->unique('users', 'email', function ($record) {
+                        return $record;
+                    }),
 
                     Fieldset::make('Password')->schema([
                         TextInput::make('password')
@@ -124,12 +127,15 @@ class EmployeeResource extends Resource
                         ->directory(get_user_directory('stores_files'))
                         ->columnSpanFull(),
 
-                    TextInput::make('employee.employee_code')->label('Kode Pegawai')->required()->length(6)->unique('employees', 'employee_code', function ($record) {
-                        return $record->employee;
-                    }),
+                    TextInput::make('employee.employee_code')->label('Kode Pegawai')
+                        ->required()
+                        ->length(6)
+                        ->unique('employees', 'employee_code', function ($record) {
+                            return $record?->employee;
+                        }),
 
                     TextInput::make('employee.ktp_number')->label('Nomor KTP')->required()->length(16)->unique('employees', 'ktp_number', function ($record) {
-                        return $record->employee;
+                        return $record?->employee;
                     }),
 
                     TextInput::make('employee.full_name')->label('Nama Lenkap')->required()->maxLength(199)->columnSpanFull(),
@@ -164,7 +170,7 @@ class EmployeeResource extends Resource
                 Section::make('Kontak Pengguna')->schema([
                     TextInput::make('phone_number.phone_code')->label('Kode Telepon')->required()->default('+62')->maxLength(5),
                     TextInput::make('phone_number.phone_number')->label('Nomor Telepon')->required()->maxLength(15)->tel()->unique('phone_numbers', 'phone_number', function ($record) {
-                        return $record->phone_number;
+                        return $record?->phone_number;
                     }),
                 ])->columns(2),
 
@@ -186,7 +192,7 @@ class EmployeeResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('employee.ktp_number')->label('Nomor KTP'),
-                ImageColumn::class::make('employee.ktp_photo')->label('Foto KTP'),
+                ImageColumn::make('employee.ktp_photo')->label('Foto KTP'),
                 Tables\Columns\TextColumn::make('name')->label('Nama'),
                 Tables\Columns\TextColumn::make('email')->label('Email'),
                 Tables\Columns\TextColumn::make('employee.employee_code')->label('Kode Pegawai'),

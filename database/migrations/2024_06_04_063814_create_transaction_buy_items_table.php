@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('store_code');
             $table->timestamps();
 
-            $table->foreign('store_code')->on('stores')->references('code');
+            $table->foreign('store_code')->on('stores')->references('code')->cascadeOnDelete();
         });
     }
 
