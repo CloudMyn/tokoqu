@@ -9,8 +9,15 @@ class Store extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function employees()
     {
         return $this->hasMany(Employee::class, 'store_code', 'code');
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(Owner::class, 'owner_id', 'id');
     }
 }

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('supplier')->nullable();
             $table->timestamps();
 
-            $table->foreign('store_code')->on('stores')->references('code');
+            $table->foreign('store_code')->on('stores')->references('code')->cascadeOnDelete();
             $table->unique(['sku', 'store_code']);
         });
     }

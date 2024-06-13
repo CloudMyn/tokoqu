@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('store_code');
 
             $table->foreign('employee_id')->on('employees')->references('id')->onDelete('set null');
-            $table->foreign('store_code')->on('stores')->references('code');
+            $table->foreign('store_code')->on('stores')->references('code')->cascadeOnDelete();
         });
     }
 
