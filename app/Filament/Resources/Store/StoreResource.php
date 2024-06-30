@@ -9,6 +9,8 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Http\Middleware\Authenticate;
+use Filament\Panel;
 use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
@@ -104,7 +106,12 @@ class StoreResource extends Resource
 
     public static function canCreate(): bool
     {
-        return get_auth_user()->has_role(['store_owner']);
+        return cek_admin_role();
+    }
+
+    public static function canAccess(): bool
+    {
+        return cek_admin_role();
     }
 
     public static function getRelations(): array

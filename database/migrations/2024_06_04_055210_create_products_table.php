@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('sku');
             $table->decimal('sale_price', 15, 2); // 15 total digits, 2 decimal places
-            $table->decimal('prouct_cost', 15, 2);
+            $table->decimal('product_cost', 15, 2);
             $table->string('store_code');
             $table->integer('stock')->default(0);
             $table->string('supplier')->nullable();

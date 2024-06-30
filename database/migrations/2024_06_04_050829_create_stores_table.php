@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('coordinate_lat')->nullable();
             $table->string('coordinate_lng')->nullable();
             $table->timestamps();
+
+            $table->unique(['code', 'owner_id']);
         });
     }
 

@@ -70,21 +70,7 @@ class EmployeeResource extends Resource
 
     public static function form(Form $form): Form
     {
-
-        $auth_user  =   get_auth_user();
-
-        $store_list = [];
-
-        if ($auth_user->has_role('store_owner')) {
-
-            foreach ($auth_user?->owner_store?->store ?? [] as  $value) {
-                $store_list[$value->code]   =   $value->name;
-            }
-        } else if ($auth_user->has_role('admin')) {
-            foreach (Store::all() ?? [] as  $value) {
-                $store_list[$value->code]   =   $value->name;
-            }
-        }
+        $store_list = get_store_list();
 
         return $form
             ->schema([

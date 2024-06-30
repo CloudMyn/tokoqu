@@ -146,3 +146,87 @@ if (!function_exists('get_store_directory')) {
         return $user_dir . $store->code;
     }
 }
+
+
+if (!function_exists('cek_store_role')) {
+    /**
+     * Dapatkan toko berdasarkan kode toko
+     *
+     * @return |bool
+     */
+    function cek_store_role(): bool
+    {
+        return get_auth_user()->has_role('store_owner');
+    }
+}
+
+
+if (!function_exists('cek_admin_role')) {
+    /**
+     * Dapatkan toko berdasarkan kode toko
+     *
+     * @return |bool
+     */
+    function cek_admin_role(): bool
+    {
+        return get_auth_user()->has_role('admin');
+    }
+}
+
+
+if (!function_exists('get_store_list')) {
+    /**
+     * Dapatkan toko berdasarkan kode toko
+     *
+     * @return |bool
+     */
+    function get_store_list(): array
+    {
+        $auth_user = get_auth_user();
+
+        $store_list = [];
+
+        if (cek_store_role()) {
+
+            foreach ($auth_user?->owner_store?->store ?? [] as  $value) {
+                $store_list[$value->code]   =   $value->name;
+            }
+        } else if (cek_admin_role()) {
+            foreach (Store::all() ?? [] as  $value) {
+                $store_list[$value->code]   =   $value->name;
+            }
+        }
+
+        return $store_list;
+    }
+}
+
+
+/**
+ * Ubah angka dengan format rupiah menjadi integer
+ *
+ * Contoh:
+ * - 100,000,000 akan menjadi 100000000
+ * - 100000000 juga akan menjadi 100000000
+ *
+ * @param string|int $angka Angka dengan format rupiah
+ * @return int Angka dalam bentuk integer
+ */
+function ubah_angka_rupiah_ke_int(string|int $angka): int
+{
+    return intval(str_replace(',', '', $angka));
+}
+
+/**
+ * Ubah angka integer menjadi format rupiah
+ *
+ * Contoh:
+ * - 100000000 akan menjadi 100,000,000
+ *
+ * @param int $angka Angka dalam bentuk integer
+ * @return string Angka dalam bentuk rupiah
+ */
+function ubah_angka_int_ke_rupiah(int $angka): string
+{
+    return number_format($angka, 0, ',', '.');
+}
