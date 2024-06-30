@@ -20,4 +20,9 @@ class Store extends Model
     {
         return $this->belongsTo(Owner::class, 'owner_id', 'id');
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'store_code', 'code');
+    }
 }

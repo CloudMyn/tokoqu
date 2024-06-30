@@ -176,7 +176,7 @@ if (!function_exists('cek_admin_role')) {
 
 if (!function_exists('get_store_list')) {
     /**
-     * Dapatkan toko berdasarkan kode toko
+     * Dapatkan daftar toko pengguna
      *
      * @return |bool
      */
@@ -200,6 +200,42 @@ if (!function_exists('get_store_list')) {
         return $store_list;
     }
 }
+
+
+if (!function_exists('get_product_list')) {
+    /**
+     * Dapatkan product toko pengguna
+     *
+     * @return
+     */
+    function get_product_list(): array
+    {
+        $list = [];
+
+        foreach (get_store()->products ?? [] as  $value) {
+            $list[$value->id]   =   strtoupper($value->name . " | SKU : " . $value->sku);
+        }
+
+        return $list;
+    }
+}
+
+
+
+if (!function_exists('get_store')) {
+    /**
+     * Dapatkan product toko pengguna
+     *
+     * @return
+     */
+    function get_store(): Store
+    {
+        $auth_user = get_auth_user();
+
+        return  $auth_user->owner_store->store()->first();
+    }
+}
+
 
 
 /**

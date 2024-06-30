@@ -24,6 +24,12 @@ class ProductResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Produk';
 
+
+    public static function canAccess(): bool
+    {
+        return cek_store_role();
+    }
+
     public static function getNavigationLabel(): string
     {
         return 'Daftar Produk';
@@ -137,10 +143,5 @@ class ProductResource extends Resource
             'create' => Pages\CreateProduct::route('/create'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
-    }
-
-    public static function canAccess(): bool
-    {
-        return cek_store_role();
     }
 }

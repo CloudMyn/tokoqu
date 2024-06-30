@@ -47,16 +47,14 @@ class CreateProduct extends CreateRecord
 
         $product->save();
 
-        Notification::make()
-            ->title('Berhasil Menyimpan Data')
-            ->success()
-            ->send();
-
         return $store;
     }
 
     protected function getCreatedNotification(): ?Notification
     {
-        return null;
+        return Notification::make()
+            ->title('Berhasil Menyimpan Data')
+            ->success()
+            ->send();
     }
 }

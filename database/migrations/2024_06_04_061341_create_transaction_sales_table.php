@@ -13,17 +13,20 @@ return new class extends Migration
     {
         Schema::create('transaction_sales', function (Blueprint $table) {
             $table->id();
+            $table->string('image');
             $table->string('title');
             $table->decimal('total_amount', 15, 2);
             $table->integer('total_qty');
             $table->decimal('total_profit', 15, 2);
-            $table->foreignId('employee_id')->nullable();
-            $table->string('employee_name');
+            $table->foreignId('admin_id')->nullable();
+            $table->string('admin_name');
+
+            $table->foreignId('product_id')->references('id')->on('products')->cascadeOnDelete();
             $table->timestamps();
 
             $table->string('store_code');
 
-            $table->foreign('employee_id')->on('employees')->references('id')->onDelete('set null');
+            $table->foreign('admin_id')->on('users')->references('id')->onDelete('set null');
             $table->foreign('store_code')->on('stores')->references('code')->cascadeOnDelete();
         });
     }
