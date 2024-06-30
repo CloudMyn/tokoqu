@@ -32,7 +32,7 @@ class ProductResource extends Resource
     public static function getNavigationGroup(): ?string
     {
         if (cek_store_role()) {
-            return 'Data Toko';
+            return 'Inventori';
         }
 
         abort(403, 'Unauthorized');
@@ -56,7 +56,9 @@ class ProductResource extends Resource
 
                 TextInput::make('sku')->label('SKU produk')->required()->length(6),
 
-                TextInput::make('stock')->label('Stok Produk')->required()->numeric(),
+                TextInput::make('stock')->label('Base Stock')->required()->numeric()->readOnly(function ($record) {
+                    return $record;
+                }),
 
                 TextInput::make('sale_price')->label('Harga Jual')
                     ->mask(RawJs::make('$money($input)'))
@@ -87,7 +89,9 @@ class ProductResource extends Resource
                     return $record?->image ?? null ? asset($record->image) : 'https://via.placeholder.com/150';
                 }),
                 TextColumn::make('name')->label('Nama'),
-                TextColumn::make('stock')->label('Base Stok'),
+
+                TextColumn::make('stock')->label('Stok'),
+
                 TextColumn::make('sale_price')
                     ->label('Harga Jual')
                     ->numeric(decimalPlaces: 0)
