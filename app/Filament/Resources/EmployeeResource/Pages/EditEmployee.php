@@ -3,7 +3,9 @@
 namespace App\Filament\Resources\EmployeeResource\Pages;
 
 use App\Filament\Resources\EmployeeResource;
+use App\Models\Employee;
 use App\Models\Store;
+use App\Models\User;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -28,17 +30,16 @@ class EditEmployee extends EditRecord
 
             // write code
 
-            $phone_number_data = $data['phone_number'];
+            $phone_number_data = $data;
 
-            $employee_data = $data['employee'];
-
+            $employee_data = $data;
 
             $employee = $record->employee;
 
             $employee->store()->associate(Store::where('code', $employee_data['store_code'])->firstOrFail());
 
-            if ($employee_data['ktp_photo[]']) {
-                $employee->ktp_photo    =   $employee_data['ktp_photo[]'];
+            if ($employee_data['ktp_photo']) {
+                $employee->ktp_photo    =   $employee_data['ktp_photo'];
             }
 
             $employee->full_name    =   $employee_data['full_name'];
@@ -89,5 +90,18 @@ class EditEmployee extends EditRecord
         }
 
         return $data;
+    }
+
+    public function mount(int|string $record): void
+    {
+        parent::mount($record);
+
+        $model      =   User::find($record);
+
+        $employee   =   $model->employee;
+
+        $data       =   [...$model->toArray(), ...$employee->toArray(), ...$model->phone_number->toArray()];
+
+        $this->form->fill($data);
     }
 }

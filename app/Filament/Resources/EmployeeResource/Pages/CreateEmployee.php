@@ -33,9 +33,9 @@ class CreateEmployee extends CreateRecord
         try {
             DB::beginTransaction();
 
-            $phone_number_d =   $data['phone_number'];
+            $phone_number_d =   $data;
 
-            $employee_data = $data['employee'];
+            $employee_data = $data;
 
             $phone_number   =   new PhoneNumber();
 
@@ -63,7 +63,7 @@ class CreateEmployee extends CreateRecord
             $employee->store()->associate(Store::where('code', $employee_data['store_code'])->firstOrFail());
             $employee->owner()->associate(get_auth_user()->owner_store);
 
-            $employee->ktp_photo    =   $employee_data['ktp_photo[]'];
+            $employee->ktp_photo    =   $employee_data['ktp_photo'];
             $employee->full_name    =   $employee_data['full_name'];
             $employee->ktp_number   =   $employee_data['ktp_number'];
             $employee->start_working_at =   $employee_data['start_working_at'];
@@ -71,10 +71,6 @@ class CreateEmployee extends CreateRecord
 
             $employee->save();
 
-            Notification::make()
-                ->title('Berhasil Menyimpan Data')
-                ->success()
-                ->send();
 
             DB::commit();
 
@@ -93,6 +89,9 @@ class CreateEmployee extends CreateRecord
 
     protected function getCreatedNotification(): ?Notification
     {
-        return null;
+        return  Notification::make()
+            ->title('Berhasil Menyimpan Data')
+            ->success()
+            ->send();
     }
 }

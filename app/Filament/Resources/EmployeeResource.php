@@ -106,29 +106,29 @@ class EmployeeResource extends Resource
 
                 Section::make('Data Pegawai')->schema([
 
-                    FileUpload::make('employee.ktp_photo[]')->label('Foto KTP')
+                    FileUpload::make('ktp_photo')->label('Foto KTP')
                         ->image()
                         ->imageEditor()
                         ->required(fn ($record) => $record === null)
                         ->directory(get_user_directory('stores_files'))
                         ->columnSpanFull(),
 
-                    TextInput::make('employee.employee_code')->label('Kode Pegawai')
+                    TextInput::make('employee_code')->label('Kode Pegawai')
                         ->required()
                         ->length(6)
                         ->unique('employees', 'employee_code', function ($record) {
                             return $record?->employee;
                         }),
 
-                    TextInput::make('employee.ktp_number')->label('Nomor KTP')->required()->length(16)->unique('employees', 'ktp_number', function ($record) {
+                    TextInput::make('ktp_number')->label('Nomor KTP')->required()->length(16)->unique('employees', 'ktp_number', function ($record) {
                         return $record?->employee;
                     }),
 
-                    TextInput::make('employee.full_name')->label('Nama Lenkap')->required()->maxLength(199)->columnSpanFull(),
+                    TextInput::make('full_name')->label('Nama Lenkap')->required()->maxLength(199)->columnSpanFull(),
 
-                    DatePicker::make('employee.start_working_at')->label('Mulai Bekerja')->required(),
+                    DatePicker::make('start_working_at')->label('Mulai Bekerja')->required(),
 
-                    Select::make('employee.store_code')->label('Pilih Toko')
+                    Select::make('store_code')->label('Pilih Toko')
                         ->options($store_list)
                         ->required(),
 
@@ -136,34 +136,13 @@ class EmployeeResource extends Resource
                 ])->columns(2),
 
 
-                Section::make('Data Pegawai')->hidden()->relationship('employee')->schema([
-
-                    FileUpload::make('employee.ktp_photo'),
-
-                    TextInput::make('employee_code'),
-
-                    TextInput::make('ktp_number'),
-
-                    TextInput::make('full_name'),
-
-                    DatePicker::make('start_working_at'),
-
-                    Select::make('store_code'),
-
-                ])->columns(2),
-
-
                 Section::make('Kontak Pengguna')->schema([
-                    TextInput::make('phone_number.phone_code')->label('Kode Telepon')->required()->default('+62')->maxLength(5),
-                    TextInput::make('phone_number.phone_number')->label('Nomor Telepon')->required()->maxLength(15)->tel()->unique('phone_numbers', 'phone_number', function ($record) {
+                    TextInput::make('phone_code')->label('Kode Telepon')->required()->default('+62')->maxLength(5),
+                    TextInput::make('phone_number')->label('Nomor Telepon')->required()->maxLength(15)->tel()->unique('phone_numbers', 'phone_number', function ($record) {
                         return $record?->phone_number;
                     }),
                 ])->columns(2),
 
-                Section::make('Kontak Pengguna')->hidden()->relationship('phone_number')->schema([
-                    TextInput::make('phone_code')->label('Kode Telepon')->required()->default('+62')->maxLength(5)->disabled(),
-                    TextInput::make('phone_number')->label('Nomor Telepon')->required()->maxLength(15)->tel()->disabled(),
-                ])->columns(2),
 
             ]);
     }
