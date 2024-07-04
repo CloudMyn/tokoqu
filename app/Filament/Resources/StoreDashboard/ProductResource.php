@@ -60,7 +60,9 @@ class ProductResource extends Resource
 
                 TextInput::make('supplier')->label('Penyuplai Barang')->required()->maxLength(100),
 
-                TextInput::make('sku')->label('SKU produk')->required()->length(6),
+                TextInput::make('sku')->label('SKU produk')->required()->length(6)->unique('products', 'sku', function ($record) {
+                    return $record;
+                }),
 
                 TextInput::make('stock')->label('Base Stock')->required()->numeric()->readOnly(function ($record) {
                     return $record;

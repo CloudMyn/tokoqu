@@ -5,8 +5,10 @@ namespace App\Filament\Resources\StoreDashboard;
 use App\Filament\Resources\StoreDashboard\TransactionBuyResource\Pages;
 use App\Filament\Resources\StoreDashboard\TransactionBuyResource\RelationManagers;
 use App\Models\TransactionBuy;
+use App\Models\TransactionBuyItem;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -14,6 +16,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
+use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -57,11 +60,9 @@ class TransactionBuyResource extends Resource
     {
         return $form
             ->schema([
-
                 FileUpload::make('image')->label('Bukti Transaksi Pembelian/Nota pembelian')
                     ->image()
                     ->imageEditor()
-                    ->required(fn ($record) => $record === null)
                     ->directory(get_user_directory('/trx-buy'))
                     ->columnSpanFull(),
 
@@ -71,19 +72,28 @@ class TransactionBuyResource extends Resource
 
                 TextInput::make('supplier')->label('Penyuplai Barang')->required()->maxLength(100)->autocapitalize('words'),
 
-                TextInput::make('total_qty')->label('Total QTY')->required()->numeric(),
-
-                TextInput::make('total_cost')->label('Harga Beli')
+                TextInput::make('total_cost')->label('Jumlah transaksi')
                     ->mask(RawJs::make('$money($input)'))
                     ->stripCharacters(',')
                     ->inputMode('double')
+                    ->columnSpanFull()
                     ->required()
                     ->prefix('RP'),
 
-                Select::make('product_id')->label('Pilih Produk')
-                    ->options(get_product_list())
-                    ->required()
-                    ->columnSpanFull(),
+
+                Repeater::make('products')->label('Daftar Produk')
+                    ->schema([
+                        Select::make('product_id')->label('Pilih Produk')
+                            ->options(get_product_list())
+                            ->required(),
+                        TextInput::make('product_qty')->label('QTY Beli')->required()->numeric()->minValue(1)->maxValue(9999999),
+                        TextInput::make('product_cost')->label('Total Harga')
+                            ->mask(RawJs::make('$money($input)'))
+                            ->stripCharacters(',')
+                            ->inputMode('double')
+                            ->required()
+                            ->prefix('RP'),
+                    ])->columnSpanFull()->columns(3),
 
             ]);
     }
@@ -91,8 +101,8 @@ class TransactionBuyResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->headerActions([])
             ->columns([
-
                 TextColumn::make('supplier')->label('Supplier'),
 
                 TextColumn::make('title')->label('Title'),
@@ -108,13 +118,11 @@ class TransactionBuyResource extends Resource
                     }),
 
                 TextColumn::make('admin_name')->label('Nama Admin'),
-
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -127,9 +135,7 @@ class TransactionBuyResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
