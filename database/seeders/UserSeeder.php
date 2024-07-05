@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Employee;
 use App\Models\Owner;
 use App\Models\PhoneNumber;
+use App\Models\Product;
 use App\Models\Store;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -149,6 +150,8 @@ class UserSeeder extends Seeder
                 unset($data['store']['employee']);
 
                 $store = Store::create($data['store']);
+
+                Product::factory(5)->create(['store_code' => $store->code]);
 
                 $employee_data =  $employee['data'];
 

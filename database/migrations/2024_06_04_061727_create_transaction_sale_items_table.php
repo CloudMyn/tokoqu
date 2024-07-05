@@ -16,10 +16,11 @@ return new class extends Migration
             $table->string('product_sku');
             $table->string('product_name');
             $table->integer('total_qty');
-            $table->decimal('product_cost', 15, 2);
             $table->decimal('sale_price', 15, 2);
             $table->decimal('sale_profit', 15, 2);
             $table->string('store_code');
+            $table->foreignId('product_id')->references('id')->on('products')->cascadeOnDelete();
+            $table->foreignId('transaction_id')->references('id')->on('transaction_sales')->cascadeOnDelete();
             $table->timestamps();
 
             $table->foreign('store_code')->on('stores')->references('code')->cascadeOnDelete();

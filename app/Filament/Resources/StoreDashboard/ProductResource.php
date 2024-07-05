@@ -15,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductResource extends Resource
 {
@@ -44,6 +45,7 @@ class ProductResource extends Resource
         abort(403, 'Unauthorized');
     }
 
+
     public static function form(Form $form): Form
     {
         return $form
@@ -52,7 +54,6 @@ class ProductResource extends Resource
                 FileUpload::make('image')->label('Foto Produk')
                     ->image()
                     ->imageEditor()
-                    ->required(fn ($record) => $record === null)
                     ->directory(get_user_directory('/products'))
                     ->columnSpanFull(),
 
@@ -84,6 +85,10 @@ class ProductResource extends Resource
                     ->options(get_store_list())
                     ->required()->columnSpanFull(),
 
+                TextInput::make('fraction')->label('Fraction')->required()->numeric()->minValue(1)->maxValue(99999999),
+
+                Select::make('unit')->label('Satuan')->required()->options(get_unit_list()),
+
             ]);
     }
 
@@ -93,12 +98,18 @@ class ProductResource extends Resource
             ->columns([
 
                 TextColumn::make('sku')->label('SKU'),
+
                 ImageColumn::make('image')->label('Foto')->default(function ($record) {
                     return $record?->image ?? null ? asset($record->image) : 'https://via.placeholder.com/150';
                 }),
+
                 TextColumn::make('name')->label('Nama'),
 
                 TextColumn::make('stock')->label('Stok'),
+
+                TextColumn::make('fraction')->label('Unit')->suffix(function ($record) {
+                    return '/' . ucwords($record->unit);
+                }),
 
                 TextColumn::make('sale_price')
                     ->label('Harga Jual')
@@ -129,6 +140,16 @@ class ProductResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+
+    public static function getEloquentQuery(): Builder
+    {
+        parent::getEloquentQuery();
+
+        $store   =   get_store();
+
+        return parent::getEloquentQuery()->where('store_code', $store->code);
     }
 
     public static function getRelations(): array

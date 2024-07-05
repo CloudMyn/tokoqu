@@ -208,18 +208,44 @@ if (!function_exists('get_product_list')) {
      *
      * @return
      */
-    function get_product_list(): array
+    function get_product_list(bool $get_have_stock = false): array
     {
         $list = [];
 
         foreach (get_store()->products ?? [] as  $value) {
-            $list[$value->id]   =   strtoupper($value->name . " | SKU : " . $value->sku);
+
+            if ($get_have_stock && intval($value->stock) <= 0) continue;
+
+            $list[$value->id]   =   strtoupper($value->name . " | " . $value->sku . " | Rp. " . number_format($value->sale_price) . " ( $value->stock )");
         }
 
         return $list;
     }
 }
 
+
+if (!function_exists('get_unit_list')) {
+    /**
+     * Dapatkan product toko pengguna
+     *
+     * @return
+     */
+    function get_unit_list(): array
+    {
+        $list = [];
+
+        foreach ([
+            'carton', 'pack', 'piece', 'box', 'bag',
+            'set', 'bottle', 'jar', 'roll', 'case', 'pallet',
+            'bundle', 'liter', 'milliliter', 'kilogram', 'gram'
+        ] as  $unit) {
+
+            $list[$unit]   =   strtoupper($unit);
+        }
+
+        return $list;
+    }
+}
 
 
 if (!function_exists('get_store')) {

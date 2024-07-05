@@ -20,6 +20,8 @@ return new class extends Migration
             $table->decimal('product_cost', 15, 2);
             $table->string('store_code');
             $table->integer('stock')->default(0);
+            $table->integer('fraction');
+            $table->enum('unit', ['carton', 'pack', 'piece', 'box', 'bag', 'set', 'bottle', 'jar', 'roll', 'case', 'pallet', 'bundle', 'liter', 'milliliter', 'kilogram', 'gram']);
             $table->string('supplier')->nullable();
             $table->timestamps();
 

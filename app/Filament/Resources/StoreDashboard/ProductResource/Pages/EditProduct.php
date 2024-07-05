@@ -41,6 +41,8 @@ class EditProduct extends EditRecord
             $product->stock         = intval($data['stock']);
             $product->sale_price    = ubah_angka_rupiah_ke_int($data['sale_price']);
             $product->product_cost  = ubah_angka_rupiah_ke_int($data['product_cost']);
+            $product->fraction      = $data['fraction'];
+            $product->unit          = $data['unit'];
 
             $product->save();
 
@@ -55,6 +57,10 @@ class EditProduct extends EditRecord
         }
     }
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 
     protected function getSavedNotification(): ?Notification
     {

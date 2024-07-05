@@ -49,7 +49,7 @@ class TransactionBuyResource extends Resource
     public static function getNavigationGroup(): ?string
     {
         if (cek_store_role()) {
-            return 'Inventori';
+            return 'Transaksi';
         }
 
         abort(403, 'Unauthorized');
@@ -67,7 +67,7 @@ class TransactionBuyResource extends Resource
                     ->columnSpanFull(),
 
                 TextInput::make('title')->label('Nama Transaksi')->required()->maxLength(100)->default(function () {
-                    return ucwords("Transaksi Pembelian oleh : " . get_auth_user()->name);
+                    return ucwords("Transaksi Pembelian oleh " . get_auth_user()->name);
                 })->autocapitalize('words'),
 
                 TextInput::make('supplier')->label('Penyuplai Barang')->required()->maxLength(100)->autocapitalize('words'),
@@ -87,7 +87,7 @@ class TransactionBuyResource extends Resource
                             ->options(get_product_list())
                             ->required(),
                         TextInput::make('product_qty')->label('QTY Beli')->required()->numeric()->minValue(1)->maxValue(9999999),
-                        TextInput::make('product_cost')->label('Total Harga')
+                        TextInput::make('product_cost')->label('Harga Barang')
                             ->mask(RawJs::make('$money($input)'))
                             ->stripCharacters(',')
                             ->inputMode('double')

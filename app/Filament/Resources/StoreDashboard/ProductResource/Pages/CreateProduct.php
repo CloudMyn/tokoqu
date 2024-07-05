@@ -40,10 +40,12 @@ class CreateProduct extends CreateRecord
         $product->name          = $data['name'];
         $product->supplier      = $data['supplier'];
         $product->sku           = strtoupper($data['sku']);
-        $product->image         = $data['image'];
+        $product->image         = $data['image'] ?? null;
         $product->stock         = $data['stock'];
         $product->sale_price    = ubah_angka_rupiah_ke_int($data['sale_price']);
         $product->product_cost  = ubah_angka_rupiah_ke_int($data['product_cost']);
+        $product->fraction      = $data['fraction'];
+        $product->unit          = $data['unit'];
 
         $product->save();
 
