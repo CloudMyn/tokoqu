@@ -28,6 +28,8 @@ class AdjustStockResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Produk';
 
+    protected static ?int $navigationSort = 2;
+
     public static function canAccess(): bool
     {
         return cek_store_role();

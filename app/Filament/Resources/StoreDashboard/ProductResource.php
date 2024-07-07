@@ -25,12 +25,16 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $recordTitleAttribute = 'Produk';
-
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function canAccess(): bool
     {
         return cek_store_role();
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'sku'];
     }
 
     public static function getNavigationLabel(): string
