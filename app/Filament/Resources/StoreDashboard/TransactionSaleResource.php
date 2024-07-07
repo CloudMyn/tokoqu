@@ -9,6 +9,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Pages;
+use App\Models\Product;
 use Filament\Forms\Components\{
     FileUpload,
     Repeater,
@@ -41,7 +42,7 @@ class TransactionSaleResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'Jual Barang';
+        return 'Catat Penjualan';
     }
 
     public static function getNavigationGroup(): ?string
@@ -88,20 +89,50 @@ class TransactionSaleResource extends Resource
                         //     ->prefix('RP'),
 
                         TextInput::make('product_qty')
-                            ->label('QTY Beli')
+                            ->label('QTY Jual')
                             ->required()
                             ->numeric()
                             ->minValue(1)
                             ->maxValue(99999999),
 
-                        TextInput::make('product_discount')->label('Potongan Produk Per-QTY')
+
+                        TextInput::make('product_discount')->label('Potongan Per-Produk')
+                            ->mask(RawJs::make('$money($input)'))
+                            ->stripCharacters(',')
+                            ->inputMode('double')
+                            ->prefix('RP'),
+
+                        TextInput::make('product_discount_per_qty')->label('Potongan Per-QTY')
                             ->mask(RawJs::make('$money($input)'))
                             ->stripCharacters(',')
                             ->inputMode('double')
                             ->prefix('RP'),
                     ])
+                    ->collapsible()
+                    ->cloneable()
                     ->columnSpanFull()
-                    ->columns(2),
+                    ->itemLabel(function (array $state) {
+
+                        $qty    =   intval($state['product_qty'] ?? 0);
+
+                        $product    =   Product::find($state['product_id'] ?? 0);
+
+                        $potongan_per_product   =   ubah_angka_rupiah_ke_int($state['product_discount'] ?? 0);
+
+                        $potongan_per_qty       =   ubah_angka_rupiah_ke_int($state['product_discount_per_qty'] ?? 0) * $qty;
+
+                        $product_name   =   ucwords($product?->name ?? 'Produk');
+
+                        $gross_trx      =   (($product?->sale_price ?? 0) * $qty - $potongan_per_product) - $potongan_per_qty;
+
+                        $profit         =   ubah_angka_int_ke_rupiah($gross_trx - ($product?->product_cost ?? 0) * $qty);
+
+                        $trx_ammount    =   ubah_angka_int_ke_rupiah($gross_trx);
+
+                        return  "$product_name | Transaksi $trx_ammount | Profit $profit";
+                    })
+                    ->live(false, 20)
+                    ->columns(3),
 
             ]);
     }

@@ -19,10 +19,11 @@ return new class extends Migration
             $table->decimal('sale_price', 15, 2);
             $table->decimal('sale_profit', 15, 2);
             $table->string('store_code');
-            $table->foreignId('product_id')->references('id')->on('products')->cascadeOnDelete();
+            $table->foreignId('product_id')->nullable();
             $table->foreignId('transaction_id')->references('id')->on('transaction_sales')->cascadeOnDelete();
             $table->timestamps();
 
+            $table->foreign('product_id')->on('products')->references('id')->onDelete('set null');
             $table->foreign('store_code')->on('stores')->references('code')->cascadeOnDelete();
         });
     }

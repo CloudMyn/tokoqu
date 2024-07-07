@@ -45,9 +45,9 @@ class TransactionSaleItem extends Model
         return $this->belongsTo(Store::class, 'store_code', 'code');
     }
 
-    public function sale_product(Product $product, int $qty, int $discount): void
+    public function sale_product(Product $product, int $qty, int $discount, int $discount_per_qty): void
     {
-        if ($product->qty > $qty) {
+        if ($product->stock < $qty) {
             throw new \Exception('Stock Barang #' . $product->sku .  ' Tidak Cukup');
         }
 
@@ -55,14 +55,15 @@ class TransactionSaleItem extends Model
             throw new \Exception('Qty minimal 1');
         }
 
-        $sale_price     =   doubleval($product->sale_price);
-        $product_cost   =   doubleval($product->product_cost);
+        $potongan_per_product   =   ubah_angka_rupiah_ke_int($discount ?? 0);
 
-        $gross_sale     =   ($sale_price - $discount) * $qty;
+        $potongan_per_qty       =   ubah_angka_rupiah_ke_int($discount_per_qty ?? 0) * $qty;
 
-        $profit         =   $gross_sale - ($product_cost * $qty);
+        $gross_trx      =   (($product->sale_price ?? 0) * $qty - $potongan_per_product) - $potongan_per_qty;
 
-        $this->sale_price      =   $gross_sale;
+        $profit         =   $gross_trx - ($product->product_cost ?? 0) * $qty;
+
+        $this->sale_price      =   $gross_trx;
         $this->sale_profit     =   $profit;
 
         $product->update([

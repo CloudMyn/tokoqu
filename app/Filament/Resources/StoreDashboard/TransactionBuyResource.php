@@ -43,7 +43,7 @@ class TransactionBuyResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'Beli Barang';
+        return 'Catat Pemeblian';
     }
 
     public static function getNavigationGroup(): ?string
@@ -76,10 +76,10 @@ class TransactionBuyResource extends Resource
                     ->mask(RawJs::make('$money($input)'))
                     ->stripCharacters(',')
                     ->inputMode('double')
+                    ->hiddenOn('view')
                     ->columnSpanFull()
                     ->required()
                     ->prefix('RP'),
-
 
                 Repeater::make('products')->label('Daftar Produk')
                     ->schema([
@@ -93,7 +93,30 @@ class TransactionBuyResource extends Resource
                             ->inputMode('double')
                             ->required()
                             ->prefix('RP'),
-                    ])->columnSpanFull()->columns(3),
+                    ])->columnSpanFull()->columns(3)->hiddenOn('view')->collapsible(),
+
+
+                Section::make('Transaksi Pembelian')
+                    ->schema([
+
+                        TextInput::make('total_cost')->label('Jumlah transaksi')
+                            ->mask(RawJs::make('$money($input)'))
+                            ->stripCharacters(',')
+                            ->inputMode('double')
+                            ->required()
+                            ->prefix('RP'),
+
+
+                        TextInput::make('total_qty')->label('QTY Beli')->formatStateUsing(function ($state) {
+                            return $state;
+                        }),
+
+                        TextInput::make('admin_name')->label('Nama Admin')->formatStateUsing(function ($state) {
+                            return ucfirst($state);
+                        })->columnSpanFull(),
+
+
+                    ])->visibleOn('view')->columns(2)
 
             ]);
     }

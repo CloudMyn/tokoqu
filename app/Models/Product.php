@@ -14,6 +14,8 @@ class Product extends Model
     protected $casts = [
         'stock'         =>  'integer',
         'fraction'      =>  'integer',
+        'product_cost'  =>  'double',
+        'sale_price'    =>  'double',
     ];
 
     public function store()

@@ -49,6 +49,9 @@ class CreateTransactionSale extends CreateRecord
             $product_trx_models = [];
 
             foreach ($products as $product) {
+
+                $qty    =   intval($product['product_qty']);
+
                 $product_model  =    $store->products()->find($product['product_id']);
 
                 $product_discount   =   doubleval($product['product_discount']);
@@ -58,12 +61,12 @@ class CreateTransactionSale extends CreateRecord
                 $product_trx_model->product()->associate($product_model);
                 $product_trx_model->store()->associate($store);
 
-                $product_trx_model->sale_product($product_model, $product['product_qty'], $product_discount + $trx_discount);
+                $product_trx_model->sale_product($product_model, $qty, $product_discount + $trx_discount, intval($product['product_discount_per_qty']));
 
                 $product_trx_model->product_sku     =   $product_model->sku;
                 $product_trx_model->product_name    =   $product_model->name;
 
-                $product_trx_model->total_qty       =   intval($product['product_qty']);
+                $product_trx_model->total_qty       =   $qty;
 
                 $data['total_amount']   =   $data['total_amount'] + $product_trx_model->sale_price;
                 $data['total_profit']   =   $data['total_profit'] + $product_trx_model->sale_profit;

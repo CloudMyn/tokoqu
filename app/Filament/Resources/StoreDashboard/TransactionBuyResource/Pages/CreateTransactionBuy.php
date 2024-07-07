@@ -71,7 +71,8 @@ class CreateTransactionBuy extends CreateRecord
                 $product_trx_model->save();
 
                 $product_model->update([
-                    'stock' => $product_model->stock + intval($product['product_qty'])
+                    'stock'     =>  $product_model->stock + intval($product['product_qty']),
+                    'supplier'  =>  $data['supplier'],
                 ]);
             }
 
