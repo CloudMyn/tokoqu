@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Store;
 use App\Filament\Fields\MoneyField;
 use App\Filament\Resources\Store\StoreResource\Pages;
 use App\Models\Store;
+use App\Traits\Ownership;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -17,9 +18,14 @@ use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class StoreResource extends Resource
 {
+    use Ownership;
+
+    protected static $ownership_column_name = 'owner_id';
+
     protected static ?string $model = Store::class;
 
     protected static ?string $recordTitleAttribute = 'title';
@@ -27,12 +33,16 @@ class StoreResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-users';
     public static function getNavigationLabel(): string
     {
+        if (cek_store_role()) {
+            return 'Toko Saya';
+        }
+
         return 'Daftar Toko';
     }
 
     public static function getNavigationGroup(): ?string
     {
-        if (get_auth_user()->has_role('store_owner')) {
+        if (cek_admin_role() || cek_store_role()) {
             return 'Data Toko';
         }
 
@@ -62,6 +72,7 @@ class StoreResource extends Resource
                     ->required()
                     ->columnSpanFull()
                     ->numeric()
+                    ->stripCharacters(',')
                     ->inputMode('double')
                     ->prefix('RP'),
 
@@ -79,10 +90,9 @@ class StoreResource extends Resource
                     return $record?->image ?? null ? asset($record->image) : 'https://via.placeholder.com/150';
                 }),
                 TextColumn::make('name')->label('Nama'),
-                TextColumn::make('address')->label('Alamat'),
+                TextColumn::make('address')->label('Alamat')->limit(30),
                 TextColumn::make('assets')
                     ->label('Kas Toko')
-                    ->numeric()
                     ->numeric(decimalPlaces: 0)
                     ->prefix('Rp. ')
                     ->default(function ($record) {
@@ -106,12 +116,18 @@ class StoreResource extends Resource
 
     public static function canCreate(): bool
     {
-        return cek_admin_role();
+        if (cek_store_role()) {
+            $store  =   get_context_store();
+
+            if ($store instanceof Store) return false;
+        }
+
+        return cek_admin_role() || cek_store_role();
     }
 
     public static function canAccess(): bool
     {
-        return cek_admin_role();
+        return cek_admin_role() || cek_store_role();
     }
 
     public static function getRelations(): array

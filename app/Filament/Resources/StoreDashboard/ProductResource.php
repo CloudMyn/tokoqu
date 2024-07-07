@@ -4,6 +4,7 @@ namespace App\Filament\Resources\StoreDashboard;
 
 use App\Filament\Resources\StoreDashboard\ProductResource\Pages;
 use App\Models\Product;
+use App\Traits\Ownership;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -15,10 +16,11 @@ use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class ProductResource extends Resource
 {
+    use Ownership;
+
     protected static ?string $model = Product::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -65,9 +67,15 @@ class ProductResource extends Resource
                     return $record;
                 }),
 
-                TextInput::make('stock')->label('Base Stock')->required()->numeric()->readOnly(function ($record) {
-                    return $record;
-                }),
+                TextInput::make('stock')
+                    ->label('Base Stock')
+                    ->required()
+                    ->numeric()
+                    ->minValue(config('rules.stock.min_input'))
+                    ->maxValue(config('rules.stock.max_input'))
+                    ->readOnly(function ($record) {
+                        return $record;
+                    }),
 
                 TextInput::make('sale_price')->label('Harga Jual')
                     ->mask(RawJs::make('$money($input)'))
@@ -140,16 +148,6 @@ class ProductResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-
-    public static function getEloquentQuery(): Builder
-    {
-        parent::getEloquentQuery();
-
-        $store   =   get_store();
-
-        return parent::getEloquentQuery()->where('store_code', $store->code);
     }
 
     public static function getRelations(): array

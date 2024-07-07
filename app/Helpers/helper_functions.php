@@ -212,7 +212,7 @@ if (!function_exists('get_product_list')) {
     {
         $list = [];
 
-        foreach (get_store()->products ?? [] as  $value) {
+        foreach (get_context_store()->products ?? [] as  $value) {
 
             if ($get_have_stock && intval($value->stock) <= 0) continue;
 
@@ -248,13 +248,13 @@ if (!function_exists('get_unit_list')) {
 }
 
 
-if (!function_exists('get_store')) {
+if (!function_exists('get_context_store')) {
     /**
      * Dapatkan product toko pengguna
      *
      * @return
      */
-    function get_store(): Store
+    function get_context_store(): Store|null
     {
         $auth_user = get_auth_user();
 

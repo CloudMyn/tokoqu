@@ -3,11 +3,13 @@
 namespace App\Filament\Resources\Store\StoreResource\Pages;
 
 use App\Filament\Resources\Store\StoreResource;
+use App\Models\Owner;
 use App\Models\Store;
 use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class CreateStore extends CreateRecord
 {
@@ -26,29 +28,43 @@ class CreateStore extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        $store = new Store();
+        try {
+            DB::beginTransaction();
 
-        $user = get_auth_user();
+            $store = new Store();
 
-        $store->owner()->associate($user);
-        $store->name    = $data['name'];
-        $store->code    = $data['code'];
-        $store->image   = $data['image'];
-        $store->assets  = $data['assets'];
-        $store->address = $data['address'];
+            $user = get_auth_user();
 
-        $store->save();
+            $store->name    = $data['name'];
+            $store->code    = $data['code'];
+            $store->image   = $data['image'];
+            $store->assets  = $data['assets'];
+            $store->address = $data['address'];
 
-        Notification::make()
-            ->title('Berhasil Menyimpan Data')
-            ->success()
-            ->send();
+            $store->owner()->associate($user->owner_store);
 
-        return $store;
-    }
+            $store->save();
 
-    protected function uploadPhotoKTP(array $data): void
-    {
+            Notification::make()
+                ->title('Berhasil Menyimpan Data')
+                ->success()
+                ->send();
+
+            DB::commit();
+
+            return $store;
+        } catch (\Throwable $th) {
+
+            DB::rollBack();
+
+            Notification::make()
+                ->title('Terjadi Kesalahan!')
+                ->body($th->getMessage())
+                ->danger()
+                ->send();
+
+            $this->halt();
+        }
     }
 
     protected function getCreatedNotification(): ?Notification

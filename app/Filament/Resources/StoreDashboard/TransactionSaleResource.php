@@ -10,6 +10,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Pages;
 use App\Models\Product;
+use App\Traits\Ownership;
 use Filament\Forms\Components\{
     FileUpload,
     Repeater,
@@ -24,6 +25,8 @@ use Filament\Tables\Actions\ViewAction;
 
 class TransactionSaleResource extends Resource
 {
+    use Ownership;
+
     protected static ?string $model = TransactionSale::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -92,8 +95,8 @@ class TransactionSaleResource extends Resource
                             ->label('QTY Jual')
                             ->required()
                             ->numeric()
-                            ->minValue(1)
-                            ->maxValue(99999999),
+                            ->minValue(config('rules.stock.min_input'))
+                            ->maxValue(config('rules.stock.max_input')),
 
 
                         TextInput::make('product_discount')->label('Potongan Per-Produk')
@@ -137,6 +140,7 @@ class TransactionSaleResource extends Resource
             ]);
     }
 
+
     public static function table(Table $table): Table
     {
         return $table
@@ -176,8 +180,6 @@ class TransactionSaleResource extends Resource
     {
         return [];
     }
-
-
 
     public static function getPages(): array
     {

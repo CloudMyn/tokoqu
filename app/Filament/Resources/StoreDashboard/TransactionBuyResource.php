@@ -6,6 +6,7 @@ use App\Filament\Resources\StoreDashboard\TransactionBuyResource\Pages;
 use App\Filament\Resources\StoreDashboard\TransactionBuyResource\RelationManagers;
 use App\Models\TransactionBuy;
 use App\Models\TransactionBuyItem;
+use App\Traits\Ownership;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
@@ -19,12 +20,13 @@ use Filament\Tables;
 use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TransactionBuyResource extends Resource
 {
+    use Ownership;
+
     protected static ?string $model = TransactionBuy::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -43,7 +45,7 @@ class TransactionBuyResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'Catat Pemeblian';
+        return 'Catat Pembelian';
     }
 
     public static function getNavigationGroup(): ?string
@@ -107,9 +109,13 @@ class TransactionBuyResource extends Resource
                             ->prefix('RP'),
 
 
-                        TextInput::make('total_qty')->label('QTY Beli')->formatStateUsing(function ($state) {
-                            return $state;
-                        }),
+                        TextInput::make('total_qty')
+                            ->label('QTY Beli')
+                            ->minValue(config('rules.stock.min_input'))
+                            ->maxValue(config('rules.stock.max_input'))
+                            ->formatStateUsing(function ($state) {
+                                return $state;
+                            }),
 
                         TextInput::make('admin_name')->label('Nama Admin')->formatStateUsing(function ($state) {
                             return ucfirst($state);
