@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Amendozaaguiar\FilamentRouteStatistics\FilamentRouteStatisticsPlugin;
 use App\Filament\Resources\StoreDashboard\TransactionBuyResource\Widgets\TrxBuyChart;
 use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Widgets\TrxSaleChart;
 use Filament\Http\Middleware\Authenticate;
@@ -61,6 +62,8 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
+                FilamentRouteStatisticsPlugin::make(),
+
                 FilamentTranslatableFieldsPlugin::make(),
 
                 FilamentGeneralSettingsPlugin::make()

@@ -91,13 +91,15 @@ class TransactionSaleResource extends Resource
                         //     ->readOnly(true)
                         //     ->prefix('RP'),
 
-                        TextInput::make('product_qty')
+                        \LaraZeus\Quantity\Components\Quantity::make('product_qty')
                             ->label('QTY Jual')
+                            ->default(1)
                             ->required()
-                            ->numeric()
                             ->minValue(config('rules.stock.min_input'))
-                            ->maxValue(config('rules.stock.max_input')),
-
+                            ->maxValue(config('rules.stock.max_input'))
+                            ->readOnly(function ($state) {
+                                return $state;
+                            }),
 
                         TextInput::make('product_discount')->label('Potongan Per-Produk')
                             ->mask(RawJs::make('$money($input)'))

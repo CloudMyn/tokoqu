@@ -73,10 +73,10 @@ class ProductResource extends Resource
                     return $record;
                 }),
 
-                TextInput::make('stock')
+                \LaraZeus\Quantity\Components\Quantity::make('stock')
+                    ->default(0)
                     ->label('Base Stock')
                     ->required()
-                    ->numeric()
                     ->minValue(config('rules.stock.min_input'))
                     ->maxValue(config('rules.stock.max_input'))
                     ->readOnly(function ($record) {
