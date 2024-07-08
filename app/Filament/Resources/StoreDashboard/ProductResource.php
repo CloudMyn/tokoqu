@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\StoreDashboard;
 
+use App\Filament\Exports\ProductExporter;
 use App\Filament\Resources\StoreDashboard\ProductResource\Pages;
 use App\Models\Product;
 use App\Traits\Ownership;
@@ -13,6 +14,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
+use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -142,15 +144,19 @@ class ProductResource extends Resource
             ->filters([
                 //
             ])
+            ->headerActions([
+                ExportAction::make()
+                    ->exporter(ProductExporter::class)->label('Eksport Produk'),
+            ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make()->label('Tampilkan'),
+                Tables\Actions\EditAction::make()->label('Ubah'),
+                Tables\Actions\DeleteAction::make()->label('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                    Tables\Actions\DeleteBulkAction::make()->label('Hapus Dipilih'),
+                ])->label('Aksi'),
             ]);
     }
 
