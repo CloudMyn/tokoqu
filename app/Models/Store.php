@@ -37,25 +37,10 @@ class Store extends Model
         return $this->hasMany(TransactionSale::class, 'store_code', 'code');
     }
 
-    public function getMonthlySalesAndProfits()
+    public function transaction_buys()
     {
-        return $this->transaction_sales()
-            ->selectRaw('MONTH(created_at) as month, COUNT(*) as sales_count, SUM(total_profit) as total_profit, SUM(total_amount) as total_amount, SUM(total_qty) as total_qty')
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get()
-            ->keyBy('month')
-            ->map(function ($row) {
-                return [
-                    'sales_count'   => doubleval($row->sales_count),
-                    'trx_amount'    => doubleval($row->total_amount),
-                    'total_qty'     => doubleval($row->total_qty),
-                    'total_profit'  => doubleval($row->total_profit),
-                ];
-            })
-            ->toArray();
+        return $this->hasMany(TransactionBuy::class, 'store_code', 'code');
     }
-
 
     public function getSalesAndProfits($period = 'monthly')
     {
@@ -90,6 +75,43 @@ class Store extends Model
                     'trx_amount'   => doubleval($row->total_amount),
                     'total_qty'    => doubleval($row->total_qty),
                     'total_profit' => doubleval($row->total_profit),
+                ];
+            })
+            ->toArray();
+    }
+
+    public function getBuysAndCosts($period = 'monthly')
+    {
+        $query = $this->transaction_buys()
+            ->selectRaw('SUM(total_cost) as total_cost, SUM(total_qty) as total_qty, COUNT(*) as buys_count');
+
+        switch ($period) {
+            case 'daily':
+                $query->selectRaw('DATE(created_at) as period')
+                    ->groupByRaw('DATE(created_at)');
+                break;
+            case 'weekly':
+                $query->selectRaw('YEARWEEK(created_at) as period')
+                    ->groupByRaw('YEARWEEK(created_at)');
+                break;
+            case 'monthly':
+                $query->selectRaw('MONTH(created_at) as period')
+                    ->groupByRaw('MONTH(created_at)');
+                break;
+            case 'yearly':
+                $query->selectRaw('YEAR(created_at) as period')
+                    ->groupByRaw('YEAR(created_at)');
+                break;
+        }
+
+        return $query->orderBy('period')
+            ->get()
+            ->keyBy('period')
+            ->map(function ($row) {
+                return [
+                    'buys_count' => doubleval($row->buys_count),
+                    'total_cost' => doubleval($row->total_cost),
+                    'total_qty'  => doubleval($row->total_qty),
                 ];
             })
             ->toArray();

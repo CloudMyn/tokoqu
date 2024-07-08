@@ -263,6 +263,19 @@ if (!function_exists('get_context_store')) {
 }
 
 
+if (!function_exists('get_chart_type')) {
+    /**
+     * Dapatkan product toko pengguna
+     *
+     * @return
+     */
+    function get_chart_type(): string
+    {
+        $available_charts   =   ['line', 'bar', 'pie', 'bubble', 'doughnut', 'radar', 'scatter', 'polarArea'];
+
+        return $available_charts[1];
+    }
+}
 
 /**
  * Ubah angka dengan format rupiah menjadi integer

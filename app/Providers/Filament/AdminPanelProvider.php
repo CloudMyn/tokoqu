@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Resources\StoreDashboard\TransactionBuyResource\Widgets\TrxBuyChart;
 use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Widgets\TrxSaleChart;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -40,7 +41,8 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
-                TrxSaleChart::class
+                TrxSaleChart::class,
+                TrxBuyChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,

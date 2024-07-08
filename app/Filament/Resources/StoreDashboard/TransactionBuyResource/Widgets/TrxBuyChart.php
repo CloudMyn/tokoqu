@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\StoreDashboard\TransactionSaleResource\Widgets;
+namespace App\Filament\Resources\StoreDashboard\TransactionBuyResource\Widgets;
 
 use Filament\Widgets\ChartWidget;
 
-class TrxSaleChart extends ChartWidget
+class TrxBuyChart extends ChartWidget
 {
-    protected static ?string $heading = 'Trend Transaksi & Keuntungan';
+    protected static ?string $heading = 'Trend Pembelian Barang';
 
     protected int | string | array $columnSpan = [
         // 'md' => 2,
@@ -30,7 +30,7 @@ class TrxSaleChart extends ChartWidget
         $period = $this->filter;
 
         // Ambil jumlah transaksi dan keuntungan berdasarkan periode
-        $periodicData = $store->getSalesAndProfits($period);
+        $periodicData = $store->getBuysAndCosts($period);
 
         // Tentukan label dan format data berdasarkan periode
         switch ($period) {
@@ -79,23 +79,16 @@ class TrxSaleChart extends ChartWidget
                 $loop++;
             }
 
-            $profitData[] = $periodicData[$label]['total_profit'] ?? 0.00;
-            $amountData[] = $periodicData[$label]['trx_amount'] ?? 0.00;
+            $amountData[] = $periodicData[$label]['total_cost'] ?? 0.00;
         }
 
         return [
             'datasets' => [
                 [
-                    'label' => 'Transaksi Penjualan',
+                    'label' => 'Transaksi Pembelian',
                     'data' => $amountData,
                     'backgroundColor' => 'rgba(0, 123, 255, 0.3)',
                     'borderColor' => '#007bff',
-                ],
-                [
-                    'label' => 'Total Profit',
-                    'data' => $profitData,
-                    'backgroundColor' => 'rgba(40, 167, 69, 0.3)',
-                    'borderColor' => '#28a745',
                 ],
             ],
             'labels' => $labels,
