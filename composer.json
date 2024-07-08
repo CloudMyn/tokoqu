@@ -19,7 +19,9 @@
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "outerweb/filament-translatable-fields": "^2.0",
-        "spatie/laravel-translatable": "^6.7"
+        "rappasoft/laravel-authentication-log": "^4.0",
+        "spatie/laravel-translatable": "^6.7",
+        "tapp/filament-authentication-log": "^3.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
