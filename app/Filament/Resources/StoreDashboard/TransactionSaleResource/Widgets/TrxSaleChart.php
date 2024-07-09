@@ -23,6 +23,7 @@ class TrxSaleChart extends ChartWidget
         ];
     }
 
+
     protected function getData(): array
     {
         $store = get_context_store();
@@ -105,5 +106,10 @@ class TrxSaleChart extends ChartWidget
     protected function getType(): string
     {
         return get_chart_type();
+    }
+
+    public static function canView(): bool
+    {
+        return cek_store_role();
     }
 }

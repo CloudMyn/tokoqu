@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use Amendozaaguiar\FilamentRouteStatistics\FilamentRouteStatisticsPlugin;
 use App\Filament\Resources\StoreDashboard\TransactionBuyResource\Widgets\TrxBuyChart;
 use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Widgets\TrxSaleChart;
 use Filament\Http\Middleware\Authenticate;
@@ -22,12 +21,9 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Joaopaulolndev\FilamentGeneralSettings\FilamentGeneralSettingsPlugin;
-use Outerweb\FilamentTranslatableFields\Filament\Plugins\FilamentTranslatableFieldsPlugin;
 use ShuvroRoy\FilamentSpatieLaravelBackup\FilamentSpatieLaravelBackupPlugin;
 use ShuvroRoy\FilamentSpatieLaravelBackup\Pages\Backups;
-use ShuvroRoy\FilamentSpatieLaravelHealth\FilamentSpatieLaravelHealthPlugin;
 use ShuvroRoy\FilamentSpatieLaravelHealth\Pages\HealthCheckResults;
-use Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -68,28 +64,30 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
-                FilamentSpatieLaravelHealthPlugin::make()
-                    ->usingPage(HealthCheckResults::class),
 
-                FilamentLogManager::make(),
 
-                \TomatoPHP\FilamentArtisan\FilamentArtisanPlugin::make(),
+                // \ShuvroRoy\FilamentSpatieLaravelHealth\FilamentSpatieLaravelHealthPlugin::make()->usingPage(HealthCheckResults::class),
 
-                \TomatoPHP\FilamentDeveloperGate\FilamentDeveloperGatePlugin::make(),
+                // \TomatoPHP\FilamentArtisan\FilamentArtisanPlugin::make(),
 
-                FilamentAuthenticationLogPlugin::make(),
+                // \TomatoPHP\FilamentDeveloperGate\FilamentDeveloperGatePlugin::make(),
 
-                FilamentRouteStatisticsPlugin::make(),
+                // \Outerweb\FilamentTranslatableFields\Filament\Plugins\FilamentTranslatableFieldsPlugin::make(),
 
-                FilamentTranslatableFieldsPlugin::make(),
+                // \Amendozaaguiar\FilamentRouteStatistics\FilamentRouteStatisticsPlugin::make(),
+
+                // \Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin::make(),
 
                 FilamentGeneralSettingsPlugin::make()
                     ->canAccess(fn () => cek_store_role() || cek_admin_role())
                     ->setSort(3)
                     ->setIcon('heroicon-o-cog')
-                    ->setNavigationGroup('Settings')
+                    ->setNavigationGroup('Utilitas')
                     ->setTitle('Pengaturan Umum')
                     ->setNavigationLabel('Pengaturan Umum'),
+
+                FilamentLogManager::make(),
+
 
             ])
             ->databaseNotifications();

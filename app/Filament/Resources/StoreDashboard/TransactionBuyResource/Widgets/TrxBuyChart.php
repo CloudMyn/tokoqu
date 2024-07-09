@@ -99,4 +99,9 @@ class TrxBuyChart extends ChartWidget
     {
         return get_chart_type();
     }
+
+    public static function canView(): bool
+    {
+        return cek_store_role();
+    }
 }
