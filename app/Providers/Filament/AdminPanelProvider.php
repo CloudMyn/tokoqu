@@ -7,6 +7,7 @@ use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Widgets\TrxSal
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -63,8 +64,7 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->plugins([
-
+            ->plugins(array_merge([
 
                 // \ShuvroRoy\FilamentSpatieLaravelHealth\FilamentSpatieLaravelHealthPlugin::make()->usingPage(HealthCheckResults::class),
 
@@ -79,7 +79,7 @@ class AdminPanelProvider extends PanelProvider
                 // \Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin::make(),
 
                 FilamentGeneralSettingsPlugin::make()
-                    ->canAccess(fn () => cek_store_role() || cek_admin_role())
+                    ->canAccess(fn () => cek_admin_role())
                     ->setSort(3)
                     ->setIcon('heroicon-o-cog')
                     ->setNavigationGroup('Utilitas')
@@ -88,8 +88,27 @@ class AdminPanelProvider extends PanelProvider
 
                 FilamentLogManager::make(),
 
-
+            ], []))
+            ->navigationGroups([
+                'Tabel Pengguna',
+                'Data Toko',
+                'Inventori',
+                'Transaksi',
+                'Utilitas',
             ])
+            ->navigationItems([])
             ->databaseNotifications();
+    }
+    private function getAdditionalPlugins()
+    {
+        $role = request()->attributes->get('user_role');
+
+        $plugins = [];
+
+        if ($role   === 'admin') {
+            $plugins[] = FilamentLogManager::make();
+        }
+
+        return $plugins;
     }
 }

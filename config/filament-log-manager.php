@@ -32,5 +32,5 @@ return [
     /**
      * Allow set custom logs page class.
      */
-    'page_class' => Logs::class,
+    'page_class' => \App\Filament\Pages\Logs::class,
 ];

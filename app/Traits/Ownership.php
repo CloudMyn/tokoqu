@@ -10,9 +10,9 @@ trait Ownership
     {
         parent::getEloquentQuery();
 
-        $store   =   get_context_store();
-
         if (cek_admin_role()) return parent::getEloquentQuery();
+
+        $store   =   get_context_store();
 
         if (cek_store_role() && (self::$ownership_column_name ?? null) == 'owner_id')
             return parent::getEloquentQuery()
