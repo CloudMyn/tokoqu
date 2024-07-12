@@ -35,9 +35,7 @@ class CreateTransactionBuy extends CreateRecord
 
             $user = get_auth_user();
 
-            $owner  =   $user->owner_store;
-
-            $store  =   $owner->store()->first();
+            $store  =   get_context_store();
 
             $products   =   $data['products'];
 
@@ -76,22 +74,42 @@ class CreateTransactionBuy extends CreateRecord
                 ]);
             }
 
+            $new_assets = $store->assets - $data['total_cost'];
+
+            if ($new_assets < 0) {
+                throw new \Exception('Kas toko tidak mencukupi jumlah transaksi total kas toko Rp. '
+                    . ubah_angka_int_ke_rupiah($store->assets) . ' dan total transaksi saat ini Rp. '
+                    . ubah_angka_int_ke_rupiah($data['total_cost']) . ' tidak mencukupi');
+            }
+
+            $store->update([
+                'assets'    =>  $new_assets
+            ]);
+
             DB::commit();
+
+            Notification::make()
+                ->title('Berhasil Menyimpan Data')
+                ->success()
+                ->send();
 
             return $transaction;
         } catch (\Throwable $th) {
 
             DB::rollBack();
 
-            throw $th;
+            Notification::make()
+                ->title('Gagal Menyimpan Data')
+                ->body($th->getMessage())
+                ->danger()
+                ->send();
+
+            $this->halt();
         }
     }
 
     protected function getCreatedNotification(): ?Notification
     {
-        return Notification::make()
-            ->title('Berhasil Menyimpan Data')
-            ->success()
-            ->send();
+        return null;
     }
 }

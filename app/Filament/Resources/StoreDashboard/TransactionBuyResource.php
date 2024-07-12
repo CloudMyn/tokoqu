@@ -91,13 +91,9 @@ class TransactionBuyResource extends Resource
 
                         \LaraZeus\Quantity\Components\Quantity::make('product_qty')
                             ->label('QTY Beli')
-                            ->default(1)
                             ->required()
                             ->minValue(config('rules.stock.min_input'))
-                            ->maxValue(config('rules.stock.max_input'))
-                            ->readOnly(function ($state) {
-                                return $state;
-                            }),
+                            ->maxValue(config('rules.stock.max_input')),
 
                         TextInput::make('product_cost')->label('Harga Barang')
                             ->mask(RawJs::make('$money($input)'))

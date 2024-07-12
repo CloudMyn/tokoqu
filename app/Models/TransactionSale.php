@@ -12,7 +12,8 @@ class TransactionSale extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'total_qty' => 'integer',
+        'total_qty'     => 'integer',
+        'total_amount'  => 'double',
     ];
 
     protected static function boot()

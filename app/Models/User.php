@@ -75,4 +75,13 @@ class User extends Authenticatable
 
         return false;
     }
+
+    public function get_role_label(): string
+    {
+        return match ($this->role) {
+            'admin' => 'Admin',
+            'store_owner' => 'Pemilik Toko',
+            'employee' => 'Karyawan Toko',
+        };
+    }
 }

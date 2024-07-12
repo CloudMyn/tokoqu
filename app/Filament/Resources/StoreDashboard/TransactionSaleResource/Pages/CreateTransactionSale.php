@@ -26,9 +26,7 @@ class CreateTransactionSale extends CreateRecord
 
             $user = get_auth_user();
 
-            $owner  =   $user->owner_store;
-
-            $store  =   $owner->store()->first();
+            $store  =   get_context_store();
 
             $products       =   $data['products'];
             $trx_discount   =   doubleval($data['discount']) / count($products);
@@ -81,6 +79,10 @@ class CreateTransactionSale extends CreateRecord
 
                 $product_trx_model->save();
             }
+
+            $store->update([
+                'assets'    =>   $store->assets + $transaction->total_amount,
+            ]);
 
             DB::commit();
 

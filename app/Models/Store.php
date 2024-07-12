@@ -12,6 +12,7 @@ class Store extends Model
     protected $guarded = [];
 
     protected $casts = [
+        'integer'   =>  'assets',
         'double'    =>  'total_amount',
         'double'    =>  'total_profit',
         'integer'   =>  'total_qty',
