@@ -50,7 +50,6 @@ class AdminPanelProvider extends PanelProvider
                 WelcomeWidget::class,
                 // Widgets\AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
-                StoreOverview::class,
                 TrxSaleChart::class,
                 TrxBuyChart::class,
             ])
