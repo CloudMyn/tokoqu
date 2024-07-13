@@ -96,10 +96,7 @@ class TransactionSaleResource extends Resource
                             ->default(1)
                             ->required()
                             ->minValue(config('rules.stock.min_input'))
-                            ->maxValue(config('rules.stock.max_input'))
-                            ->readOnly(function ($state) {
-                                return $state;
-                            }),
+                            ->maxValue(config('rules.stock.max_input')),
 
                         TextInput::make('product_discount')->label('Potongan Per-Produk')
                             ->mask(RawJs::make('$money($input)'))
@@ -150,7 +147,7 @@ class TransactionSaleResource extends Resource
             ->columns([
                 TextColumn::make('title')->label('Title'),
 
-                TextColumn::make('total_qty')->label('QTY Beli'),
+                TextColumn::make('total_qty')->label('QTY Jual'),
 
                 TextColumn::make('total_amount')
                     ->label('Tranasksi')

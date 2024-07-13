@@ -84,11 +84,14 @@ class CreateTransactionSale extends CreateRecord
                 'assets'    =>   $store->assets + $transaction->total_amount,
             ]);
 
+
             DB::commit();
 
             Notification::make()
                 ->title('Berhasil Menyimpan Data')
+                ->body('Anda telah menyimpan data transaksi penjualan')
                 ->success()
+                ->sendToDatabase($store->owner->user)
                 ->send();
 
             return $transaction;

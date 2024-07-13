@@ -6,7 +6,7 @@ use Filament\Widgets\ChartWidget;
 
 class TrxSaleChart extends ChartWidget
 {
-    protected static ?string $heading = 'Trend Transaksi & Keuntungan';
+    protected static ?string $heading = 'Trend Penjualan & Keuntungan';
 
     protected int | string | array $columnSpan = [
         // 'md' => 2,
