@@ -99,7 +99,7 @@ class AdminPanelProvider extends PanelProvider
                 'Transaksi',
                 'Utilitas',
             ])
-            ->navigationItems([])
+            ->navigationItems([])->globalSearch(false)
             ->databaseNotifications();
     }
     private function getAdditionalPlugins()

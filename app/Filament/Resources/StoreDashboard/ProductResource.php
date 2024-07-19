@@ -34,6 +34,9 @@ use Filament\Infolists\Components\Tabs\Tab;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\TextEntry\TextEntrySize;
 use Filament\Support\Enums\FontWeight;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductResource extends Resource
 {
@@ -125,26 +128,45 @@ class ProductResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->filters([
+                TernaryFilter::make('stockout')
+                    ->label('Filter Stock')
+                    ->nullable()
+                    ->placeholder('Semua Barang')
+                    ->trueLabel('Barang Ada Stock')
+                    ->falseLabel('Barang Stock Kosong')
+                    ->queries(
+                        true: fn (Builder $query) => $query->where('stock', '!=', 0),
+                        false: fn (Builder $query) => $query->where('stock', '=', 0),
+                        blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
+                    )
+            ])
             ->columns([
 
-                TextColumn::make('sku')->label('SKU'),
+                TextColumn::make('sku')->label('SKU')->searchable(),
 
                 ImageColumn::make('image')->label('Foto')->default(function ($record) {
                     return $record?->image ?? null ? asset($record->image) : 'https://via.placeholder.com/150';
                 }),
 
-                TextColumn::make('name')->label('Nama'),
+                TextColumn::make('name')->label('Nama')->searchable(),
 
-                TextColumn::make('stock')->label('Stok'),
+                TextColumn::make('stock')->label('Stok')->searchable()->sortable(),
 
-                TextColumn::make('fraction')->label('Unit')->suffix(function ($record) {
-                    return '/' . ucwords($record->unit);
-                }),
+                TextColumn::make('fraction')
+                    ->label('Unit')
+                    ->searchable()
+                    ->sortable()
+                    ->suffix(function ($record) {
+                        return '/' . ucwords($record->unit);
+                    }),
 
                 TextColumn::make('sale_price')
                     ->label('Harga Jual')
                     ->numeric(decimalPlaces: 0)
                     ->prefix('Rp. ')
+                    ->searchable()
+                    ->sortable()
                     ->default(function ($record) {
                         return "number_format($record->sale_price, 0, ',', '.')";
                     }),
@@ -153,16 +175,11 @@ class ProductResource extends Resource
                     ->label('Harga Beli')
                     ->numeric(decimalPlaces: 0)
                     ->prefix('Rp. ')
+                    ->searchable()
+                    ->sortable()
                     ->default(function ($record) {
                         return "number_format($record->prouct_cost, 0, ',', '.')";
                     }),
-            ])
-            ->filters([
-                //
-            ])
-            ->headerActions([
-                ExportAction::make()
-                    ->exporter(ProductExporter::class)->label('Eksport Produk'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()->label('Tampilkan'),
