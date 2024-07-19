@@ -4,13 +4,22 @@ namespace App\Filament\Resources\StoreDashboard;
 
 use App\Filament\Exports\ProductExporter;
 use App\Filament\Resources\StoreDashboard\ProductResource\Pages;
+use App\Filament\Resources\StoreDashboard\ProductResource\Pages\ViewProduct;
+use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Widgets\TrxSaleChart;
 use App\Models\Product;
 use App\Traits\Ownership;
+use Filament\Actions\SelectAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Actions;
+use Filament\Infolists\Components\Actions\Action;
+use Filament\Infolists\Components\Fieldset;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\KeyValueEntry;
+use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
@@ -18,6 +27,13 @@ use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\Split;
+use Filament\Infolists\Components\Tabs\Tab;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\TextEntry\TextEntrySize;
+use Filament\Support\Enums\FontWeight;
 
 class ProductResource extends Resource
 {
@@ -173,6 +189,220 @@ class ProductResource extends Resource
             'index' => Pages\ListProducts::route('/index'),
             'create' => Pages\CreateProduct::route('/create'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
+            'view'  =>  ViewProduct::route('/view/{record}'),
         ];
+    }
+
+
+    public static function infolist(\Filament\Infolists\Infolist $infolist): \Filament\Infolists\Infolist
+    {
+        return $infolist
+            ->schema([
+                \Filament\Infolists\Components\Tabs::make('tabs')
+                    ->tabs([
+
+                        Tab::make('PRODUK')->schema([
+
+                            Split::make([
+
+                                Section::make([
+                                    Fieldset::make('Data Produk')->schema([
+                                        TextEntry::make('name')
+                                            ->label('Nama Produk')
+                                            ->weight(FontWeight::Bold)
+                                            ->size(TextEntrySize::Large),
+
+                                        TextEntry::make('sku')
+                                            ->label('SKU Produk')
+                                            ->prefix('#')
+                                            ->copyable()
+                                            ->size(TextEntrySize::Large)
+                                            ->copyMessage('SKU produk disalin')
+                                            ->weight(FontWeight::Bold),
+
+                                        TextEntry::make('sale_price')
+                                            ->label('Harga Jual')
+                                            ->size(TextEntrySize::Large)
+                                            ->numeric(decimalPlaces: 0)
+                                            ->prefix('Rp. '),
+
+                                        TextEntry::make('product_cost')
+                                            ->label('Harga Beli/Modal')
+                                            ->size(TextEntrySize::Large)
+                                            ->numeric(decimalPlaces: 0)
+                                            ->prefix('Rp. '),
+
+                                    ])->columns(2),
+
+
+                                    RepeatableEntry::make('transaction_sale_items')
+                                        ->label('10 PENJUALAN TERAHKIR')
+                                        ->schema([
+                                            TextEntry::make('transaction_id')
+                                                ->label('')
+                                                ->prefix('TRANSAKSI ID #')
+                                                ->suffix(function ($record) {
+                                                    return " | " . $record->created_at->format('d-m-Y H:i:s');
+                                                })
+                                                ->size(TextEntrySize::Small)
+                                                ->columnSpanFull()
+                                                ->numeric(decimalPlaces: 0),
+
+                                            TextEntry::make('total_qty')
+                                                ->label('QTY Jual')
+                                                ->size(TextEntrySize::Small)
+                                                ->numeric(decimalPlaces: 0),
+
+                                            TextEntry::make('sale_price')
+                                                ->label('Harga Jual')
+                                                ->size(TextEntrySize::Small)
+                                                ->numeric(decimalPlaces: 0)
+                                                ->prefix('Rp. '),
+
+                                            TextEntry::make('sale_profit')
+                                                ->label('Keuntungan')
+                                                ->size(TextEntrySize::Small)
+                                                ->numeric(decimalPlaces: 0)
+                                                ->prefix('Rp. '),
+                                        ])
+                                        ->columns(3)
+
+                                ])->grow(true),
+
+                                Section::make([
+                                    ImageEntry::make('image')->label('Gambar Produk')->square()->width(340)->alignCenter(),
+
+                                    TextEntry::make('stock')
+                                        ->inlineLabel(true)
+                                        ->badge()
+                                        ->color(function ($record) {
+                                            return $record->stock >= 10 ? 'success' : 'danger';
+                                        })
+                                        ->label('STOK BARANG'),
+
+                                    TextEntry::make('supplier')
+                                        ->label('PENYUPLAI')
+                                        ->badge()
+                                        ->color('info')
+                                        ->inlineLabel(),
+
+                                    TextEntry::make('unit')
+                                        ->label('SATUAN')
+                                        ->badge()
+                                        ->color('info')
+                                        ->inlineLabel(),
+
+                                    TextEntry::make('fraction')
+                                        ->label('FRAKSI')
+                                        ->badge()
+                                        ->color('info')
+                                        ->inlineLabel(),
+
+                                    TextEntry::make('created_at')
+                                        ->label('DIBUAT PADA')
+                                        ->inlineLabel(true)
+                                        ->color('info')
+                                        ->badge()
+                                        ->dateTime(),
+
+                                ])->grow(false),
+
+
+
+                            ])->from('md')->columns(2)
+                        ]),
+
+                        Tab::make('LAPORAN')
+                            ->schema([
+
+                                Split::make([
+
+                                    Section::make([
+
+                                        KeyValueEntry::make('product_reports')->label('LAPORAN PENJUALAN PRODUK')->valueLabel('NILAI')->keyLabel('JENIS LAPORAN'),
+
+                                    ])->key('product_reports')
+                                        ->headerActions([
+
+                                            Action::make('Export laporan')
+                                                ->icon('heroicon-c-clipboard-document-list')
+                                                ->requiresConfirmation(),
+                                        ])
+                                        ->grow(true),
+
+                                    Section::make([
+
+                                        TextEntry::make('name')
+                                            ->label('NAMA')
+                                            ->weight(FontWeight::Bold)
+                                            ->inlineLabel(true),
+
+                                        TextEntry::make('sku')
+                                            ->label('SKU')
+                                            ->prefix('#')
+                                            ->copyable()
+                                            ->inlineLabel(true)
+                                            ->copyMessage('SKU produk disalin')
+                                            ->weight(FontWeight::Bold),
+
+                                        TextEntry::make('sale_price')
+                                            ->label('HARGA')
+                                            ->inlineLabel(true)
+                                            ->numeric(decimalPlaces: 0)
+                                            ->prefix('Rp. '),
+
+                                        TextEntry::make('product_cost')
+                                            ->label('MODAL')
+                                            ->inlineLabel(true)
+                                            ->numeric(decimalPlaces: 0)
+                                            ->prefix('Rp. '),
+
+                                        TextEntry::make('stock')
+                                            ->inlineLabel(true)
+                                            ->badge()
+                                            ->color(function ($record) {
+                                                return $record->stock >= 10 ? 'success' : 'danger';
+                                            })
+                                            ->label('STOK BARANG'),
+
+                                        TextEntry::make('supplier')
+                                            ->label('PENYUPLAI')
+                                            ->badge()
+                                            ->color('info')
+                                            ->inlineLabel(),
+
+                                        TextEntry::make('unit')
+                                            ->label('SATUAN')
+                                            ->badge()
+                                            ->color('info')
+                                            ->inlineLabel(),
+
+                                        TextEntry::make('fraction')
+                                            ->label('FRAKSI')
+                                            ->badge()
+                                            ->color('info')
+                                            ->inlineLabel(),
+
+                                        TextEntry::make('created_at')
+                                            ->label('DIBUAT PADA')
+                                            ->inlineLabel(true)
+                                            ->color('info')
+                                            ->badge()
+                                            ->dateTime(),
+
+                                    ])->grow(false),
+
+
+
+                                ])->from('md')->columns(2)
+                            ]),
+
+
+                    ])
+                    ->contained(false)
+                    ->persistTab()
+                    ->id('product_tab'),
+
+            ])->columns(1);
     }
 }

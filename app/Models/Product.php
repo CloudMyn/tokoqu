@@ -23,4 +23,8 @@ class Product extends Model
         return $this->belongsTo(Store::class, 'store_code', 'code');
     }
 
+    public function transaction_sale_items()
+    {
+        return $this->hasMany(TransactionSaleItem::class, 'product_id', 'id');
+    }
 }

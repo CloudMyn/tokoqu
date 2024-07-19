@@ -14,11 +14,13 @@ class TrxOverview extends BaseWidget
     {
         $model_toko   =   get_context_store();
 
-        $trx_sales      =   $model_toko->transaction_sales()->sum('total_amount');
+        $scope          =   [now()->startOfMonth(), now()->endOfMonth()];
 
-        $sales_profit   =   $model_toko->transaction_sales()->sum('total_profit');
+        $trx_sales      =   $model_toko->transaction_sales()->whereBetween('created_at', $scope)->sum('total_amount');
 
-        $trx_buy        =   $model_toko->transaction_buys()->sum('total_cost');
+        $sales_profit   =   $model_toko->transaction_sales()->whereBetween('created_at', $scope)->sum('total_profit');
+
+        $trx_buy        =   $model_toko->transaction_buys()->whereBetween('created_at', $scope)->sum('total_cost');
 
         return [
             Stat::make('Total Transaksi Penjualan ( Bulan Ini )', "Rp. " . ubah_angka_int_ke_rupiah($trx_sales)),

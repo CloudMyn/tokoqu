@@ -303,5 +303,5 @@ function ubah_angka_rupiah_ke_int(string|int $angka): int
  */
 function ubah_angka_int_ke_rupiah(int $angka): string
 {
-    return number_format($angka, 0, ',', '.');
+    return number_format($angka, 0, '.', ',');
 }

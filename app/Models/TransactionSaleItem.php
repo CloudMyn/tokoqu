@@ -17,6 +17,11 @@ class TransactionSaleItem extends Model
         'sale_profit'   =>  'double'
     ];
 
+    protected $with =   [
+        'product',
+        'transaction'
+    ];
+
     protected static function boot()
     {
         parent::boot();
@@ -32,7 +37,7 @@ class TransactionSaleItem extends Model
 
     public function transaction()
     {
-        return $this->belongsTo(TransactionBuy::class, 'transaction_id');
+        return $this->belongsTo(TransactionSale::class, 'transaction_id');
     }
 
     public function product()
