@@ -208,12 +208,12 @@ class ProductResource extends Resource
                                 Section::make([
                                     Fieldset::make('Data Produk')->schema([
                                         TextEntry::make('name')
-                                            ->label('Nama Produk')
+                                            ->label('NAMA PRODUK')
                                             ->weight(FontWeight::Bold)
                                             ->size(TextEntrySize::Large),
 
                                         TextEntry::make('sku')
-                                            ->label('SKU Produk')
+                                            ->label('SKU PRODUK')
                                             ->prefix('#')
                                             ->copyable()
                                             ->size(TextEntrySize::Large)
@@ -221,13 +221,13 @@ class ProductResource extends Resource
                                             ->weight(FontWeight::Bold),
 
                                         TextEntry::make('sale_price')
-                                            ->label('Harga Jual')
+                                            ->label('HARGA JUAL')
                                             ->size(TextEntrySize::Large)
                                             ->numeric(decimalPlaces: 0)
                                             ->prefix('Rp. '),
 
                                         TextEntry::make('product_cost')
-                                            ->label('Harga Beli/Modal')
+                                            ->label('HARGA BELI/MODAL')
                                             ->size(TextEntrySize::Large)
                                             ->numeric(decimalPlaces: 0)
                                             ->prefix('Rp. '),
@@ -319,7 +319,7 @@ class ProductResource extends Resource
 
                                     Section::make([
 
-                                        KeyValueEntry::make('product_reports')->label('LAPORAN PENJUALAN PRODUK')->valueLabel('NILAI')->keyLabel('JENIS LAPORAN'),
+                                        KeyValueEntry::make('product_reports')->label('LAPORAN PENJUALAN PRODUK BULAN INI')->valueLabel('NILAI')->keyLabel('JENIS LAPORAN'),
 
                                     ])->key('product_reports')
                                         ->headerActions([

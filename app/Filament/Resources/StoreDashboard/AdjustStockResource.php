@@ -75,7 +75,10 @@ class AdjustStockResource extends Resource
                     ->maxLength(100)
                     ->numeric()
                     ->minValue(config('rules.stock.min_input'))
-                    ->maxValue(config('rules.stock.max_input')),
+                    ->maxValue(config('rules.stock.max_input'))
+                    ->hiddenOn('view'),
+
+                TextInput::make('total_qty')->label('QTY Adjust')->hiddenOn('create'),
 
                 TextInput::make('message')->label('Alasan perubahan')->required()->maxLength(200)
                     ->columnSpanFull()

@@ -24,8 +24,8 @@ class ViewProduct extends ViewRecord
 
         $product->transaction_sale_items    =   $trx_items;
 
-        $start_date = now()->startOfYear();
-        $end_date   = now()->endOfYear();
+        $start_date = now()->startOfMonth();
+        $end_date   = now()->endOfMonth();
 
         $query_builder  =   $product->transaction_sale_items()->whereBetween('created_at', [$start_date, $end_date]);
 

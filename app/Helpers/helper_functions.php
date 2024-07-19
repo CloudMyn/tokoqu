@@ -289,7 +289,7 @@ if (!function_exists('get_chart_type')) {
  */
 function ubah_angka_rupiah_ke_int(string|int $angka): int
 {
-    return intval(str_replace(',', '', $angka));
+    return intval(str_replace(',', '', $angka ?? ''));
 }
 
 /**
@@ -301,7 +301,7 @@ function ubah_angka_rupiah_ke_int(string|int $angka): int
  * @param int $angka Angka dalam bentuk integer
  * @return string Angka dalam bentuk rupiah
  */
-function ubah_angka_int_ke_rupiah(int $angka): string
+function ubah_angka_int_ke_rupiah(int $angka = null): string
 {
-    return number_format($angka, 0, '.', ',');
+    return number_format($angka ?? 0, 0, '.', ',');
 }
