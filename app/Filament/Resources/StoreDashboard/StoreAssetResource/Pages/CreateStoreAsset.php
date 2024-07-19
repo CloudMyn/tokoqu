@@ -9,4 +9,11 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateStoreAsset extends CreateRecord
 {
     protected static string $resource = StoreAssetResource::class;
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['store_code'] = get_context_store()->code;
+
+        return $data;
+    }
 }

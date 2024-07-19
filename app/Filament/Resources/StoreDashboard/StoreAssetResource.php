@@ -7,10 +7,16 @@ use App\Filament\Resources\StoreDashboard\StoreAssetResource\Pages\CreateStoreAs
 use App\Filament\Resources\StoreDashboard\StoreAssetResource\Pages\EditStoreAsset;
 use App\Models\StoreAsset;
 use App\Traits\Ownership;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\RawJs;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class StoreAssetResource extends Resource
 {
@@ -32,11 +38,42 @@ class StoreAssetResource extends Resource
         return 'Transaksi';
     }
 
+    public static function canEdit(Model $record): bool
+    {
+        return false;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+
+                TextInput::make('title')
+                    ->label('Judul')
+                    ->required()
+                    ->maxLength(100)
+                    ->columnSpanFull()
+                    ->autocapitalize('words'),
+
+                Textarea::make('message')
+                    ->label('Deskripsi')
+                    ->required()
+                    ->columnSpanFull()
+                    ->maxLength(244),
+
+                TextInput::make('amount')
+                    ->label('Jumlah')
+                    ->mask(RawJs::make('$money($input)'))
+                    ->stripCharacters(',')
+                    ->inputMode('double')
+                    ->prefix('RP'),
+
+                Select::make('type')
+                    ->label('Jenis Inputan')
+                    ->options([
+                        'in'    =>  'Kas Masuk',
+                        'out'   =>  'Kas keluar',
+                    ])
             ]);
     }
 
@@ -44,7 +81,22 @@ class StoreAssetResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('title')->label('Judul'),
+
+                TextColumn::make('message')->label('Deskripsi')->limit(120),
+
+                TextColumn::make('type')
+                    ->label('Jenis')
+                    ->color(fn (string $state): string => match ($state) {
+                        'in' => 'success',
+                        'out' => 'danger',
+                    })
+                    ->badge(),
+
+                TextColumn::make('amount')
+                    ->label('Jumlah')
+                    ->numeric(decimalPlaces: 0)
+                    ->prefix('Rp. '),
             ])
             ->filters([
                 //
