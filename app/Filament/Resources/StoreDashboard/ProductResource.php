@@ -336,7 +336,9 @@ class ProductResource extends Resource
 
                                     Section::make([
 
-                                        KeyValueEntry::make('product_reports')->label('LAPORAN PENJUALAN PRODUK BULAN INI')->valueLabel('NILAI')->keyLabel('JENIS LAPORAN'),
+                                        KeyValueEntry::make('monthly_report')->label('LAPORAN PENJUALAN PRODUK BULAN INI')->valueLabel('NILAI')->keyLabel('JENIS LAPORAN'),
+
+                                        KeyValueEntry::make('yearly_report')->label('LAPORAN PENJUALAN PRODUK TAHUN INI')->valueLabel('NILAI')->keyLabel('JENIS LAPORAN'),
 
                                     ])->key('product_reports')
                                         ->headerActions([

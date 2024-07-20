@@ -27,6 +27,19 @@ class ViewProduct extends ViewRecord
         $start_date = now()->startOfMonth();
         $end_date   = now()->endOfMonth();
 
+        $monthly_report =   $this->produce_report($product, $start_date, $end_date);
+
+        $yearly_report  =   $this->produce_report($product, now()->startOfYear(), now()->endOfYear());
+
+        $product->monthly_report    =   $monthly_report;
+
+        $product->yearly_report     =   $yearly_report;
+
+        $this->getInfolist('infolist')->record($product);
+    }
+
+    private function produce_report(Product $product, $start_date, $end_date)
+    {
         $query_builder  =   $product->transaction_sale_items()->whereBetween('created_at', [$start_date, $end_date]);
 
         $data_repot['TOTAL KEUTUNGAN PENJUALAN']    =   "Rp. " . ubah_angka_int_ke_rupiah($query_builder->sum('sale_profit'));
@@ -34,10 +47,8 @@ class ViewProduct extends ViewRecord
         $data_repot['TOTAL TRANSAKSI PENJUALAN']    =   "Rp. " . ubah_angka_int_ke_rupiah($query_builder->sum('sale_price'));
         $data_repot['AVG TRANSAKSI PENJUALAN']      =   "Rp. " . ubah_angka_int_ke_rupiah($query_builder->avg('sale_price'));
         $data_repot['TOTAL QTY PENJUALAN']          =   $query_builder->sum('total_qty');
-        $data_repot['TOTAL QTY (IN UNIT)']          =   round($query_builder->sum('total_qty') / $product->fraction) . " ". strtoupper($product->unit);
+        $data_repot['TOTAL QTY (IN UNIT)']          =   round($query_builder->sum('total_qty') / $product->fraction) . " " . strtoupper($product->unit);
 
-        $product->product_reports   =   $data_repot;
-
-        $this->getInfolist('infolist')->record($product);
+        return $data_repot;
     }
 }

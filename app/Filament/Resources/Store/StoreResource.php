@@ -74,6 +74,8 @@ class StoreResource extends Resource
                     ->numeric()
                     ->stripCharacters(',')
                     ->inputMode('double')
+                    ->readOnly()
+                    ->disabled()
                     ->prefix('RP'),
 
                 Textarea::make('address')->label('Alamat')->required()->maxLength(100)->columnSpanFull(),
