@@ -289,9 +289,12 @@ if (!function_exists('add_store_asset')) {
         Store $store = null,
         string  $title,
         string  $message,
-        int $amount,
+        int|null $amount,
         string $type,
-    ): StoreAsset {
+    ): StoreAsset|null {
+
+        if ($amount == 0 || !$amount) return null;
+
         $asset    =   new StoreAsset();
 
         $asset->store()->associate($store ?? get_context_store());

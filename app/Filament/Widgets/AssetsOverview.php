@@ -11,11 +11,11 @@ class AssetsOverview extends BaseWidget
 
     protected function getStats(): array
     {
-        $model_toko   =   get_context_store();
+        $model_toko     =   get_context_store();
 
         $scope          =   [now()->startOfMonth(), now()->endOfMonth()];
 
-        $asset_in      =   $model_toko->store_assets()->sum('amount');
+        $total_asset    =   $model_toko->store_assets()->where('type', 'in')->sum('amount') - $model_toko->store_assets()->where('type', 'out')->sum('amount');
 
         $q_in   =   $model_toko->store_assets()->whereBetween('created_at', $scope)->where('type', 'in');
 
@@ -27,7 +27,7 @@ class AssetsOverview extends BaseWidget
 
         return [
 
-            Stat::make('Total Kas Toko', "Rp. " . ubah_angka_int_ke_rupiah($asset_in)),
+            Stat::make('Total Kas Toko', "Rp. " . ubah_angka_int_ke_rupiah($total_asset)),
 
             Stat::make('Pemasukan Bulan Ini', "Rp. " . ubah_angka_int_ke_rupiah($asset_in_this_mounth))
                 ->chart($q_in->pluck('amount')->toArray())

@@ -96,7 +96,7 @@ class ProductResource extends Resource
                     ->default(0)
                     ->label('Base Stock')
                     ->required()
-                    ->minValue(config('rules.stock.min_input'))
+                    ->minValue(0)
                     ->maxValue(config('rules.stock.max_input'))
                     ->readOnly(function ($record) {
                         return $record;
