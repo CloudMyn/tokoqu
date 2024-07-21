@@ -33,7 +33,7 @@ class ListAdjustStocks extends ListRecords
     {
         return [
             'Semua' => Tab::make(),
-            'Ajust Plus' => Tab::make()
+            'Adjust Plus' => Tab::make()
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('type', 'plus')),
             'Adjust Minus' => Tab::make()
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('type', 'minus')),
