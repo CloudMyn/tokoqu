@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Store\StoreResource\StoreAssetResource\Pages;
 
 use App\Filament\Resources\StoreDashboard\StoreAssetResource;
+use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Widgets\TrxSaleChart;
+use App\Filament\Widgets\AssetsOverview;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,12 +14,19 @@ class ListStoreAssets extends ListRecords
 {
     protected static string $resource = StoreAssetResource::class;
 
-    protected static ?string $title = 'Daftar Kas';
+    protected static ?string $title = 'Kas Toko';
 
     protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make()->label('Input Kas'),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            AssetsOverview::class
         ];
     }
 

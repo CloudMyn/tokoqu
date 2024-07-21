@@ -81,9 +81,9 @@ class StoreAssetResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('title')->label('Judul'),
+                TextColumn::make('title')->label('Judul')->searchable(),
 
-                TextColumn::make('message')->label('Deskripsi')->limit(120),
+                TextColumn::make('message')->label('Deskripsi')->limit(120)->searchable(),
 
                 TextColumn::make('type')
                     ->label('Jenis')
@@ -91,10 +91,12 @@ class StoreAssetResource extends Resource
                         'in' => 'success',
                         'out' => 'danger',
                     })
+                    ->searchable()
                     ->badge(),
 
                 TextColumn::make('amount')
                     ->label('Jumlah')
+                    ->searchable()
                     ->numeric(decimalPlaces: 0)
                     ->prefix('Rp. '),
             ])
@@ -102,7 +104,9 @@ class StoreAssetResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make()->label('Tampilkan'),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()->label('Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

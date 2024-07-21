@@ -18,6 +18,6 @@ trait Ownership
             return parent::getEloquentQuery()
                 ->where('owner_id', get_auth_user()?->owner_store?->id);
 
-        return parent::getEloquentQuery()->where('store_code', $store?->code);
+        return parent::getEloquentQuery()->where('store_code', $store?->code)->orderBy('created_at', 'DESC');
     }
 }

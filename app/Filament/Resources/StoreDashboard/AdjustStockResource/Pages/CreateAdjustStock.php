@@ -5,6 +5,7 @@ namespace App\Filament\Resources\StoreDashboard\AdjustStockResource\Pages;
 use App\Filament\Resources\StoreDashboard\AdjustStockResource;
 use App\Models\AdjustStock;
 use App\Models\Product;
+use App\Models\StoreAsset;
 use App\Traits\Ownership;
 use Filament\Actions;
 use Filament\Notifications\Notification;
@@ -17,6 +18,8 @@ class CreateAdjustStock extends CreateRecord
     use Ownership;
 
     protected static string $resource = AdjustStockResource::class;
+
+    protected static ?string $title = 'Input Adjust';
 
     protected static ?string $buttonCreateLabel = null;
 
@@ -35,7 +38,7 @@ class CreateAdjustStock extends CreateRecord
 
             $product    =   Product::findOrFail($data['product_id']);
 
-            if($data['type'] === 'minus' && $product->stock < intval($data['qty'])) {
+            if ($data['type'] === 'minus' && $product->stock < intval($data['qty'])) {
                 throw new \Exception("Stok barang tidak cukup");
             }
 
@@ -55,13 +58,25 @@ class CreateAdjustStock extends CreateRecord
 
             $adjust_stock->save();
 
-            if($data['type'] == 'plus') {
+            if ($data['type'] == 'plus') {
                 $product->stock += intval($data['qty']);
             } else {
                 $product->stock -= intval($data['qty']);
             }
 
             $product->save();
+
+            // input kase
+            $asset    =   new StoreAsset();
+
+            $asset->store()->associate($store);
+
+            $asset->type    =   $data['type'] === 'plus' ? 'in' : 'out';
+            $asset->amount  =   doubleval($total_amount);
+            $asset->title   =   "Adjust Stock #" . $adjust_stock->id;
+            $asset->message =   "Adjust Stock : " . $data['message'];
+
+            $asset->save();
 
             DB::commit();
 

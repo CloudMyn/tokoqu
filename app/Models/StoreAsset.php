@@ -11,8 +11,26 @@ class StoreAsset extends Model
 
     protected $guarded = [];
 
+    protected static function booted()
+    {
+        static::deleting(function ($storeAsset) {
+
+            $store  =   $storeAsset->store;
+
+            if ($storeAsset->type == 'in') {
+                $store->update([
+                    'assets'    =>  $store->assets - $storeAsset->amount
+                ]);
+            } else {
+                $store->update([
+                    'assets'    =>  $store->assets + $storeAsset->amount
+                ]);
+            }
+        });
+    }
+
     public function store()
     {
-        return $this->belongsTo(Store::class, 'store_code','code');
+        return $this->belongsTo(Store::class, 'store_code', 'code');
     }
 }

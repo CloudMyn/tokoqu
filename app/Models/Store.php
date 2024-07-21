@@ -43,6 +43,11 @@ class Store extends Model
         return $this->hasMany(TransactionBuy::class, 'store_code', 'code');
     }
 
+    public function store_assets()
+    {
+        return $this->hasMany(StoreAsset::class, 'store_code', 'code');
+    }
+
     public function getSalesAndProfits($period = 'monthly')
     {
         $query = $this->transaction_sales()

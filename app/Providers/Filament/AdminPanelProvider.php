@@ -4,7 +4,9 @@ namespace App\Providers\Filament;
 
 use App\Filament\Resources\StoreDashboard\TransactionBuyResource\Widgets\TrxBuyChart;
 use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Widgets\TrxSaleChart;
+use App\Filament\Widgets\AssetsOverview;
 use App\Filament\Widgets\StoreOverview;
+use App\Filament\Widgets\TrxOverview;
 use App\Filament\Widgets\WelcomeWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -47,11 +49,14 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                WelcomeWidget::class,
                 // Widgets\AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
+                WelcomeWidget::class,
+                StoreOverview::class,
+                TrxOverview::class,
                 TrxSaleChart::class,
                 TrxBuyChart::class,
+                AssetsOverview::class
             ])
             ->middleware([
                 EncryptCookies::class,

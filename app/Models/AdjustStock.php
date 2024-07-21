@@ -11,6 +11,32 @@ class AdjustStock extends Model
 
     protected $guarded = [];
 
+    protected   $casts  =   [
+        'id'        =>  'integer',
+        'total_qty' =>  'integer',
+        'total_amount'  =>  'integer'
+    ];
+
+    protected static function booted()
+    {
+        static::deleting(function ($adjustStock) {
+
+            $product    =   $adjustStock->product;
+
+            if ($adjustStock->type == 'plus') {
+                $product->update([
+                    'stock' =>  $product->stock - intval($adjustStock->total_qty),
+                ]);
+            } else {
+                $product->update([
+                    'stock' =>  $product->stock + intval($adjustStock->total_qty),
+                ]);
+            }
+
+            StoreAsset::where('title', '=', 'Adjust Stock #'. $adjustStock->id)->delete();
+        });
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id');
