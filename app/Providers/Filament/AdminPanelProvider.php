@@ -6,6 +6,7 @@ use App\Filament\Resources\StoreDashboard\TransactionBuyResource\Widgets\TrxBuyC
 use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Widgets\TrxSaleChart;
 use App\Filament\Widgets\AdjustOverview;
 use App\Filament\Widgets\AssetsOverview;
+use App\Filament\Widgets\ProductsOverview;
 use App\Filament\Widgets\StoreOverview;
 use App\Filament\Widgets\TrxOverview;
 use App\Filament\Widgets\WelcomeWidget;
@@ -53,10 +54,11 @@ class AdminPanelProvider extends PanelProvider
                 // Widgets\AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
                 WelcomeWidget::class,
-                StoreOverview::class,
+                // StoreOverview::class,
                 TrxOverview::class,
                 TrxSaleChart::class,
                 TrxBuyChart::class,
+                ProductsOverview::class,
                 AssetsOverview::class,
                 AdjustOverview::class,
             ])
