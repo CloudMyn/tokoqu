@@ -15,7 +15,7 @@ class AssetsOverview extends BaseWidget
 
         $scope          =   [now()->startOfMonth(), now()->endOfMonth()];
 
-        $asset_in      =   $model_toko->store_assets()->where('type', 'in')->sum('amount');
+        $asset_in      =   $model_toko->store_assets()->sum('amount');
 
         $q_in   =   $model_toko->store_assets()->whereBetween('created_at', $scope)->where('type', 'in');
 

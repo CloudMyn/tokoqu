@@ -307,6 +307,19 @@ if (!function_exists('add_store_asset')) {
     }
 }
 
+if (!function_exists('delete_store_asset')) {
+    /**
+     * delet store asset
+     *
+     * @return
+     */
+    function delete_store_asset(
+        string $title
+    ) {
+        return StoreAsset::where('title', $title)->delete();
+    }
+}
+
 /**
  * Ubah angka dengan format rupiah menjadi integer
  *

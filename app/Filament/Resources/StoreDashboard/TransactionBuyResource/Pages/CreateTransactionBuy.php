@@ -82,14 +82,6 @@ class CreateTransactionBuy extends CreateRecord
                     . ubah_angka_int_ke_rupiah($data['total_cost']) . ' tidak mencukupi');
             }
 
-            add_store_asset(
-                store: $store,
-                title: 'Transaksi Pembelian #' . $transaction->id,
-                message: 'Transaksi pembelian : ' . ubah_angka_int_ke_rupiah($transaction->total_cost). " ( " . $transaction->total_qty . " )",
-                type: 'out',
-                amount: $transaction->total_cost,
-            );
-
             DB::commit();
 
             Notification::make()
