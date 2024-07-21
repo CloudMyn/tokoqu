@@ -9,6 +9,7 @@ use App\Filament\Widgets\AssetsOverview;
 use App\Filament\Widgets\ProductsOverview;
 use App\Filament\Widgets\StoreOverview;
 use App\Filament\Widgets\TrxOverview;
+use App\Filament\Widgets\TrxSaleOverview;
 use App\Filament\Widgets\WelcomeWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -61,6 +62,7 @@ class AdminPanelProvider extends PanelProvider
                 ProductsOverview::class,
                 AssetsOverview::class,
                 AdjustOverview::class,
+                TrxSaleOverview::class,
             ])
             ->middleware([
                 EncryptCookies::class,
