@@ -151,7 +151,7 @@ class UserSeeder extends Seeder
 
                 $store = Store::create($data['store']);
 
-                Product::factory(5)->create(['store_code' => $store->code]);
+                // Product::factory(5)->create(['store_code' => $store->code]);
 
                 $employee_data =  $employee['data'];
 

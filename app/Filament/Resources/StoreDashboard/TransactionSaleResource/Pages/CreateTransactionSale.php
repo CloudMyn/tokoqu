@@ -80,10 +80,13 @@ class CreateTransactionSale extends CreateRecord
                 $product_trx_model->save();
             }
 
-            $store->update([
-                'assets'    =>   $store->assets + $transaction->total_amount,
-            ]);
-
+            add_store_asset(
+                store: $store,
+                title: 'Transaksi Penjualan #' . $transaction->id,
+                message: 'Transaksi penjualan : ' . ubah_angka_int_ke_rupiah($transaction->total_amount). " ( " . $transaction->total_qty . " )",
+                type: 'in',
+                amount: $transaction->total_amount,
+            );
 
             DB::commit();
 

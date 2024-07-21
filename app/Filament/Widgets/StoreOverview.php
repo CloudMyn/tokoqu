@@ -18,7 +18,7 @@ class StoreOverview extends BaseWidget
         $model_toko   =   get_context_store();
 
         return [
-            Stat::make('Jumlah Asset', "Rp. " . ubah_angka_int_ke_rupiah($model_toko->assets)),
+            Stat::make('Kas Toko', "Rp. " . ubah_angka_int_ke_rupiah($model_toko->assets)),
             Stat::make('Jumlah Produk', $model_toko->products()->count() . " Produk"),
             Stat::make('Jumlah Karyawan', $model_toko->employees()->count() . " Orang"),
         ];

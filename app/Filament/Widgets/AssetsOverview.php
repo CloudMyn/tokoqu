@@ -17,14 +17,26 @@ class AssetsOverview extends BaseWidget
 
         $asset_in      =   $model_toko->store_assets()->where('type', 'in')->sum('amount');
 
-        $asset_in_this_mounth       =   $model_toko->store_assets()->whereBetween('created_at', $scope)->where('type', 'in')->sum('amount');
+        $q_in   =   $model_toko->store_assets()->whereBetween('created_at', $scope)->where('type', 'in');
 
-        $asset_out_this_mounth     =   $model_toko->store_assets()->whereBetween('created_at', $scope)->where('type', 'out')->sum('amount');
+        $q_out  =   $model_toko->store_assets()->whereBetween('created_at', $scope)->where('type', 'out');
+
+        $asset_in_this_mounth      =   $q_in->sum('amount');
+
+        $asset_out_this_mounth     =   $q_out->sum('amount');
 
         return [
+
             Stat::make('Total Kas Toko', "Rp. " . ubah_angka_int_ke_rupiah($asset_in)),
-            Stat::make('Pemasukan Bulan Ini', "Rp. " . ubah_angka_int_ke_rupiah($asset_in_this_mounth)),
-            Stat::make('Pengeluaran Bulan Ini', "Rp. " . ubah_angka_int_ke_rupiah($asset_out_this_mounth)),
+
+            Stat::make('Pemasukan Bulan Ini', "Rp. " . ubah_angka_int_ke_rupiah($asset_in_this_mounth))
+                ->chart($q_in->pluck('amount')->toArray())
+                ->color('success'),
+
+            Stat::make('Pengeluaran Bulan Ini', "Rp. " . ubah_angka_int_ke_rupiah($asset_out_this_mounth))
+                ->chart($q_out->pluck('amount')->toArray())
+                ->color('danger'),
+
         ];
     }
 

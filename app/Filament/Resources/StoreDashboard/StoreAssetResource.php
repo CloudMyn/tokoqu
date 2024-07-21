@@ -65,7 +65,6 @@ class StoreAssetResource extends Resource
                     ->label('Jumlah')
                     ->mask(RawJs::make('$money($input)'))
                     ->stripCharacters(',')
-                    ->inputMode('double')
                     ->prefix('RP'),
 
                 Select::make('type')

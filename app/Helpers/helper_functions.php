@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Store;
+use App\Models\StoreAsset;
 use App\Models\User;
 
 if (!function_exists('format_rupiah')) {
@@ -277,6 +278,35 @@ if (!function_exists('get_chart_type')) {
     }
 }
 
+
+if (!function_exists('add_store_asset')) {
+    /**
+     * Input kase toko
+     *
+     * @return
+     */
+    function add_store_asset(
+        Store $store = null,
+        string  $title,
+        string  $message,
+        int $amount,
+        string $type,
+    ): StoreAsset {
+        $asset    =   new StoreAsset();
+
+        $asset->store()->associate($store ?? get_context_store());
+
+        $asset->type    =   $type;
+        $asset->amount  =   $amount;
+        $asset->title   =   $title;
+        $asset->message =   $message;
+
+        $asset->save();
+
+        return $asset;
+    }
+}
+
 /**
  * Ubah angka dengan format rupiah menjadi integer
  *
@@ -303,5 +333,22 @@ function ubah_angka_rupiah_ke_int(string|int $angka): int
  */
 function ubah_angka_int_ke_rupiah(int $angka = null): string
 {
-    return number_format($angka ?? 0, 0, '.', ',');
+    $angka = $angka ?? 0;
+
+    if ($angka >= 1_000_000_000_000) {
+        // Jika angka lebih dari atau sama dengan 1 triliun
+        $angka_triliun = $angka / 1_000_000_000_000;
+        return number_format($angka_triliun, 2, '.', ',') . ' T';
+    } elseif ($angka >= 1_000_000_000) {
+        // Jika angka lebih dari atau sama dengan 1 miliar
+        $angka_miliar = $angka / 1_000_000_000;
+        return number_format($angka_miliar, 2, '.', ',') . ' M';
+    } elseif ($angka >= 100_000_000) {
+        // Jika angka lebih dari atau sama dengan 100 juta
+        $angka_juta = $angka / 1_000_000;
+        return number_format($angka_juta, 2, '.', ',') . ' JT';
+    }
+
+    // Jika angka kurang dari 100 juta
+    return number_format($angka, 0, '.', ',');
 }

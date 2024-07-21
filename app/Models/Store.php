@@ -48,6 +48,11 @@ class Store extends Model
         return $this->hasMany(StoreAsset::class, 'store_code', 'code');
     }
 
+    public function adjusts_stock()
+    {
+        return $this->hasMany(AdjustStock::class, 'store_code', 'code');
+    }
+
     public function getSalesAndProfits($period = 'monthly')
     {
         $query = $this->transaction_sales()

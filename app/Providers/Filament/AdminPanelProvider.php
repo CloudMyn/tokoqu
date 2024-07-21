@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Resources\StoreDashboard\TransactionBuyResource\Widgets\TrxBuyChart;
 use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Widgets\TrxSaleChart;
+use App\Filament\Widgets\AdjustOverview;
 use App\Filament\Widgets\AssetsOverview;
 use App\Filament\Widgets\StoreOverview;
 use App\Filament\Widgets\TrxOverview;
@@ -47,7 +48,7 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            // ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 // Widgets\AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
@@ -56,7 +57,8 @@ class AdminPanelProvider extends PanelProvider
                 TrxOverview::class,
                 TrxSaleChart::class,
                 TrxBuyChart::class,
-                AssetsOverview::class
+                AssetsOverview::class,
+                AdjustOverview::class,
             ])
             ->middleware([
                 EncryptCookies::class,
