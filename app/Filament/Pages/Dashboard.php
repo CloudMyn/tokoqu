@@ -22,6 +22,8 @@ class Dashboard extends \Filament\Pages\Dashboard
 
     public function tours(): array
     {
+        if (!cek_store_role()) return [];
+
         return [
             Tour::make('dashboard')
                 ->colors('dark', 'dark')

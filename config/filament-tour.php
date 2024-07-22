@@ -3,7 +3,7 @@
 // config for JibayMcs/FilamentTour
 return [
 
-    'only_visible_once' => true,
+    'only_visible_once' => false,
     'enable_css_selector' => false,
 
     'tour_prefix_id' => 'tour_',

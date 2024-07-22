@@ -89,7 +89,7 @@ class User extends Authenticatable implements HasAvatar
         return match ($this->role) {
             'admin' => 'Admin',
             'store_owner' => 'Pemilik Toko',
-            'employee' => 'Karyawan Toko',
+            'store_employee' => 'Karyawan Toko',
         };
     }
 }

@@ -22,10 +22,10 @@ use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\ViewAction;
+use Illuminate\Database\Eloquent\Builder;
 
 class TransactionSaleResource extends Resource
 {
-    use Ownership;
 
     protected static ?string $model = TransactionSale::class;
 
@@ -33,9 +33,27 @@ class TransactionSaleResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Produk';
 
+    protected static ?int $navigationSort = 3;
+
     public static function canAccess(): bool
     {
-        return cek_store_role();
+        return cek_store_role() || cek_store_employee_role();
+    }
+
+
+    public static function getEloquentQuery(): Builder
+    {
+        parent::getEloquentQuery();
+
+        if (cek_admin_role()) return parent::getEloquentQuery();
+
+        $store   =   get_context_store();
+
+        if (cek_store_employee_role()) {
+            return parent::getEloquentQuery()->where('store_code', $store?->code)->orderBy('created_at', 'DESC')->where('admin_id', get_auth_user()->id);
+        }
+
+        return parent::getEloquentQuery()->where('store_code', $store?->code)->orderBy('created_at', 'DESC');
     }
 
     public static function canEdit(Model $record): bool
@@ -53,6 +71,8 @@ class TransactionSaleResource extends Resource
         if (cek_store_role()) {
             return 'Transaksi';
         }
+
+        if (cek_store_employee_role()) return "";
 
         abort(403, 'Unauthorized');
     }

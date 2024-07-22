@@ -61,7 +61,7 @@ class EmployeeResource extends Resource
 
         if ($auth_user->has_role('store_owner')) {
             return User::whereHas('employee', function ($query) use ($auth_user) {
-                return $query->where('owner_code', $auth_user->owner_store->code);
+                return $query->where('store_code', get_context_store()->code);
             });
         }
 
@@ -194,5 +194,10 @@ class EmployeeResource extends Resource
             'create' => Pages\CreateEmployee::route('/create'),
             'edit' => Pages\EditEmployee::route('/{record}/edit'),
         ];
+    }
+
+    public static function canAccess(): bool
+    {
+        return cek_store_role();
     }
 }

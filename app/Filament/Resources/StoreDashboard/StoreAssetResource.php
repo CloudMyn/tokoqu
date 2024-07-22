@@ -129,4 +129,9 @@ class StoreAssetResource extends Resource
             'edit' => EditStoreAsset::route('/{record}/edit'),
         ];
     }
+
+    public static function canAccess(): bool
+    {
+        return cek_store_role();
+    }
 }

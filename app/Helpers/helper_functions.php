@@ -161,6 +161,18 @@ if (!function_exists('cek_store_role')) {
     }
 }
 
+if (!function_exists('cek_store_employee_role')) {
+    /**
+     * Dapatkan toko berdasarkan kode toko
+     *
+     * @return |bool
+     */
+    function cek_store_employee_role(): bool
+    {
+        return get_auth_user()->has_role('store_employee');
+    }
+}
+
 
 if (!function_exists('cek_admin_role')) {
     /**
@@ -259,7 +271,21 @@ if (!function_exists('get_context_store')) {
     {
         $auth_user = get_auth_user();
 
-        return  $auth_user->owner_store->store()->first();
+        if(cek_store_role()) {
+
+            return  $auth_user->owner_store->store()->first();
+        }
+
+        if(cek_store_employee_role()) {
+
+
+            return $auth_user->employee->store()->first();
+
+        }
+
+
+        abort(404, 'Perizinan Gagal');
+
     }
 }
 
