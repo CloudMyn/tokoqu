@@ -30,6 +30,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use JibayMcs\FilamentTour\FilamentTourPlugin;
+use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use Joaopaulolndev\FilamentGeneralSettings\FilamentGeneralSettingsPlugin;
 use ShuvroRoy\FilamentSpatieLaravelBackup\FilamentSpatieLaravelBackupPlugin;
 use ShuvroRoy\FilamentSpatieLaravelBackup\Pages\Backups;
@@ -107,6 +108,16 @@ class AdminPanelProvider extends PanelProvider
 
                 FilamentTourPlugin::make(),
 
+                FilamentEditProfilePlugin::make()
+                    ->slug('my-profile')
+                    ->setTitle('Profile Saya')
+                    ->setNavigationLabel('Profile Saya')
+                    // ->setNavigationGroup('Group Profile')
+                    ->setIcon('heroicon-o-user')
+                    ->shouldRegisterNavigation(true)
+                    ->shouldShowDeleteAccountForm(true)
+                    ->shouldShowBrowserSessionsForm()
+                    ->shouldShowAvatarForm(),
             ], []))
             ->navigationGroups([
                 'Tabel Pengguna',

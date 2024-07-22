@@ -56,8 +56,8 @@ class Dashboard extends \Filament\Pages\Dashboard
                         ->description('Disamping ini adalah daftar menu yang tersedia'),
 
                     Step::make('body > div.fi-layout.flex.min-h-screen.w-full.flex-row-reverse.overflow-x-clip > aside > nav > ul > li:nth-child(1)')
-                        ->title('Menu Dashboard')
-                        ->description('Saat ini anda berada di menu Dashboard, disini anda dapat melihat segala rankuman laporan terkait toko anda!'),
+                        ->title('Menu Dashboard & Profile')
+                        ->description('Saat ini anda berada di menu Dashboard, disini anda dapat melihat segala rankuman laporan terkait toko anda & Anda juga dapat mengubah profil anda'),
 
                     Step::make('body > div.fi-layout.flex.min-h-screen.w-full.flex-row-reverse.overflow-x-clip > aside > nav > ul > li:nth-child(2)')
                         ->title('Menu Data Toko')
