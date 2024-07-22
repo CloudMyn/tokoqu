@@ -33,7 +33,8 @@ if (!function_exists('get_auth_user')) {
 
         if ($user instanceof User) return $user;
 
-        abort(403, 'Unauthorized');
+
+        abort(403, 'Pengguna Tidak Terauntentikasi');
     }
 }
 
@@ -157,6 +158,8 @@ if (!function_exists('cek_store_role')) {
      */
     function cek_store_role(): bool
     {
+        if(!auth()->user()) return false;
+
         return get_auth_user()->has_role('store_owner');
     }
 }
