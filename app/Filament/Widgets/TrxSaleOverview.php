@@ -9,6 +9,9 @@ class TrxSaleOverview extends BaseWidget
 {
     protected static ?string $pollingInterval = "10s";
 
+    protected static ?int $sort = 8;
+
+    protected int | string | array $columnSpan = 'full';
     protected function getStats(): array
     {
         $model_toko   =   get_context_store();

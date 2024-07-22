@@ -8,11 +8,16 @@ class TrxBuyChart extends ChartWidget
 {
     protected static ?string $heading = 'Trend Pembelian Barang';
 
-    protected int | string | array $columnSpan = [
-        // 'md' => 2,
-    ];
-
     public ?string $filter = 'monthly';
+
+    protected static ?int $sort = 3;
+
+    protected int | string | array $columnSpan = [
+        'sm' => 2,
+        'md' => 2,
+        'lg' => 1,
+        'xl' => 1,
+    ];
 
     protected function getFilters(): ?array
     {

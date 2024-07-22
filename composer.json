@@ -16,6 +16,7 @@
         "filament/notifications": "^3.2",
         "filipfonal/filament-log-manager": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
+        "jibaymcs/filament-tour": "^3.0",
         "joaopaulolndev/filament-general-settings": "^1.0",
         "lara-zeus/quantity": "^1.0",
         "laravel/framework": "^10.10",

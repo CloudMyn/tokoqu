@@ -9,6 +9,12 @@ class TrxBuyOverview extends BaseWidget
 {
     protected static ?string $pollingInterval = "10s";
 
+    protected int | string | array $columnSpan = [
+        'sm'    =>  1,
+        'md'    =>  2,
+        'xl'    =>  2,
+    ];
+
     protected function getStats(): array
     {
         $model_toko   =   get_context_store();

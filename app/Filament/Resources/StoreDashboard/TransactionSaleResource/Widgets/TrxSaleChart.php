@@ -8,11 +8,17 @@ class TrxSaleChart extends ChartWidget
 {
     protected static ?string $heading = 'Trend Penjualan & Keuntungan';
 
-    protected int | string | array $columnSpan = [
-        // 'md' => 2,
-    ];
-
     public ?string $filter = 'monthly';
+
+    protected static ?int $sort = 4;
+
+
+    protected int | string | array $columnSpan = [
+        'sm' => 2,
+        'md' => 2,
+        'lg' => 1,
+        'xl' => 1,
+    ];
 
     protected function getFilters(): ?array
     {

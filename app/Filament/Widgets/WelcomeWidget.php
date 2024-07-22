@@ -10,7 +10,7 @@ class WelcomeWidget extends Widget
 
     protected static ?int $sort = -3;
 
-    protected int | string | array $columnSpan = 2;
+    protected int | string | array $columnSpan = 'full';
 
     /**
      * @var view-string

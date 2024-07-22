@@ -11,7 +11,11 @@ class StoreOverview extends BaseWidget
 
     protected static ?int $sort = -2;
 
-    protected int | string | array $columnSpan = 2;
+    protected int | string | array $columnSpan = [
+        'sm'    =>  1,
+        'md'    =>  2,
+        'xl'    =>  2,
+    ];
 
     protected function getStats(): array
     {

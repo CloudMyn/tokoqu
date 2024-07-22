@@ -9,6 +9,10 @@ class AdjustOverview extends BaseWidget
 {
     protected static ?string $pollingInterval = null;
 
+    protected static ?int $sort = 7;
+
+    protected int | string | array $columnSpan = 'full';
+
     protected function getStats(): array
     {
         $model_toko   =   get_context_store();
