@@ -22,10 +22,8 @@ class TransactionSaleItem extends Model
         'transaction'
     ];
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
-
         static::deleting(function ($trx_item) {
             $product = $trx_item->product;
 

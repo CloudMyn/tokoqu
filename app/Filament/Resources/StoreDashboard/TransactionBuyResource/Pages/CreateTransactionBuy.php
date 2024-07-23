@@ -21,11 +21,11 @@ class CreateTransactionBuy extends CreateRecord
 
     protected static bool $canCreateAnother = false;
 
+    protected static ?string $title  =   "Input Transaksi Pembelian";
+
     protected function getHeaderActions(): array
     {
-        return [
-            Actions\CreateAction::make(),
-        ];
+        return [];
     }
 
     protected function handleRecordCreation(array $data): Model

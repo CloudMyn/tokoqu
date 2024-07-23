@@ -19,6 +19,8 @@ class CreateTransactionSale extends CreateRecord
 
     protected static bool $canCreateAnother = false;
 
+    protected static ?string $title  =   "Input Transaksi Penjualan";
+
     protected function handleRecordCreation(array $data): Model
     {
         try {

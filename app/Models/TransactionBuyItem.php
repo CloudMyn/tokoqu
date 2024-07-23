@@ -15,10 +15,8 @@ class TransactionBuyItem extends Model
         'total_qty' =>  'integer'
     ];
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
-
         static::deleting(function ($transactionBuyItem) {
             $product = $transactionBuyItem->product;
 
