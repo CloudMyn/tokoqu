@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\StoreDashboard\TransactionBuyResource\Pages;
 
+use App\Filament\Exports\TransactionBuyExporter;
 use App\Filament\Resources\StoreDashboard\TransactionBuyResource;
 use App\Filament\Widgets\TrxBuyOverview;
 use Filament\Actions;
@@ -20,6 +21,7 @@ class ListTransactionBuys extends ListRecords
         return [
             Actions\CreateAction::make()
                 ->label('Input Pembelian'),
+            Actions\ExportAction::make()->exporter(TransactionBuyExporter::class)->label('Eksport Data'),
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\StoreDashboard\TransactionSaleResource\Pages;
 
+use App\Filament\Exports\TransactionSaleExporter;
 use App\Filament\Resources\StoreDashboard\TransactionSaleResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -20,6 +21,8 @@ class ListTransactionSales extends ListRecords
         return [
             Actions\CreateAction::make()
                 ->label('Input Penjualan'),
+
+            Actions\ExportAction::make()->exporter(TransactionSaleExporter::class)->label('Eksport Data'),
         ];
     }
 

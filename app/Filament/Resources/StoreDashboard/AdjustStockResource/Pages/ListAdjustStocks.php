@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\StoreDashboard\AdjustStockResource\Pages;
 
+use App\Filament\Exports\AdjustStockExporter;
 use App\Filament\Resources\StoreDashboard\AdjustStockResource;
 use App\Filament\Widgets\AdjustOverview;
 use Filament\Actions;
@@ -19,6 +20,7 @@ class ListAdjustStocks extends ListRecords
     {
         return [
             Actions\CreateAction::make()->label('Input Penyesuaian'),
+            Actions\ExportAction::make()->exporter(AdjustStockExporter::class)->label('Eksport Data'),
         ];
     }
 

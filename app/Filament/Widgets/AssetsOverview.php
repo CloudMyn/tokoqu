@@ -34,11 +34,11 @@ class AssetsOverview extends BaseWidget
 
             Stat::make('Total Kas Toko', "Rp. " . ubah_angka_int_ke_rupiah($total_asset)),
 
-            Stat::make('Pemasukan Bulan Ini', "Rp. " . ubah_angka_int_ke_rupiah($asset_in_this_mounth))
+            Stat::make('Kas Masuk ( Bulan Ini )', "Rp. " . ubah_angka_int_ke_rupiah($asset_in_this_mounth))
                 ->chart($q_in->pluck('amount')->toArray())
                 ->color('success'),
 
-            Stat::make('Pengeluaran Bulan Ini', "Rp. " . ubah_angka_int_ke_rupiah($asset_out_this_mounth))
+            Stat::make('Kas Keluar ( Bulan Ini )', "Rp. " . ubah_angka_int_ke_rupiah($asset_out_this_mounth))
                 ->chart($q_out->pluck('amount')->toArray())
                 ->color('danger'),
 

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Store\StoreResource\StoreAssetResource\Pages;
 
+use App\Filament\Exports\StoreAssetExporter;
 use App\Filament\Resources\StoreDashboard\StoreAssetResource;
 use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Widgets\TrxSaleChart;
 use App\Filament\Widgets\AssetsOverview;
@@ -20,6 +21,7 @@ class ListStoreAssets extends ListRecords
     {
         return [
             Actions\CreateAction::make()->label('Input Kas'),
+            Actions\ExportAction::make()->exporter(StoreAssetExporter::class)->label('Eksport Data'),
         ];
     }
 
