@@ -46,7 +46,7 @@ class TrxBuyOverview extends BaseWidget
                 ->chart($base_query->pluck('total_cost')->toArray())
                 ->color('success'),
 
-            Stat::make('Total QTY Transaksi', "Rp. " . ubah_angka_int_ke_rupiah($total_prv))
+            Stat::make('Total QTY Transaksi', ubah_angka_int_ke_rupiah($total_prv))
                 ->chart($base_query->pluck('total_qty')->toArray())
                 ->color('success'),
         ];

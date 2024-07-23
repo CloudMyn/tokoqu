@@ -15,21 +15,18 @@ class TransactionBuy extends Model
         'total_qty' => 'integer',
     ];
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
-
         static::created(function ($transaction) {
 
             add_store_asset(
                 store: $transaction->store,
                 title: 'Transaksi Pembelian #' . $transaction->id,
-                message: 'Transaksi pembelian : ' . ubah_angka_int_ke_rupiah($transaction->total_amount) . " ( " . $transaction->total_qty . " )",
+                message: 'Transaksi pembelian : ' . ubah_angka_int_ke_rupiah($transaction->total_cost) . " ( " . $transaction->total_qty . " )",
                 type: 'out',
-                amount: $transaction->total_amount,
+                amount: $transaction->total_cost,
             );
         });
-
 
         static::deleting(function ($transaction) {
             $items      =   $transaction->transactionBuyItems;

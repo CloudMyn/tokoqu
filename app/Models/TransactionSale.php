@@ -16,10 +16,8 @@ class TransactionSale extends Model
         'total_amount'  => 'double',
     ];
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
-
         static::created(function ($transaction) {
 
             add_store_asset(
