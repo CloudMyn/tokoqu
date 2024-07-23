@@ -16,37 +16,34 @@ class ProductImporter extends Importer
         return [
             ImportColumn::make('name')
                 ->requiredMapping()
-                ->rules(['required', 'max:255']),
+                ->rules(['required', 'max:100']),
             ImportColumn::make('image')
                 ->rules(['max:255']),
             ImportColumn::make('sku')
                 ->label('SKU')
                 ->requiredMapping()
-                ->rules(['required', 'max:255']),
+                ->rules(['required', 'max:6']),
             ImportColumn::make('sale_price')
                 ->requiredMapping()
                 ->numeric()
-                ->rules(['required', 'integer']),
+                ->rules(['required', 'integer', 'min:1']),
             ImportColumn::make('product_cost')
                 ->requiredMapping()
                 ->numeric()
-                ->rules(['required', 'integer']),
-            ImportColumn::make('store_code')
-                ->requiredMapping()
-                ->rules(['required', 'max:255']),
+                ->rules(['required', 'integer', 'min:1']),
             ImportColumn::make('stock')
                 ->requiredMapping()
                 ->numeric()
-                ->rules(['required', 'integer']),
+                ->rules(['required', 'integer', 'min:0']),
             ImportColumn::make('fraction')
                 ->requiredMapping()
                 ->numeric()
-                ->rules(['required', 'integer']),
+                ->rules(['required', 'integer', 'min:1', 'max:99999999']),
             ImportColumn::make('unit')
                 ->requiredMapping()
-                ->rules(['required']),
+                ->rules(['required', 'in:carton,pack,piece,box,bag,set,bottle,jar,roll,case,pallet,bundle,liter,milliliter,kilogram,gram,other']),
             ImportColumn::make('supplier')
-                ->rules(['max:255']),
+                ->rules(['max:100']),
         ];
     }
 
@@ -62,10 +59,10 @@ class ProductImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = 'Your product import has completed and ' . number_format($import->successful_rows) . ' ' . str('row')->plural($import->successful_rows) . ' imported.';
+        $body = 'Impor produk Anda telah selesai dan ' . number_format($import->successful_rows) . ' ' . str('baris')->plural($import->successful_rows) . ' diimpor.';
 
         if ($failedRowsCount = $import->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to import.';
+            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('baris')->plural($failedRowsCount) . ' gagal untuk diimpor.';
         }
 
         return $body;
