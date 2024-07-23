@@ -296,7 +296,7 @@ if (!function_exists('get_context_store')) {
         if(cek_store_employee_role()) {
 
 
-            return $auth_user->employee->store()->first();
+            return $auth_user->employee?->store()?->first();
 
         }
 

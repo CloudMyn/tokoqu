@@ -37,7 +37,7 @@ class TransactionSaleResource extends Resource
 
     public static function canAccess(): bool
     {
-        return cek_store_role() || cek_store_employee_role();
+        return cek_store_role() || cek_store_employee_role() && cek_store_exists();
     }
 
 

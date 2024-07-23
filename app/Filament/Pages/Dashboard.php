@@ -210,7 +210,7 @@ class Dashboard extends \Filament\Pages\Dashboard
 
                 Step::make()
                     ->title("Halaman Toko Saya")
-                    ->description('DiHalaman ini anda dapat membuat dan mengedit toko anda!'),
+                    ->description('Di halaman ini anda dapat membuat dan mengedit toko anda!'),
 
                 Step::make('body > div.fi-layout.flex.min-h-screen.w-full.flex-row-reverse.overflow-x-clip > div.fi-main-ctn.w-screen.flex-1.flex-col.opacity-0 > main > div > section > header > div.fi-ac.gap-3.flex.flex-wrap.items-center.justify-start.shrink-0.sm\:mt-7 > a')
                     ->title('Buat Toko')
@@ -273,7 +273,7 @@ class Dashboard extends \Filament\Pages\Dashboard
 
                 Step::make()
                     ->title("Halaman Pegawai")
-                    ->description('DiHalaman ini anda dapat menambahkan, mengedit, & menghapus pegawai di toko anda!'),
+                    ->description('Dihalaman ini anda dapat menambahkan, mengedit, & menghapus pegawai di toko anda!'),
 
                 Step::make('body > div.fi-layout.flex.min-h-screen.w-full.flex-row-reverse.overflow-x-clip > div.fi-main-ctn.w-screen.flex-1.flex-col.opacity-0 > main > div > section > header > div.fi-ac.gap-3.flex.flex-wrap.items-center.justify-start.shrink-0.sm\:mt-7 > a')
                     ->title('Tambahkan Karywan')
