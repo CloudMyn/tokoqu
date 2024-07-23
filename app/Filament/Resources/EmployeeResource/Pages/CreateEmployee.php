@@ -21,10 +21,12 @@ class CreateEmployee extends CreateRecord
 
     protected static bool $canCreateAnother = false;
 
+    protected static ?string $title = 'Tambah Pegawai';
+
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            // Actions\CreateAction::make(),
         ];
     }
 

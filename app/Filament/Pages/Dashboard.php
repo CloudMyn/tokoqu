@@ -38,6 +38,8 @@ class Dashboard extends \Filament\Pages\Dashboard
 
             $this->tour_employee(),
 
+            $this->tour_employee_create(),
+
         ];
     }
 
@@ -289,4 +291,37 @@ class Dashboard extends \Filament\Pages\Dashboard
             ->previousButtonLabel('Kembali')
             ->doneButtonLabel('Seleai');
     }
+
+
+
+    protected function tour_employee_create(): Tour
+    {
+        return Tour::make('employee.create')
+            ->route('/admin/employees/create')
+            ->colors('dark', 'dark')
+            ->steps(
+
+                Step::make()
+                    ->title("Tambah Pegawai")
+                    ->description('Berikut adalah halaman untuk menambahkan pegawai!'),
+
+                Step::make('#form > div.grid.grid-cols-\[--cols-default\].lg\:grid-cols-\[--cols-lg\].fi-fo-component-ctn.gap-6 > div:nth-child(1)')
+                    ->title('Form Akun Karyawan')
+                    ->description('Dalam group form ini, terdapat informasi berupa nama, email & password yang wajib diisi, untuk membuat akun pegawai!'),
+
+                Step::make('#form > div.grid.grid-cols-\[--cols-default\].lg\:grid-cols-\[--cols-lg\].fi-fo-component-ctn.gap-6 > div:nth-child(2)')
+                    ->title('Form Informasi Personal')
+                    ->description('Dalam group form ini, anda di wajibkan memasukan beberapa informasi personal pegawai anda seperti foto ktp, no KTP, nama lenkap, dan lainnya!'),
+
+                Step::make('#form > div.grid.grid-cols-\[--cols-default\].lg\:grid-cols-\[--cols-lg\].fi-fo-component-ctn.gap-6 > div:nth-child(3)')
+                    ->title('Form kontak pegawai')
+                    ->description('Dalam group form ini, anda di wajibkan memasukan kontak personal pegawai yang aktif, baik itu whatsapp atau nomor telepon'),
+
+            )
+            ->uncloseable(false)    // Set the 'Next' button label
+            ->nextButtonLabel('Selanjutnya')
+            ->previousButtonLabel('Kembali')
+            ->doneButtonLabel('Seleai');
+    }
 }
+

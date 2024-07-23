@@ -21,18 +21,19 @@ class CreateStore extends CreateRecord
 
     protected static ?string $title = 'Tambahkan Toko';
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            $this->getCreateFormAction()->label('Simpan'),
-            $this->getCancelFormAction()->label('Batalkan'),
-        ];
-    }
+    // protected function getHeaderActions(): array
+    // {
+    //     return [
+    //         $this->getCreateFormAction()->label('Simpan'),
+    //         $this->getCancelFormAction()->label('Batalkan'),
+    //     ];
+    // }
 
-    protected function getFormActions(): array
-    {
-        return [];
-    }
+    // protected function getFormActions(): array
+    // {
+    //     return [];
+    // }
+
 
     protected function handleRecordCreation(array $data): Model
     {
@@ -78,5 +79,10 @@ class CreateStore extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return null;
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
     }
 }
