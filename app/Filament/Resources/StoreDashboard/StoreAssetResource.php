@@ -80,9 +80,9 @@ class StoreAssetResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('title')->label('Judul')->searchable(),
+                TextColumn::make('title')->label('Judul')->searchable()->sortable(),
 
-                TextColumn::make('message')->label('Deskripsi')->limit(120)->searchable(),
+                TextColumn::make('message')->label('Deskripsi')->limit(120)->searchable()->sortable(),
 
                 TextColumn::make('type')
                     ->label('Jenis')
@@ -91,13 +91,15 @@ class StoreAssetResource extends Resource
                         'out' => 'danger',
                     })
                     ->searchable()
-                    ->badge(),
+                    ->badge()
+                    ->sortable(),
 
                 TextColumn::make('amount')
                     ->label('Jumlah')
                     ->searchable()
                     ->numeric(decimalPlaces: 0)
-                    ->prefix('Rp. '),
+                    ->prefix('Rp. ')
+                    ->sortable(),
             ])
             ->filters([
                 //

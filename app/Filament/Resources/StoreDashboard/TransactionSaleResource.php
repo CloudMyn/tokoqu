@@ -165,21 +165,34 @@ class TransactionSaleResource extends Resource
         return $table
             ->headerActions([])
             ->columns([
-                TextColumn::make('title')->label('Title'),
+                TextColumn::make('title')
+                    ->label('Title')
+                    ->sortable()
+                    ->searchable(),
 
-                TextColumn::make('total_qty')->label('QTY Jual'),
+                TextColumn::make('total_qty')
+                    ->label('QTY Jual')
+                    ->sortable()
+                    ->searchable(),
 
                 TextColumn::make('total_amount')
                     ->label('Tranasksi')
                     ->numeric(decimalPlaces: 0)
-                    ->prefix('Rp. '),
+                    ->prefix('Rp. ')
+                    ->sortable()
+                    ->searchable(),
 
                 TextColumn::make('total_profit')
                     ->label('Keuntungan')
                     ->numeric(decimalPlaces: 0)
-                    ->prefix('Rp. '),
+                    ->prefix('Rp. ')
+                    ->sortable()
+                    ->searchable(),
 
-                TextColumn::make('admin_name')->label('Nama Admin'),
+                TextColumn::make('admin_name')
+                    ->label('Nama Admin')
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
                 //

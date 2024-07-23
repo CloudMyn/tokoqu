@@ -343,9 +343,9 @@ class ProductResource extends Resource
                                     ])->key('product_reports')
                                         ->headerActions([
 
-                                            Action::make('Export laporan')
-                                                ->icon('heroicon-c-clipboard-document-list')
-                                                ->requiresConfirmation(),
+                                            // Action::make('Export laporan')
+                                            //     ->icon('heroicon-c-clipboard-document-list')
+                                            //     ->requiresConfirmation(),
                                         ])
                                         ->grow(true),
 

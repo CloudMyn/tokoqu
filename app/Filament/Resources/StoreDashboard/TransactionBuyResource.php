@@ -138,11 +138,20 @@ class TransactionBuyResource extends Resource
         return $table
             ->headerActions([])
             ->columns([
-                TextColumn::make('supplier')->label('Supplier'),
+                TextColumn::make('supplier')
+                    ->label('Supplier')
+                    ->searchable()
+                    ->sortable(),
 
-                TextColumn::make('title')->label('Title'),
+                TextColumn::make('title')
+                    ->label('Title')
+                    ->searchable()
+                    ->sortable(),
 
-                TextColumn::make('total_qty')->label('QTY Beli'),
+                TextColumn::make('total_qty')
+                    ->label('QTY Beli')
+                    ->searchable()
+                    ->sortable(),
 
                 TextColumn::make('total_cost')
                     ->label('Total Harga')
@@ -150,9 +159,14 @@ class TransactionBuyResource extends Resource
                     ->prefix('Rp. ')
                     ->default(function ($record) {
                         return "number_format($record->total_cost, 0, ',', '.')";
-                    }),
+                    })
+                    ->searchable()
+                    ->sortable(),
 
-                TextColumn::make('admin_name')->label('Nama Admin'),
+                TextColumn::make('admin_name')
+                    ->label('Nama Admin')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 //

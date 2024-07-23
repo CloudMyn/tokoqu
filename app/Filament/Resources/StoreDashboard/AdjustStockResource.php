@@ -59,7 +59,6 @@ class AdjustStockResource extends Resource
         return $form
             ->schema([
 
-
                 Select::make('product_id')->label('Pilih Produk')
                     ->options(get_product_list(get_have_stock: false))
                     ->searchable()
@@ -98,22 +97,37 @@ class AdjustStockResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('message')->label('Pesan'),
+                TextColumn::make('message')
+                    ->label('Pesan')
+                    ->searchable()
+                    ->sortable(),
 
                 TextColumn::make('total_amount')
                     ->label('Total Adjust')
                     ->numeric(decimalPlaces: 0)
+                    ->searchable()
+                    ->sortable()
                     ->prefix('Rp. '),
 
-                TextColumn::make('total_qty')->label('QTY'),
+                TextColumn::make('total_qty')
+                    ->label('QTY')
+                    ->sortable()
+                    ->searchable(),
 
-                TextColumn::make('type')->label('Jenis')->badge()
+                TextColumn::make('type')
+                    ->label('Jenis')
+                    ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'plus' => 'success',
                         'minus' => 'danger',
-                    }),
+                    })
+                    ->searchable()
+                    ->sortable(),
 
-                TextColumn::make('admin_name')->label('Nama Admin'),
+                TextColumn::make('admin_name')
+                    ->label('Nama Admin')
+                    ->searchable()
+                    ->sortable(),
 
             ])
             ->filters([
