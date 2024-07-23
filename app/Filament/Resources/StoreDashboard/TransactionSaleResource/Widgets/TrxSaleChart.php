@@ -116,6 +116,6 @@ class TrxSaleChart extends ChartWidget
 
     public static function canView(): bool
     {
-        return cek_store_role();
+        return cek_store_role() && cek_store_exists();
     }
 }

@@ -19,11 +19,19 @@ class CreateStore extends CreateRecord
 
     protected static bool $canCreateAnother = false;
 
+    protected static ?string $title = 'Tambahkan Toko';
+
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            $this->getCreateFormAction()->label('Simpan'),
+            $this->getCancelFormAction()->label('Batalkan'),
         ];
+    }
+
+    protected function getFormActions(): array
+    {
+        return [];
     }
 
     protected function handleRecordCreation(array $data): Model
@@ -38,7 +46,7 @@ class CreateStore extends CreateRecord
             $store->name    = $data['name'];
             $store->code    = $data['code'];
             $store->image   = $data['image'];
-            $store->assets  = $data['assets'];
+            $store->assets  = 0;
             $store->address = $data['address'];
 
             $store->owner()->associate($user->owner_store);

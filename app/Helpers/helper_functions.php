@@ -164,6 +164,20 @@ if (!function_exists('cek_store_role')) {
     }
 }
 
+if (!function_exists('cek_store_exists')) {
+    /**
+     * Dapatkan toko berdasarkan kode toko
+     *
+     * @return |bool
+     */
+    function cek_store_exists(): bool
+    {
+        if(!auth()->user()) return false;
+
+        return get_context_store() instanceof Store;
+    }
+}
+
 if (!function_exists('cek_store_employee_role')) {
     /**
      * Dapatkan toko berdasarkan kode toko

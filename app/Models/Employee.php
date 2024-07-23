@@ -11,6 +11,15 @@ class Employee extends Model
 
     protected $guarded = [];
 
+
+    protected static function booted()
+    {
+        static::deleting(function ($employee) {
+            $employee->user()->delete();
+        });
+    }
+
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

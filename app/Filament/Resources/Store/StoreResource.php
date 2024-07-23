@@ -28,6 +28,8 @@ class StoreResource extends Resource
 
     protected static ?string $model = Store::class;
 
+    protected static ?string $modelLabel = 'Toko';
+
     protected static ?string $recordTitleAttribute = 'title';
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
@@ -61,7 +63,7 @@ class StoreResource extends Resource
                     ->directory(get_user_directory('stores_files'))
                     ->columnSpanFull(),
 
-                TextInput::make('name')->label('Nama Toko')->required()->maxLength(100),
+                TextInput::make('name')->label('Nama Toko')->required()->maxLength(100)->minLength(4),
 
                 TextInput::make('code')->label('Kode Toko')->required()->length(4)->unique('stores', 'code', function ($record) {
                     return $record;
@@ -75,6 +77,7 @@ class StoreResource extends Resource
                     ->stripCharacters(',')
                     ->inputMode('double')
                     ->readOnly()
+                    ->visibleOn('view')
                     ->disabled()
                     ->prefix('RP'),
 

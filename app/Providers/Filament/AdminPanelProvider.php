@@ -9,6 +9,7 @@ use App\Filament\Widgets\AdjustOverview;
 use App\Filament\Widgets\AssetsOverview;
 use App\Filament\Widgets\ProductsOverview;
 use App\Filament\Widgets\StoreOverview;
+use App\Filament\Widgets\TrxBuyOverview;
 use App\Filament\Widgets\TrxOverview;
 use App\Filament\Widgets\TrxSaleOverview;
 use App\Filament\Widgets\WelcomeWidget;
@@ -67,6 +68,7 @@ class AdminPanelProvider extends PanelProvider
                 AssetsOverview::class,
                 AdjustOverview::class,
                 TrxSaleOverview::class,
+                TrxBuyOverview::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -110,8 +112,8 @@ class AdminPanelProvider extends PanelProvider
 
                 FilamentEditProfilePlugin::make()
                     ->slug('my-profile')
-                    ->setTitle('Profile Saya')
-                    ->setNavigationLabel('Profile Saya')
+                    ->setTitle('Profil Saya')
+                    ->setNavigationLabel('Profil Saya')
                     // ->setNavigationGroup('Group Profile')
                     ->setIcon('heroicon-o-user')
                     ->shouldRegisterNavigation(true)

@@ -10,10 +10,13 @@ class ListStores extends ListRecords
 {
     protected static string $resource = StoreResource::class;
 
+    protected static ?string $title = 'Daftar Toko';
+
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label('Tambah Toko'),
         ];
     }
 }

@@ -61,7 +61,7 @@ class EmployeeResource extends Resource
 
         if ($auth_user->has_role('store_owner')) {
             return User::whereHas('employee', function ($query) use ($auth_user) {
-                return $query->where('store_code', get_context_store()->code);
+                return $query->where('store_code', get_context_store()?->code);
             });
         }
 

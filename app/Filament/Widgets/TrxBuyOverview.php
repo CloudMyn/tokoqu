@@ -31,29 +31,29 @@ class TrxBuyOverview extends BaseWidget
             'Tahun Ini' => [now()->startOfYear(), now()->endOfYear()],
         };
 
-        $base_query     =   $model_toko->transaction_sales()->whereBetween('created_at', $scope);
+        $base_query     =   $model_toko->transaction_buys()->whereBetween('created_at', $scope);
 
-        if ($scope_ctx == 'Semua') $base_query     =   $model_toko->transaction_sales();
+        if ($scope_ctx == 'Semua') $base_query     =   $model_toko->transaction_buys();
 
-        $total_trxt     =   $base_query->sum('total_amount');
+        $total_trxt     =   $base_query->sum('total_cost');
 
-        $total_prv      =   $base_query->sum('total_profit');
+        $total_prv      =   $base_query->sum('total_qty');
 
         return [
             Stat::make('Jumlah Transaksi', $base_query->count()),
 
             Stat::make('Total Transaksi', "Rp. " . ubah_angka_int_ke_rupiah($total_trxt))
-                ->chart($base_query->pluck('total_amount')->toArray())
+                ->chart($base_query->pluck('total_cost')->toArray())
                 ->color('success'),
 
-            Stat::make('Total Keuntungan', "Rp. " . ubah_angka_int_ke_rupiah($total_prv))
-                ->chart($base_query->pluck('total_profit')->toArray())
+            Stat::make('Total QTY Transaksi', "Rp. " . ubah_angka_int_ke_rupiah($total_prv))
+                ->chart($base_query->pluck('total_qty')->toArray())
                 ->color('success'),
         ];
     }
 
     public static function canView(): bool
     {
-        return cek_store_role();
+        return cek_store_role() && cek_store_exists();
     }
 }
