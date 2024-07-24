@@ -74,6 +74,14 @@ class CreateTransactionSale extends CreateRecord
                 $product_trx_models[]   =   $product_trx_model;
             }
 
+            if($data['total_amount'] < 0) {
+                throw new \Exception("Transaksi yang anda lakukan tidak dapat diproses, dikarnakan nominal transaksi kurang dari 0");
+            }
+
+            if($data['total_profit'] < 0) {
+                throw new \Exception("Transaksi yang anda lakukan tidak dapat diproses, dikarnakan nominal transaksi kurang dari 0");
+            }
+
             $transaction = TransactionSale::create($data);
 
             foreach ($product_trx_models as $product_trx_model) {

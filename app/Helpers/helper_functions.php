@@ -338,6 +338,10 @@ if (!function_exists('add_store_asset')) {
 
         if ($amount == 0 || !$amount) return null;
 
+        if($amount < 0) {
+            throw new \Exception('Nilai nominal tidak boleh negatif');
+        }
+
         $asset    =   new StoreAsset();
 
         $asset->store()->associate($store ?? get_context_store());

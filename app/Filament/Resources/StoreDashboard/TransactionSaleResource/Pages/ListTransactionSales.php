@@ -7,6 +7,8 @@ use App\Filament\Resources\StoreDashboard\TransactionSaleResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use App\Filament\Widgets\TrxSaleOverview;
+use App\Models\TransactionSale;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Components\Tab;
 use Illuminate\Database\Eloquent\Builder;
 
