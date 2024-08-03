@@ -12,6 +12,7 @@ use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Pages;
 use App\Models\Product;
 use App\Traits\Ownership;
 use Filament\Forms\Components\{
+    Fieldset,
     FileUpload,
     Repeater,
     Select,
@@ -98,7 +99,23 @@ class TransactionSaleResource extends Resource
                     ->inputMode('double')
                     ->prefix('RP'),
 
+
+                TextInput::make('total_amount')->label('Total Transaksi')
+                    ->mask(RawJs::make('$money($input)'))
+                    ->stripCharacters(',')
+                    ->visibleOn('view')
+                    ->inputMode('double')
+                    ->prefix('RP'),
+
+                TextInput::make('total_profit')->label('Total Keuntungan')
+                    ->mask(RawJs::make('$money($input)'))
+                    ->stripCharacters(',')
+                    ->visibleOn('view')
+                    ->inputMode('double')
+                    ->prefix('RP'),
+
                 Repeater::make('products')->label('Daftar Produk')
+                    ->hiddenOn('view')
                     ->schema([
                         Select::make('product_id')->label('Pilih Produk')
                             ->options(get_product_list(get_have_stock: true))
@@ -155,6 +172,38 @@ class TransactionSaleResource extends Resource
                     })
                     ->live(false, 20)
                     ->columns(3),
+
+
+                Repeater::make('transactionSaleItems')
+                    ->relationship('transactionSaleItems')
+                    ->label('Daftar Produk')
+                    ->visibleOn('view')
+                    ->columnSpanFull()
+                    ->schema([
+
+                        Fieldset::make('')
+                            ->schema([
+
+                                TextInput::make('product_sku')->label('SKU Produk'),
+
+                                TextInput::make('product_name')->label('Nama Produk'),
+
+                                TextInput::make('sale_price')->label('Penjualan')
+                                    ->mask(RawJs::make('$money($input)'))
+                                    ->stripCharacters(',')
+                                    ->inputMode('double')
+                                    ->required()
+                                    ->prefix('Rp'),
+
+                                TextInput::make('sale_profit')->label('Keutungan')
+                                    ->mask(RawJs::make('$money($input)'))
+                                    ->stripCharacters(',')
+                                    ->inputMode('double')
+                                    ->required()
+                                    ->prefix('Rp'),
+                            ]),
+
+                    ]),
 
             ]);
     }

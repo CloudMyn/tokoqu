@@ -13,6 +13,7 @@ class TransactionSale extends Model
 
     protected $casts = [
         'total_qty'     => 'integer',
+        'total_profit'  => 'double',
         'total_amount'  => 'double',
     ];
 
@@ -40,7 +41,7 @@ class TransactionSale extends Model
         });
     }
 
-    public function transactionBuyItems()
+    public function transactionSaleItems()
     {
         return $this->hasMany(TransactionSaleItem::class, 'transaction_id');
     }

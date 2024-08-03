@@ -8,6 +8,7 @@ use App\Models\TransactionBuy;
 use App\Models\TransactionBuyItem;
 use App\Traits\Ownership;
 use Filament\Forms;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
@@ -115,7 +116,7 @@ class TransactionBuyResource extends Resource
                             ->prefix('RP'),
 
 
-                        TextInput::make('product_qty')
+                        TextInput::make('total_qty')
                             ->label('QTY Beli')
                             ->minValue(config('rules.stock.min_input'))
                             ->maxValue(config('rules.stock.max_input'))
@@ -128,7 +129,40 @@ class TransactionBuyResource extends Resource
                         })->columnSpanFull(),
 
 
-                    ])->visibleOn('view')->columns(2)
+                    ])->visibleOn('view')->columns(2),
+
+
+                Repeater::make('transactionBuyItems')
+                    ->relationship('transactionBuyItems')
+                    ->label('Daftar Produk')
+                    ->visibleOn('view')
+                    ->columnSpanFull()
+                    ->schema([
+
+                        Fieldset::make('')
+                            ->schema([
+
+                                TextInput::make('product_sku')->label('SKU Produk'),
+
+                                TextInput::make('product_name')->label('Nama Produk'),
+
+                                TextInput::make('product_cost')->label('Harga Barang')
+                                    ->mask(RawJs::make('$money($input)'))
+                                    ->stripCharacters(',')
+                                    ->inputMode('double')
+                                    ->required()
+                                    ->prefix('Rp'),
+
+                                TextInput::make('total_qty')
+                                    ->label('QTY Beli')
+                                    ->minValue(config('rules.stock.min_input'))
+                                    ->maxValue(config('rules.stock.max_input'))
+                                    ->formatStateUsing(function ($state) {
+                                        return $state;
+                                    }),
+                            ]),
+
+                    ]),
 
             ]);
     }
