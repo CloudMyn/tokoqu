@@ -14,7 +14,6 @@
         "filament/forms": "^3.2",
         "filament/infolists": "^3.2",
         "filament/notifications": "^3.2",
-        "filipfonal/filament-log-manager": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
         "jibaymcs/filament-tour": "^3.0",
         "joaopaulolndev/filament-edit-profile": "^1.0",

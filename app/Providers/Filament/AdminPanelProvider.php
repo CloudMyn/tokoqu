@@ -8,7 +8,6 @@ use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Widgets\TrxSal
 use App\Filament\Widgets\AdjustOverview;
 use App\Filament\Widgets\AssetsOverview;
 use App\Filament\Widgets\ProductsOverview;
-use App\Filament\Widgets\StoreOverview;
 use App\Filament\Widgets\TrxBuyOverview;
 use App\Filament\Widgets\TrxOverview;
 use App\Filament\Widgets\TrxSaleOverview;
@@ -16,12 +15,10 @@ use App\Filament\Widgets\WelcomeWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use FilipFonal\FilamentLogManager\FilamentLogManager;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -33,9 +30,6 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use JibayMcs\FilamentTour\FilamentTourPlugin;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use Joaopaulolndev\FilamentGeneralSettings\FilamentGeneralSettingsPlugin;
-use ShuvroRoy\FilamentSpatieLaravelBackup\FilamentSpatieLaravelBackupPlugin;
-use ShuvroRoy\FilamentSpatieLaravelBackup\Pages\Backups;
-use ShuvroRoy\FilamentSpatieLaravelHealth\Pages\HealthCheckResults;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -53,7 +47,6 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Dashboard::class,
-                // Pages\Dashboard::class,
             ])
             // ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
@@ -86,18 +79,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins(array_merge([
 
-                // \ShuvroRoy\FilamentSpatieLaravelHealth\FilamentSpatieLaravelHealthPlugin::make()->usingPage(HealthCheckResults::class),
-
-                // \TomatoPHP\FilamentArtisan\FilamentArtisanPlugin::make(),
-
-                // \TomatoPHP\FilamentDeveloperGate\FilamentDeveloperGatePlugin::make(),
-
-                // \Outerweb\FilamentTranslatableFields\Filament\Plugins\FilamentTranslatableFieldsPlugin::make(),
-
-                // \Amendozaaguiar\FilamentRouteStatistics\FilamentRouteStatisticsPlugin::make(),
-
-                // \Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin::make(),
-
                 FilamentGeneralSettingsPlugin::make()
                     ->canAccess(fn () => cek_admin_role())
                     ->setSort(3)
@@ -105,8 +86,6 @@ class AdminPanelProvider extends PanelProvider
                     ->setNavigationGroup('Utilitas')
                     ->setTitle('Pengaturan Umum')
                     ->setNavigationLabel('Pengaturan Umum'),
-
-                FilamentLogManager::make(),
 
                 FilamentTourPlugin::make(),
 
@@ -130,17 +109,5 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationItems([])->globalSearch(false)
             ->databaseNotifications();
-    }
-    private function getAdditionalPlugins()
-    {
-        $role = request()->attributes->get('user_role');
-
-        $plugins = [];
-
-        if ($role   === 'admin') {
-            $plugins[] = FilamentLogManager::make();
-        }
-
-        return $plugins;
     }
 }
