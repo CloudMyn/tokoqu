@@ -6,8 +6,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "amendozaaguiar/filament-route-statistics": "^3.0",
-        "bilfeldt/laravel-route-statistics": "^3.4",
+        "barryvdh/laravel-dompdf": "^3.0",
+        "bezhansalleh/filament-exceptions": "^2.1",
+        "bezhansalleh/filament-language-switch": "^3.1",
         "brick/money": "^0.9.0",
         "doctrine/dbal": "^3.8",
         "filament/filament": "^3.2",
@@ -22,16 +23,7 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
-        "outerweb/filament-translatable-fields": "^2.0",
-        "rappasoft/laravel-authentication-log": "^4.0",
-        "shuvroroy/filament-spatie-laravel-backup": "^2.2",
-        "shuvroroy/filament-spatie-laravel-health": "^2.0",
-        "spatie/cpu-load-health-check": "^1.0",
-        "spatie/laravel-translatable": "^6.7",
-        "spatie/security-advisories-health-check": "^1.2",
-        "tapp/filament-authentication-log": "^3.1",
-        "tomatophp/filament-artisan": "^1.1",
-        "tomatophp/filament-developer-gate": "^1.0"
+        "swisnl/filament-backgrounds": "^1.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

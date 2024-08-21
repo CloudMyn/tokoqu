@@ -4,7 +4,7 @@ return [
 
     'column_toggle' => [
 
-        'heading' => 'Kolom',
+        'heading' => 'Columns',
 
     ],
 
@@ -13,11 +13,11 @@ return [
         'text' => [
 
             'actions' => [
-                'collapse_list' => 'Tampilkan :count kurang',
-                'expand_list' => 'Tampilkan :count lebih',
+                'collapse_list' => 'Show :count less',
+                'expand_list' => 'Show :count more',
             ],
 
-            'more_list_items' => 'dan :count lebih',
+            'more_list_items' => 'and :count more',
 
         ],
 
@@ -26,47 +26,47 @@ return [
     'fields' => [
 
         'bulk_select_page' => [
-            'label' => 'Pilih/desisal semua item untuk aksi massal.',
+            'label' => 'Select/deselect all items for bulk actions.',
         ],
 
         'bulk_select_record' => [
-            'label' => 'Pilih/desisal item :key untuk aksi massal.',
+            'label' => 'Select/deselect item :key for bulk actions.',
         ],
 
         'bulk_select_group' => [
-            'label' => 'Pilih/desisal grup :title untuk aksi massal.',
+            'label' => 'Select/deselect group :title for bulk actions.',
         ],
 
         'search' => [
-            'label' => 'Pencarian',
-            'placeholder' => 'Pencarian',
-            'indicator' => 'Pencarian',
+            'label' => 'Search',
+            'placeholder' => 'Search',
+            'indicator' => 'Search',
         ],
 
     ],
 
     'summary' => [
 
-        'heading' => 'Ringkasan',
+        'heading' => 'Summary',
 
         'subheadings' => [
-            'all' => 'Semua :label',
-            'group' => 'Ringkasan :group',
-            'page' => 'Halaman ini',
+            'all' => 'All :label',
+            'group' => ':group summary',
+            'page' => 'This page',
         ],
 
         'summarizers' => [
 
             'average' => [
-                'label' => 'Rata-rata',
+                'label' => 'Average',
             ],
 
             'count' => [
-                'label' => 'Jumlah',
+                'label' => 'Count',
             ],
 
             'sum' => [
-                'label' => 'Jumlah',
+                'label' => 'Sum',
             ],
 
         ],
@@ -76,11 +76,11 @@ return [
     'actions' => [
 
         'disable_reordering' => [
-            'label' => 'Selesai memindahkan data',
+            'label' => 'Finish reordering records',
         ],
 
         'enable_reordering' => [
-            'label' => 'Memindahkan data',
+            'label' => 'Reorder records',
         ],
 
         'filter' => [
@@ -88,24 +88,24 @@ return [
         ],
 
         'group' => [
-            'label' => 'Grup',
+            'label' => 'Group',
         ],
 
         'open_bulk_actions' => [
-            'label' => 'Aksi massal',
+            'label' => 'Bulk actions',
         ],
 
         'toggle_columns' => [
-            'label' => 'Tampilkan/sembunyikan kolom',
+            'label' => 'Toggle columns',
         ],
 
     ],
 
     'empty' => [
 
-        'heading' => 'Tidak ada :model',
+        'heading' => 'No :model',
 
-        'description' => 'Buat :model untuk memulai.',
+        'description' => 'Create a :model to get started.',
 
     ],
 
@@ -114,16 +114,16 @@ return [
         'actions' => [
 
             'apply' => [
-                'label' => 'Terapkan filter',
+                'label' => 'Apply filters',
             ],
 
             'remove' => [
-                'label' => 'Hapus filter',
+                'label' => 'Remove filter',
             ],
 
             'remove_all' => [
-                'label' => 'Hapus semua filter',
-                'tooltip' => 'Hapus semua filter',
+                'label' => 'Remove all filters',
+                'tooltip' => 'Remove all filters',
             ],
 
             'reset' => [
@@ -132,27 +132,27 @@ return [
 
         ],
 
-        'heading' => 'Filter',
+        'heading' => 'Filters',
 
-        'indicator' => 'Filter aktif',
+        'indicator' => 'Active filters',
 
         'multi_select' => [
-            'placeholder' => 'Semua',
+            'placeholder' => 'All',
         ],
 
         'select' => [
-            'placeholder' => 'Semua',
+            'placeholder' => 'All',
         ],
 
         'trashed' => [
 
-            'label' => 'Data terhapus',
+            'label' => 'Deleted records',
 
-            'only_trashed' => 'Hanya data terhapus',
+            'only_trashed' => 'Only deleted records',
 
-            'with_trashed' => 'Dengan data terhapus',
+            'with_trashed' => 'With deleted records',
 
-            'without_trashed' => 'Tanpa data terhapus',
+            'without_trashed' => 'Without deleted records',
 
         ],
 
@@ -163,17 +163,17 @@ return [
         'fields' => [
 
             'group' => [
-                'label' => 'Grup',
-                'placeholder' => 'Grup',
+                'label' => 'Group by',
+                'placeholder' => 'Group by',
             ],
 
             'direction' => [
 
-                'label' => 'Grup arah',
+                'label' => 'Group direction',
 
                 'options' => [
-                    'asc' => 'Naik',
-                    'desc' => 'Turun',
+                    'asc' => 'Ascending',
+                    'desc' => 'Descending',
                 ],
 
             ],
@@ -182,20 +182,20 @@ return [
 
     ],
 
-    'reorder_indicator' => 'Sorot dan drag data untuk mengatur urutan.',
+    'reorder_indicator' => 'Drag and drop the records into order.',
 
     'selection_indicator' => [
 
-        'selected_count' => '1 data di pilih|:count data di pilih',
+        'selected_count' => '1 record selected|:count records selected',
 
         'actions' => [
 
             'select_all' => [
-                'label' => 'Pilih semua :count',
+                'label' => 'Select all :count',
             ],
 
             'deselect_all' => [
-                'label' => 'Desisal semua',
+                'label' => 'Deselect all',
             ],
 
         ],
@@ -207,16 +207,16 @@ return [
         'fields' => [
 
             'column' => [
-                'label' => 'Urutkan',
+                'label' => 'Sort by',
             ],
 
             'direction' => [
 
-                'label' => 'Grup arah',
+                'label' => 'Sort direction',
 
                 'options' => [
-                    'asc' => 'Naik',
-                    'desc' => 'Turun',
+                    'asc' => 'Ascending',
+                    'desc' => 'Descending',
                 ],
 
             ],
@@ -226,4 +226,3 @@ return [
     ],
 
 ];
-

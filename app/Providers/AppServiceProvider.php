@@ -27,30 +27,5 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-    {
-        Health::checks([
-            OptimizedAppCheck::new(),
-            DebugModeCheck::new(),
-            EnvironmentCheck::new(),
-            SecurityAdvisoriesCheck::new(),
-            CpuLoadCheck::new()
-                ->failWhenLoadIsHigherInTheLast5Minutes(2.0)
-                ->failWhenLoadIsHigherInTheLast15Minutes(1.5),
-
-            UsedDiskSpaceCheck::new()
-                ->warnWhenUsedSpaceIsAbovePercentage(60)
-                ->failWhenUsedSpaceIsAbovePercentage(80),
-
-            PingCheck::new()->url('https://spatie.be')->name('Spatie'),
-
-            DatabaseConnectionCountCheck::new()
-                ->warnWhenMoreConnectionsThan(50)
-                ->failWhenMoreConnectionsThan(100),
-
-
-            DatabaseTableSizeCheck::new()
-                ->table('users', maxSizeInMb: 1_000),
-        ]);
-    }
+    public function boot(): void {}
 }

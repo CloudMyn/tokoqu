@@ -80,7 +80,7 @@ class AdminPanelProvider extends PanelProvider
             ->plugins(array_merge([
 
                 FilamentGeneralSettingsPlugin::make()
-                    ->canAccess(fn () => cek_admin_role())
+                    ->canAccess(fn() => cek_admin_role())
                     ->setSort(3)
                     ->setIcon('heroicon-o-cog')
                     ->setNavigationGroup('Utilitas')
@@ -99,6 +99,8 @@ class AdminPanelProvider extends PanelProvider
                     ->shouldShowDeleteAccountForm(true)
                     ->shouldShowBrowserSessionsForm()
                     ->shouldShowAvatarForm(),
+
+                \BezhanSalleh\FilamentExceptions\FilamentExceptionsPlugin::make(),
             ], []))
             ->navigationGroups([
                 'Tabel Pengguna',
