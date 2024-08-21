@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Store\StoreResource\StoreAssetResource\Pages;
+namespace App\Filament\Resources\StoreDashboard\StoreAssetResource\Pages;
 
 use App\Filament\Exports\StoreAssetExporter;
 use App\Filament\Resources\StoreDashboard\StoreAssetResource;

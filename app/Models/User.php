@@ -4,14 +4,16 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements HasAvatar
+class User extends Authenticatable implements FilamentUser, HasAvatar
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -50,8 +52,20 @@ class User extends Authenticatable implements HasAvatar
 
 
     protected $with = [
-        'phone_number', 'owner_store'
+        'phone_number',
+        'owner_store'
     ];
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        if ($panel->getId() === 'admin') {
+            return cek_admin_role();
+        } else if ($panel->getId() === 'store') {
+            return cek_store_role();
+        }
+
+        return false;
+    }
 
     public function getFilamentAvatarUrl(): ?string
     {

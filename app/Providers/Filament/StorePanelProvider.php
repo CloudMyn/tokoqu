@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+
 use App\Filament\Pages\Dashboard;
 use App\Filament\Resources\StoreDashboard\TransactionBuyResource\Widgets\TrxBuyChart;
 use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Widgets\TrxSaleChart;
@@ -31,14 +32,13 @@ use JibayMcs\FilamentTour\FilamentTourPlugin;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use Joaopaulolndev\FilamentGeneralSettings\FilamentGeneralSettingsPlugin;
 
-class AdminPanelProvider extends PanelProvider
+class StorePanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->default()
-            ->id('admin')
-            ->path('admin')
+            ->id('store')
+            ->path('store')
             ->login()
             ->colors([
                 'primary' => Color::Amber,
@@ -48,8 +48,20 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
             ])
+            // ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
+                // Widgets\AccountWidget::class,
+                // Widgets\FilamentInfoWidget::class,
                 WelcomeWidget::class,
+                // StoreOverview::class,
+                TrxOverview::class,
+                TrxSaleChart::class,
+                TrxBuyChart::class,
+                ProductsOverview::class,
+                AssetsOverview::class,
+                AdjustOverview::class,
+                TrxSaleOverview::class,
+                TrxBuyOverview::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -67,13 +79,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins(array_merge([
 
-                FilamentGeneralSettingsPlugin::make()
-                    ->canAccess(fn() => cek_admin_role())
-                    ->setSort(3)
-                    ->setIcon('heroicon-o-cog')
-                    ->setNavigationGroup('Utilitas')
-                    ->setTitle('Pengaturan Umum')
-                    ->setNavigationLabel('Pengaturan Umum'),
+                FilamentTourPlugin::make(),
 
                 FilamentEditProfilePlugin::make()
                     ->slug('my-profile')
@@ -86,15 +92,18 @@ class AdminPanelProvider extends PanelProvider
                     ->shouldShowBrowserSessionsForm()
                     ->shouldShowAvatarForm(),
 
-                \BezhanSalleh\FilamentExceptions\FilamentExceptionsPlugin::make(),
             ], []))
             ->navigationGroups([
                 'Tabel Pengguna',
                 'Data Toko',
+                'Inventori',
+                'Transaksi',
                 'Utilitas',
             ])
             ->navigationItems([])->globalSearch(false)
             ->databaseNotifications()
-            ->spa();
+            ->spa()
+            ->unsavedChangesAlerts()
+            ->emailVerification();
     }
 }
