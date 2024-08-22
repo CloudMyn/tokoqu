@@ -103,7 +103,6 @@ class StorePanelProvider extends PanelProvider
             ->navigationItems([])->globalSearch(false)
             ->databaseNotifications()
             ->spa()
-            ->unsavedChangesAlerts()
             ->emailVerification();
     }
 }

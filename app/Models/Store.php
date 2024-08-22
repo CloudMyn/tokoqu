@@ -18,6 +18,14 @@ class Store extends Model
         'integer'   =>  'total_qty',
     ];
 
+
+    protected static function booted()
+    {
+        static::created(function ($store) {
+
+        });
+    }
+
     public function employees()
     {
         return $this->hasMany(Employee::class, 'store_code', 'code');
