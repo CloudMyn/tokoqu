@@ -12,13 +12,20 @@ use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Pages;
 use App\Models\Product;
 use App\Traits\Ownership;
 use Filament\Forms\Components\{
+    DatePicker,
+    DateTimePicker,
     Fieldset,
     FileUpload,
     Repeater,
+    Section,
     Select,
-    TextInput
+    Textarea,
+    TextInput,
+    Toggle
 };
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
@@ -99,25 +106,22 @@ class TransactionSaleResource extends Resource
                     ->inputMode('double')
                     ->prefix('RP'),
 
-
                 TextInput::make('total_amount')->label('Total Transaksi')
-                    ->mask(RawJs::make('$money($input)'))
-                    ->stripCharacters(',')
-                    ->visibleOn('view')
-                    ->inputMode('double')
+                    ->disabled()
+                    ->default(0)
                     ->prefix('RP'),
 
                 TextInput::make('total_profit')->label('Total Keuntungan')
-                    ->mask(RawJs::make('$money($input)'))
-                    ->stripCharacters(',')
-                    ->visibleOn('view')
-                    ->inputMode('double')
+                    ->disabled()
+                    ->default(0)
                     ->prefix('RP'),
 
                 Repeater::make('products')->label('Daftar Produk')
                     ->hiddenOn('view')
                     ->schema([
-                        Select::make('product_id')->label('Pilih Produk')
+                        Select::make('product_id')
+                            ->label('Pilih Produk')
+                            ->unique()
                             ->options(get_product_list(get_have_stock: true))
                             ->searchable()
                             ->columnSpanFull()
@@ -149,8 +153,9 @@ class TransactionSaleResource extends Resource
                     ])
                     ->collapsible()
                     ->cloneable()
+                    ->dehydrateStateUsing(function (Get $get, Set $set) {})
                     ->columnSpanFull()
-                    ->itemLabel(function (array $state) {
+                    ->itemLabel(function (array $state, Set $set, Get $get) {
 
                         $qty    =   intval($state['product_qty'] ?? 0);
 
@@ -164,15 +169,80 @@ class TransactionSaleResource extends Resource
 
                         $gross_trx      =   (($product?->sale_price ?? 0) * $qty - $potongan_per_product) - $potongan_per_qty;
 
+
+                        if ($get('is_deliver')) {
+
+                            $onkir      =   $product->delivery_fee ?? 0;
+                            $gross_trx =   $gross_trx + ($product->delivery_fee ?? 0);
+                        } else {
+
+                            $onkir      =   0;
+                            $gross_trx  =   ($product?->sale_price ?? 0);
+                        }
+
                         $profit         =   ubah_angka_int_ke_rupiah($gross_trx - ($product?->product_cost ?? 0) * $qty);
 
                         $trx_ammount    =   ubah_angka_int_ke_rupiah($gross_trx);
 
-                        return  "$product_name | Transaksi $trx_ammount | Profit $profit";
+
+
+                        return  "$product_name | Transaksi Rp. $trx_ammount | Profit Rp. $profit | Onkir Rp." . ubah_angka_int_ke_rupiah($onkir);
                     })
                     ->live(false, 20)
+                    ->reactive()
                     ->columns(3),
 
+                Toggle::make('in_debt')
+                    ->label('Transaksi Pinjaman')
+                    ->default(false)
+                    ->live()
+                    ->onColor('success'),
+
+
+                Toggle::make('is_deliver')
+                    ->label('Pakai Onkir')
+                    ->default(false)
+                    ->live()
+                    ->onColor('success'),
+
+                Fieldset::make('debtor_data')
+                    ->label('Data peminjam')
+                    ->visible(function (Get $get) {
+                        return $get('in_debt');
+                    })
+                    ->schema([
+
+                        TextInput::make('debtor_data.name')
+                            ->label('Nama')
+                            ->required()
+                            ->minLength(3)
+                            ->maxLength(199),
+
+                        TextInput::make('debtor_data.phone')
+                            ->label('Nomor telepeon')
+                            ->numeric()
+                            ->inputMode('integer')
+                            ->required(),
+
+                        TextInput::make('debtor_data.amount')
+                            ->label('Jumlah Pinjaman')
+                            ->mask(RawJs::make('$money($input)'))
+                            ->stripCharacters(',')
+                            ->numeric()
+                            ->prefix('RP'),
+
+                        DateTimePicker::make('debtor_data.due_date')
+                            ->label('Tanggal jatuh tempo')
+                            ->minDate(now()->addDay())
+                            ->required(),
+
+                        Textarea::make('debtor_data.note')
+                            ->label('Catatan/Keteragan')
+                            ->columnSpanFull()
+                            ->minLength(3)
+                            ->maxLength(400),
+
+                    ]),
 
                 Repeater::make('transactionSaleItems')
                     ->relationship('transactionSaleItems')

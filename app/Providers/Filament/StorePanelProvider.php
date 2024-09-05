@@ -96,8 +96,9 @@ class StorePanelProvider extends PanelProvider
             ->navigationGroups([
                 'Tabel Pengguna',
                 'Data Toko',
-                'Inventori',
                 'Transaksi',
+                'Asset',
+                'Inventori',
                 'Utilitas',
             ])
             ->navigationItems([])->globalSearch(false)

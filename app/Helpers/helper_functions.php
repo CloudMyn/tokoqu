@@ -158,7 +158,7 @@ if (!function_exists('cek_store_role')) {
      */
     function cek_store_role(): bool
     {
-        if(!auth()->user()) return false;
+        if (!auth()->user()) return false;
 
         return get_auth_user()->has_role('store_owner');
     }
@@ -172,7 +172,7 @@ if (!function_exists('cek_store_exists')) {
      */
     function cek_store_exists(): bool
     {
-        if(!auth()->user()) return false;
+        if (!auth()->user()) return false;
 
         return get_context_store() instanceof Store;
     }
@@ -264,11 +264,26 @@ if (!function_exists('get_unit_list')) {
     {
         $list = [];
 
-        foreach ([
-            'carton', 'pack', 'piece', 'box', 'bag',
-            'set', 'bottle', 'jar', 'roll', 'case', 'pallet',
-            'bundle', 'liter', 'milliliter', 'kilogram', 'gram'
-        ] as  $unit) {
+        foreach (
+            [
+                'carton',
+                'pack',
+                'piece',
+                'box',
+                'bag',
+                'set',
+                'bottle',
+                'jar',
+                'roll',
+                'case',
+                'pallet',
+                'bundle',
+                'liter',
+                'milliliter',
+                'kilogram',
+                'gram'
+            ] as  $unit
+        ) {
 
             $list[$unit]   =   strtoupper($unit);
         }
@@ -288,21 +303,19 @@ if (!function_exists('get_context_store')) {
     {
         $auth_user = get_auth_user();
 
-        if(cek_store_role()) {
+        if (cek_store_role()) {
 
             return  $auth_user->owner_store->store()->first();
         }
 
-        if(cek_store_employee_role()) {
+        if (cek_store_employee_role()) {
 
 
             return $auth_user->employee?->store()?->first();
-
         }
 
 
         abort(404, 'Perizinan Gagal');
-
     }
 }
 
@@ -338,7 +351,7 @@ if (!function_exists('add_store_asset')) {
 
         if ($amount == 0 || !$amount) return null;
 
-        if($amount < 0) {
+        if ($amount < 0) {
             throw new \Exception('Nilai nominal tidak boleh negatif');
         }
 
@@ -394,9 +407,14 @@ function ubah_angka_rupiah_ke_int(string|int $angka): int
  * @param int $angka Angka dalam bentuk integer
  * @return string Angka dalam bentuk rupiah
  */
-function ubah_angka_int_ke_rupiah(int $angka = null): string
+function ubah_angka_int_ke_rupiah(int $angka = null, bool $with_format = true): string
 {
     $angka = $angka ?? 0;
+
+    if (!$with_format) {
+        return number_format($angka, 0, '.', ',');
+    }
+
 
     if ($angka >= 1_000_000_000_000) {
         // Jika angka lebih dari atau sama dengan 1 triliun

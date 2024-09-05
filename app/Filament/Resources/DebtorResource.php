@@ -9,15 +9,35 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class DebtorResource extends Resource
 {
     protected static ?string $model = Debtor::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-credit-card';
+
+    protected static ?string $label = 'Tabel Peminjam';
+
+    public static function getNavigationLabel(): string
+    {
+        return 'List Peminjam';
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Asset';
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return true;
+    }
+
 
     public static function form(Form $form): Form
     {
@@ -31,13 +51,64 @@ class DebtorResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('name')
+                    ->label('Nama')
+                    ->searchable()
+                    ->limit(30)
+                    ->sortable(),
+
+                TextColumn::make('phone')
+                    ->label('Nomor Telepon')
+                    ->searchable(),
+
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->colors(function (string $state) {
+                        return [
+                            'success'   => 'paid',
+                            'warning' => 'unpaid',
+                            'danger' => 'overdue',
+                        ];
+                    })
+                    ->searchable(),
+
+                TextColumn::make('amount')
+                    ->label('Jumlah')
+                    ->money('Rp. ')
+                    ->sortable(),
+
+                TextColumn::make('paid')
+                    ->label('Sudah Dibayar')
+                    ->money('Rp. ')
+                    ->sortable(),
+
+                TextColumn::make('due_date')
+                    ->label('Jatuh Tempo')
+                    ->date('Y-m-d')
+                    ->sortable(),
+
+
+                TextColumn::make('updated_at')
+                    ->label('Tanggal Diubah')
+                    ->date('Y-m-d')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
+
+                TextColumn::make('created_at')
+                    ->label('Tanggal Dibuat')
+                    ->date('Y-m-d')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
+
             ])
             ->filters([
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -60,5 +131,10 @@ class DebtorResource extends Resource
             'create' => Pages\CreateDebtor::route('/create'),
             'edit' => Pages\EditDebtor::route('/{record}/edit'),
         ];
+    }
+
+    public static function canAccess(): bool
+    {
+        return cek_store_role();
     }
 }

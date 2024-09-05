@@ -17,10 +17,9 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->decimal('amount', 15, 2)->default(0);
             $table->decimal('paid', 15, 2)->default(0);
-            $table->decimal('balance', 15, 2)->default(0);
             $table->foreignId('transaction_id')->nullable();
             $table->foreignId('asset_id')->nullable();
-            $table->enum('status', ['paid', 'unpaid', 'overdue']);
+            $table->enum('status', ['paid', 'unpaid', 'overdue'])->default('unpaid');
             $table->date('due_date');
             $table->text('note')->nullable();
             $table->timestamps();

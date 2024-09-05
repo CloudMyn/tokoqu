@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Debtor;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
@@ -26,20 +27,37 @@ class AssetsOverview extends BaseWidget
 
         $q_out  =   $model_toko->store_assets()->whereBetween('created_at', $scope)->where('type', 'out');
 
+        $q_hold  =   $model_toko->store_assets()->where('type', 'hold');
+
+        $amount  =   Debtor::where('status', '!=', 'paid')->sum('amount');
+        $paid  =   Debtor::where('status', '!=', 'paid')->sum('paid');
+
         $asset_in_this_mounth      =   $q_in->sum('amount');
 
         $asset_out_this_mounth     =   $q_out->sum('amount');
 
+        $asset_hold_this_mounth     =   $amount - $paid;
+
+        $total_asset    =   $total_asset - $asset_hold_this_mounth;
+
         return [
 
-            Stat::make('Total Kas Toko', "Rp. " . ubah_angka_int_ke_rupiah($total_asset)),
+            Stat::make('Total Kas Toko', "Rp. " . ubah_angka_int_ke_rupiah($total_asset))
+                ->icon('heroicon-o-banknotes'),
 
             Stat::make('Kas Masuk ( Bulan Ini )', "Rp. " . ubah_angka_int_ke_rupiah($asset_in_this_mounth))
                 ->chart($q_in->pluck('amount')->toArray())
+                ->icon('heroicon-o-arrow-trending-up')
                 ->color('success'),
 
             Stat::make('Kas Keluar ( Bulan Ini )', "Rp. " . ubah_angka_int_ke_rupiah($asset_out_this_mounth))
                 ->chart($q_out->pluck('amount')->toArray())
+                ->icon('heroicon-o-arrow-trending-down')
+                ->color('danger'),
+
+            Stat::make('Kas Tertahan', "Rp. " . ubah_angka_int_ke_rupiah($asset_hold_this_mounth))
+                ->chart($q_out->pluck('amount')->toArray())
+                ->icon('heroicon-o-question-mark-circle')
                 ->color('danger'),
 
         ];

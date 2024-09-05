@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\StoreDashboard\TransactionSaleResource\Pages;
 
 use App\Filament\Resources\StoreDashboard\TransactionSaleResource;
+use App\Models\Debtor;
 use App\Models\TransactionSale;
 use App\Models\TransactionSaleItem;
 use Filament\Actions;
@@ -33,8 +34,14 @@ class CreateTransactionSale extends CreateRecord
             $products       =   $data['products'];
             $trx_discount   =   doubleval($data['discount']) / count($products);
 
+            $in_debt    =    $data['in_debt'];
+
+            $debtor_data    =   $data['debtor_data'];
+
             unset($data['products']);
             unset($data['discount']);
+            unset($data['in_debt']);
+            unset($data['debtor_data']);
 
             $data['store_code']     =   $store->code;
             $data['admin_name']     =   $user->name;
@@ -88,6 +95,11 @@ class CreateTransactionSale extends CreateRecord
                 $product_trx_model->transaction()->associate($transaction);
 
                 $product_trx_model->save();
+            }
+
+
+            if($in_debt) {
+                Debtor::create($debtor_data);
             }
 
             DB::commit();

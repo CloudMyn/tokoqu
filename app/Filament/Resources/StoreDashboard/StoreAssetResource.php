@@ -26,7 +26,7 @@ class StoreAssetResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
     public static function getNavigationLabel(): string
     {
@@ -35,7 +35,7 @@ class StoreAssetResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Transaksi';
+        return 'Asset';
     }
 
     public static function canEdit(Model $record): bool
@@ -86,7 +86,7 @@ class StoreAssetResource extends Resource
 
                 TextColumn::make('type')
                     ->label('Jenis')
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'in' => 'success',
                         'out' => 'danger',
                     })
@@ -100,6 +100,22 @@ class StoreAssetResource extends Resource
                     ->numeric(decimalPlaces: 0)
                     ->prefix('Rp. ')
                     ->sortable(),
+
+                TextColumn::make('updated_at')
+                    ->label('Diupdate Pada')
+                    ->searchable()
+                    ->sortable()
+                    ->date('d F Y')
+                    ->toggleable()
+                    ->toggledHiddenByDefault(true),
+
+                TextColumn::make('created_at')
+                    ->label('Ditambahkan Pada')
+                    ->searchable()
+                    ->sortable()
+                    ->date('d F Y')
+                    ->toggleable()
+                    ->toggledHiddenByDefault(false),
             ])
             ->filters([
                 //

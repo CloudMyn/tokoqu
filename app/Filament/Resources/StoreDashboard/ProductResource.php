@@ -9,6 +9,7 @@ use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Widgets\TrxSal
 use App\Models\Product;
 use App\Traits\Ownership;
 use Filament\Actions\SelectAction;
+use Filament\Forms\Components\Fieldset as ComponentsFieldset;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -102,17 +103,28 @@ class ProductResource extends Resource
                         return $record;
                     }),
 
-                TextInput::make('sale_price')->label('Harga Jual')
-                    ->mask(RawJs::make('$money($input)'))
-                    ->required()
-                    ->inputMode('double')
-                    ->prefix('RP'),
+                ComponentsFieldset::make('')
+                    ->columns(3)
+                    ->schema([
 
-                TextInput::make('product_cost')->label('Harga Beli')
-                    ->mask(RawJs::make('$money($input)'))
-                    ->required()
-                    ->inputMode('double')
-                    ->prefix('RP'),
+                        TextInput::make('sale_price')->label('Harga Jual')
+                            ->mask(RawJs::make('$money($input)'))
+                            ->required()
+                            ->inputMode('double')
+                            ->prefix('RP'),
+
+                        TextInput::make('product_cost')->label('Harga Beli')
+                            ->mask(RawJs::make('$money($input)'))
+                            ->required()
+                            ->inputMode('double')
+                            ->prefix('RP'),
+
+                        TextInput::make('delivery_fee')->label('Onkos Kirim')
+                            ->mask(RawJs::make('$money($input)'))
+                            ->required()
+                            ->inputMode('double')
+                            ->prefix('RP'),
+                    ]),
 
                 Select::make('store_code')->label('Pilih Toko')
                     ->options(get_store_list())
@@ -136,9 +148,9 @@ class ProductResource extends Resource
                     ->trueLabel('Barang Ada Stock')
                     ->falseLabel('Barang Stock Kosong')
                     ->queries(
-                        true: fn (Builder $query) => $query->where('stock', '!=', 0),
-                        false: fn (Builder $query) => $query->where('stock', '=', 0),
-                        blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
+                        true: fn(Builder $query) => $query->where('stock', '!=', 0),
+                        false: fn(Builder $query) => $query->where('stock', '=', 0),
+                        blank: fn(Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
                     )
             ])
             ->columns([

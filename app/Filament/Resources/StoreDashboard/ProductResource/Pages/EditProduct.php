@@ -43,6 +43,7 @@ class EditProduct extends EditRecord
             $product->product_cost  = ubah_angka_rupiah_ke_int($data['product_cost']);
             $product->fraction      = $data['fraction'];
             $product->unit          = $data['unit'];
+            $product->delivery_fee  = ubah_angka_rupiah_ke_int($data['delivery_fee']);
 
             $product->save();
 
@@ -55,11 +56,6 @@ class EditProduct extends EditRecord
 
             throw $th;
         }
-    }
-
-    protected function getRedirectUrl(): string
-    {
-        return $this->getResource()::getUrl('index');
     }
 
     protected function getSavedNotification(): ?Notification
