@@ -40,8 +40,6 @@ class ListStoreAssets extends ListRecords
                 ->modifyQueryUsing(fn(Builder $query) => $query->where('type', 'in')),
             'Kas Keluar' => Tab::make()
                 ->modifyQueryUsing(fn(Builder $query) => $query->where('type', 'out')),
-            'Kas Tertahan' => Tab::make()
-                ->modifyQueryUsing(fn(Builder $query) => $query->where('type', 'hold')),
         ];
     }
 

@@ -314,7 +314,25 @@ class TransactionSaleResource extends Resource
                     ->searchable(),
             ])
             ->filters([
-                //
+                \Filament\Tables\Filters\Filter::make('created_at')
+                    ->label('Tanggal Dibuat')
+                    ->form([
+                        \Filament\Forms\Components\DatePicker::make('created_from')
+                            ->label('Dari Tanggal'),
+                        \Filament\Forms\Components\DatePicker::make('created_until')
+                            ->label('Hingga Tanggal'),
+                    ])
+                    ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data): \Illuminate\Database\Eloquent\Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn(\Illuminate\Database\Eloquent\Builder $query, $date): \Illuminate\Database\Eloquent\Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn(\Illuminate\Database\Eloquent\Builder $query, $date): \Illuminate\Database\Eloquent\Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
             ])
             ->actions([
                 ViewAction::make(),

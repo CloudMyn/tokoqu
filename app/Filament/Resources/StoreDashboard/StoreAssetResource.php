@@ -7,6 +7,7 @@ use App\Filament\Resources\StoreDashboard\StoreAssetResource\Pages\EditStoreAsse
 use App\Filament\Resources\StoreDashboard\StoreAssetResource\Pages\ListStoreAssets;
 use App\Models\StoreAsset;
 use App\Traits\Ownership;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -15,7 +16,9 @@ use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class StoreAssetResource extends Resource
@@ -118,7 +121,24 @@ class StoreAssetResource extends Resource
                     ->toggledHiddenByDefault(false),
             ])
             ->filters([
-                //
+                Filter::make('created_at')
+                    ->form([
+                        DatePicker::make('created_from')
+                            ->label('Dari Tanggal'),
+                        DatePicker::make('created_until')
+                            ->label('Hingga Tanggal'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()->label('Tampilkan'),
