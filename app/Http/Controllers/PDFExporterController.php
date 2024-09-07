@@ -133,7 +133,7 @@ class PDFExporterController extends Controller
                 'Laporan Peminjaman'   =>  $data_repot,
             ],
             'tables'        =>  [
-                'Daftar Peminjam'    =>  [
+                'Daftar Peminjaman Belum Lunas'    =>  [
                     "kolom"     =>  ['ID', 'Nama', 'Jumlah', 'Terbayar', 'Status', 'Tanggal'],
                     "data"      =>  $data_debtors,
                 ]

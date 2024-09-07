@@ -19,16 +19,7 @@ class TransactionSale extends Model
 
     protected static function booted()
     {
-        static::created(function ($transaction) {
-
-            add_store_asset(
-                store: $transaction->store,
-                title: 'Transaksi Penjualan #' . $transaction->id,
-                message: "Transaksi penjualan ID #{$transaction->id} : Rp. " .  ubah_angka_int_ke_rupiah($transaction->total_amount) . " ( " . $transaction->total_qty . " )",
-                type: 'in',
-                amount: $transaction->total_amount,
-            );
-        });
+        static::created(function ($transaction) {});
 
         static::deleting(function ($transaction) {
             $items      =   $transaction->transactionBuyItems;

@@ -186,7 +186,7 @@ class TransactionSaleResource extends Resource
                     ->reactive()
                     ->columns(3),
 
-                Toggle::make('in_debt')
+                Toggle::make('is_debt')
                     ->label('Transaksi Pinjaman')
                     ->default(false)
                     ->live()
@@ -202,7 +202,7 @@ class TransactionSaleResource extends Resource
                 Fieldset::make('debtor_data')
                     ->label('Data peminjam')
                     ->visible(function (Get $get) {
-                        return $get('in_debt');
+                        return $get('is_debt');
                     })
                     ->schema([
 

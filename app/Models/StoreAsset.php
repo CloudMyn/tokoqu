@@ -21,7 +21,7 @@ class StoreAsset extends Model
                 $store->update([
                     'assets'    =>  $store->assets + $storeAsset->amount
                 ]);
-            } else {
+            } else if ($storeAsset->type == 'out') {
                 $store->update([
                     'assets'    =>  $store->assets - $storeAsset->amount
                 ]);
@@ -36,7 +36,7 @@ class StoreAsset extends Model
                 $store->update([
                     'assets'    =>  $store->assets - $storeAsset->amount
                 ]);
-            } else {
+            } else if ($storeAsset->type == 'out') {
                 $store->update([
                     'assets'    =>  $store->assets + $storeAsset->amount
                 ]);

@@ -83,9 +83,11 @@ class StoreAssetResource extends Resource
 
                 Select::make('type')
                     ->label('Jenis Inputan')
+                    ->required()
                     ->options([
                         'in'    =>  'Kas Masuk',
                         'out'   =>  'Kas keluar',
+                        'hold'  =>  'Kas Tertahan',
                     ])
             ]);
     }
@@ -103,6 +105,7 @@ class StoreAssetResource extends Resource
                     ->color(fn(string $state): string => match ($state) {
                         'in' => 'success',
                         'out' => 'danger',
+                        'hold' => 'warning',
                     })
                     ->searchable()
                     ->badge()

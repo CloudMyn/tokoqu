@@ -19,42 +19,35 @@ class AssetsOverview extends BaseWidget
     {
         $model_toko     =   get_context_store();
 
-        $scope          =   [now()->startOfMonth(), now()->endOfMonth()];
+        $q_in   =   $model_toko->store_assets()->where('type', 'in');
 
-        $total_asset    =   $model_toko->store_assets()->where('type', 'in')->sum('amount') - $model_toko->store_assets()->where('type', 'out')->sum('amount');
+        $q_out  =   $model_toko->store_assets()->where('type', 'out');
 
-        $q_in   =   $model_toko->store_assets()->whereBetween('created_at', $scope)->where('type', 'in');
+        $q_hold =   $model_toko->store_assets()->where('type', 'hold');
 
-        $q_out  =   $model_toko->store_assets()->whereBetween('created_at', $scope)->where('type', 'out');
+        $asset_in      =   $model_toko->store_assets()->where('type', 'in')->sum('amount');
 
-        $amount  =  $model_toko->debtors()->where('status', '!=', 'paid')->sum('amount');
+        $asset_out     =   $model_toko->store_assets()->where('type', 'out')->sum('amount');
 
-        $paid  =  $model_toko->debtors()->where('status', '!=', 'paid')->sum('paid');
-
-        $asset_in_this_mounth      =   $q_in->sum('amount');
-
-        $asset_out_this_mounth     =   $q_out->sum('amount');
-
-        $asset_hold_this_mounth     =   $amount - $paid;
-
+        $asset_hold    =   $model_toko->store_assets()->where('type', 'hold')->sum('amount');
 
         return [
 
             Stat::make('Total Kas Toko', "Rp. " . ubah_angka_int_ke_rupiah($model_toko->assets))
                 ->icon('heroicon-o-banknotes'),
 
-            Stat::make('Kas Masuk ( Bulan Ini )', "Rp. " . ubah_angka_int_ke_rupiah($asset_in_this_mounth))
+            Stat::make('Kas Masuk ( Bulan Ini )', "Rp. " . ubah_angka_int_ke_rupiah($asset_in))
                 ->chart($q_in->pluck('amount')->toArray())
                 ->icon('heroicon-o-arrow-trending-up')
                 ->color('success'),
 
-            Stat::make('Kas Keluar ( Bulan Ini )', "Rp. " . ubah_angka_int_ke_rupiah($asset_out_this_mounth))
+            Stat::make('Kas Keluar ( Bulan Ini )', "Rp. " . ubah_angka_int_ke_rupiah($asset_out))
                 ->chart($q_out->pluck('amount')->toArray())
                 ->icon('heroicon-o-arrow-trending-down')
                 ->color('danger'),
 
-            Stat::make('Kas Terpinjam', "Rp. " . ubah_angka_int_ke_rupiah($asset_hold_this_mounth))
-                ->chart($q_out->pluck('amount')->toArray())
+            Stat::make('Kas Tertahan', "Rp. " . ubah_angka_int_ke_rupiah($asset_hold))
+                ->chart($q_hold->pluck('amount')->toArray())
                 ->icon('heroicon-o-question-mark-circle')
                 ->color('danger'),
 

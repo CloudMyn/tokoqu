@@ -383,6 +383,22 @@ if (!function_exists('delete_store_asset')) {
     }
 }
 
+if (!function_exists('sync_store_assets')) {
+    /**
+     * sync store assets
+     *
+     * @return void
+     */
+    function sync_store_assets()
+    {
+        $store  =   get_context_store();
+
+        $store->update([
+            'assets'   =>  $store->store_assets()->where('type', 'in')->sum('amount')
+        ]);
+    }
+}
+
 /**
  * Ubah angka dengan format rupiah menjadi integer
  *

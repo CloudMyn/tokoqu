@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('total_profit');
             $table->foreignId('admin_id')->nullable();
             $table->string('admin_name');
+            $table->boolean('is_debt')->default(false);
             $table->string('store_code');
             $table->timestamps();
 

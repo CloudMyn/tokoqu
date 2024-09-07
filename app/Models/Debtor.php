@@ -21,30 +21,22 @@ class Debtor extends Model
         parent::boot();
 
         static::deleting(function (Debtor $debtor) {
-            $store  =   get_context_store();
-
-            $store->update([
-                'assets'    =>  $store->assets + $debtor->amount
-            ]);
+            $debtor->asset->delete();
         });
 
         static::creating(function (Debtor $debtor) {
             $store  =   get_context_store();
 
             $debtor->store()->associate($store);
-
-            $store->update([
-                'assets'    =>  $store->assets - $debtor->amount
-            ]);
         });
 
         static::saved(function (Debtor $debtor) {
             if ($debtor->status == 'paid') {
-                $store  =   get_context_store();
-
-                $store->update([
-                    'assets'    =>  $store->assets + $debtor->amount
+                $debtor->asset->update([
+                    'type'    =>  'in'
                 ]);
+
+                sync_store_assets();
             }
         });
     }
@@ -57,5 +49,10 @@ class Debtor extends Model
     public function store()
     {
         return $this->belongsTo(Store::class, 'store_code', 'code');
+    }
+
+    public function asset()
+    {
+        return $this->belongsTo(StoreAsset::class, 'asset_id', 'id');
     }
 }

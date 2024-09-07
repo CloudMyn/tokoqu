@@ -35,7 +35,7 @@ class CreateTransactionSale extends CreateRecord
             $products       =   $data['products'];
             $trx_discount   =   doubleval($data['discount']) / count($products);
 
-            $in_debt        =    $data['in_debt'];
+            $in_debt        =    $data['is_debt'];
 
             $is_deliver     =    $data['is_deliver'];
 
@@ -44,7 +44,6 @@ class CreateTransactionSale extends CreateRecord
             unset($data['is_deliver']);
             unset($data['products']);
             unset($data['discount']);
-            unset($data['in_debt']);
             unset($data['debtor_data']);
 
             $data['store_code']     =   $store->code;
@@ -67,7 +66,7 @@ class CreateTransactionSale extends CreateRecord
 
                 $product_model  =    $store->products()->find($product['product_id']);
 
-                if($is_deliver) {
+                if ($is_deliver) {
                     $onkir  =   $product_model->delivery_fee;
                 }
 
@@ -107,6 +106,14 @@ class CreateTransactionSale extends CreateRecord
                 $product_trx_model->save();
             }
 
+            $asset = add_store_asset(
+                store: $transaction->store,
+                title: 'Transaksi Penjualan #' . $transaction->id,
+                message: "Transaksi penjualan ID #{$transaction->id} : Rp. " .  ubah_angka_int_ke_rupiah($transaction->total_amount) . " ( " . $transaction->total_qty . " )",
+                type: $transaction->is_debt ? 'hold' : 'in',
+                amount: $transaction->total_amount,
+            );
+
 
             if ($in_debt) {
 
@@ -115,7 +122,9 @@ class CreateTransactionSale extends CreateRecord
                     throw new \Exception("Transaksi yang anda lakukan tidak dapat diproses, dikarnakan nominal pinjaman melebihi total transaksi Rp " . ubah_angka_int_ke_rupiah($transaction->total_amount));
                 }
 
-                $debtor_data['paid']    =   0;
+                $debtor_data['paid']            =   0;
+                $debtor_data['transaction_id']  =   $transaction->id;
+                $debtor_data['asset_id']        =   $asset->id;
 
                 Debtor::create($debtor_data);
             }

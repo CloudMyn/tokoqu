@@ -23,24 +23,24 @@ class Product extends Model
         static::created(function ($product) {
             // when product created
 
-            add_store_asset(
-                store: $product->store,
-                title: 'Penambahan Produk #' . $product->id,
-                message: 'Produk yang di tambahkan : ' . $product->name . " ( " . $product->stock . " )",
-                type: 'out',
-                amount: intval($product->product_cost * $product->stock),
-            );
+            // add_store_asset(
+            //     store: $product->store,
+            //     title: 'Penambahan Produk #' . $product->id,
+            //     message: 'Produk yang di tambahkan : ' . $product->name . " ( " . $product->stock . " )",
+            //     type: 'in',
+            //     amount: intval($product->product_cost * $product->stock),
+            // );
         });
 
         static::deleting(function ($product) {
 
-            add_store_asset(
-                store: $product->store,
-                title: 'Penghapusan Produk #' . $product->id,
-                message: 'Produk yang di hapus : ' . $product->name . " ( " . $product->stock . " )",
-                type: 'in',
-                amount: intval($product->product_cost * $product->stock),
-            );
+            // add_store_asset(
+            //     store: $product->store,
+            //     title: 'Penghapusan Produk #' . $product->id,
+            //     message: 'Produk yang di hapus : ' . $product->name . " ( " . $product->stock . " )",
+            //     type: 'out',
+            //     amount: intval($product->product_cost * $product->stock),
+            // );
         });
     }
 

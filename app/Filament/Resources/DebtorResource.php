@@ -37,6 +37,11 @@ class DebtorResource extends Resource
         return 'Asset';
     }
 
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
     public static function canEdit(Model $record): bool
     {
         return true;
@@ -192,7 +197,10 @@ class DebtorResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->disabled(function (Debtor $record) {
+                        return $record->status == 'paid';
+                    }),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
