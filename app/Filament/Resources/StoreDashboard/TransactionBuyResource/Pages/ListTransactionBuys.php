@@ -33,6 +33,7 @@ class ListTransactionBuys extends ListRecords
 
                 Actions\ExportAction::make()
                     ->exporter(TransactionBuyExporter::class)
+                    ->modifyQueryUsing(fn(Builder $query) => $query->where('store_code', get_context_store()->code))
                     ->icon('heroicon-o-document-chart-bar')
                     ->label('Eksport Data'),
 

@@ -32,9 +32,7 @@ class CreateAdjustStock extends CreateRecord
 
             $user = get_auth_user();
 
-            $owner  =   $user->owner_store;
-
-            $store  =   $owner->store()->first();
+            $store  =   get_context_store();
 
             $product    =   Product::findOrFail($data['product_id']);
 

@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources\DebtorResource\Pages;
 
+use App\Filament\Exports\DebtorExporter;
 use App\Filament\Resources\DebtorResource;
 use App\Filament\Resources\DebtorResource\Widgets\DebtsOverview;
 use Filament\Actions;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Notifications\Notification;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
@@ -19,12 +21,6 @@ class ListDebtors extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
-
-            Actions\Action::make('export_laporan')
-                ->label('Laporan Peminjaman')
-                ->icon('heroicon-o-document-text')
-                ->color('info')
-                ->url(route('report.debtor'), true),
 
             Action::make('cek_overdue')
                 ->label('Update Status Telat Bayar')
@@ -52,6 +48,24 @@ class ListDebtors extends ListRecords
                         ->success()
                         ->send();
                 }),
+
+            ActionGroup::make([
+
+                Actions\Action::make('export_laporan')
+                    ->label('Laporan Peminjaman')
+                    ->icon('heroicon-o-document-text')
+                    ->url(route('report.debtor'), true),
+
+                Actions\ExportAction::make()
+                    ->exporter(DebtorExporter::class)
+                    ->modifyQueryUsing(fn(Builder $query) => $query->where('store_code', get_context_store()->code))
+                    ->icon('heroicon-o-document-chart-bar')
+                    ->label('Eksport Data'),
+            ])
+                ->label('Laporan')
+                ->icon('heroicon-o-arrow-up-on-square-stack')
+                ->color('info')
+                ->button()
         ];
     }
 

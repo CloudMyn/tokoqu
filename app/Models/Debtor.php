@@ -16,13 +16,36 @@ class Debtor extends Model
         'paid'      =>  'integer'
     ];
 
-
     protected static function boot()
     {
         parent::boot();
 
+        static::deleting(function (Debtor $debtor) {
+            $store  =   get_context_store();
+
+            $store->update([
+                'assets'    =>  $store->assets + $debtor->amount
+            ]);
+        });
+
         static::creating(function (Debtor $debtor) {
-            $debtor->store()->associate(get_context_store());
+            $store  =   get_context_store();
+
+            $debtor->store()->associate($store);
+
+            $store->update([
+                'assets'    =>  $store->assets - $debtor->amount
+            ]);
+        });
+
+        static::saved(function (Debtor $debtor) {
+            if ($debtor->status == 'paid') {
+                $store  =   get_context_store();
+
+                $store->update([
+                    'assets'    =>  $store->assets + $debtor->amount
+                ]);
+            }
         });
     }
 

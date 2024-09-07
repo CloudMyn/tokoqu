@@ -37,11 +37,10 @@ class AssetsOverview extends BaseWidget
 
         $asset_hold_this_mounth     =   $amount - $paid;
 
-        $total_asset    =   $total_asset - $asset_hold_this_mounth;
 
         return [
 
-            Stat::make('Total Kas Toko', "Rp. " . ubah_angka_int_ke_rupiah($total_asset))
+            Stat::make('Total Kas Toko', "Rp. " . ubah_angka_int_ke_rupiah($model_toko->assets))
                 ->icon('heroicon-o-banknotes'),
 
             Stat::make('Kas Masuk ( Bulan Ini )', "Rp. " . ubah_angka_int_ke_rupiah($asset_in_this_mounth))
@@ -54,7 +53,7 @@ class AssetsOverview extends BaseWidget
                 ->icon('heroicon-o-arrow-trending-down')
                 ->color('danger'),
 
-            Stat::make('Kas Tertahan', "Rp. " . ubah_angka_int_ke_rupiah($asset_hold_this_mounth))
+            Stat::make('Kas Terpinjam', "Rp. " . ubah_angka_int_ke_rupiah($asset_hold_this_mounth))
                 ->chart($q_out->pluck('amount')->toArray())
                 ->icon('heroicon-o-question-mark-circle')
                 ->color('danger'),

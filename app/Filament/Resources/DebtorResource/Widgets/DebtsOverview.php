@@ -20,7 +20,7 @@ class DebtsOverview extends BaseWidget
                 ->icon('heroicon-o-user-group'),
             Stat::make('Telat Bayar', $store->debtors()->where('status', 'overdue')->count())
                 ->icon('heroicon-o-user-group'),
-            Stat::make('Total Keseluruhan', "RP. " .  ubah_angka_int_ke_rupiah($total_all))
+            Stat::make('Total Kas Terpinjam', "RP. " .  ubah_angka_int_ke_rupiah($total_all - $total_paid))
                 ->icon('heroicon-o-banknotes'),
             Stat::make('Total Terbayarkan', "RP. " . ubah_angka_int_ke_rupiah($total_paid))
                 ->icon('heroicon-o-banknotes'),

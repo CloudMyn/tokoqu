@@ -8,6 +8,7 @@ use App\Models\Debtor;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
@@ -80,14 +81,22 @@ class DebtorResource extends Resource
                     ->stripCharacters(',')
                     ->inputMode('integer')
                     ->required()
+                    ->disabledOn('create')
+                    ->disabled(function (Get $get) {
+                        return $get('status') == 'paid';
+                    })
+                    ->hiddenOn('create')
                     ->prefix('Rp'),
 
                 Forms\Components\Select::make('status')
                     ->label('Status')
                     ->default('unpaid')
+                    ->live()
+                    ->hiddenOn('create')
+                    ->disabledOn('create')
                     ->options([
-                        'paid' => 'Terbayar',
-                        'unpaid' => 'Belum Terbayar',
+                        'paid' => 'Sudah Lunas',
+                        'unpaid' => 'Belum Lunas',
                         'overdue' => 'Terlambat',
                     ]),
 

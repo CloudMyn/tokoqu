@@ -13,8 +13,8 @@ class Store extends Model
 
     protected $casts = [
         'integer'   =>  'assets',
-        'double'    =>  'total_amount',
-        'double'    =>  'total_profit',
+        'integer'   =>  'total_amount',
+        'integer'   =>  'total_profit',
         'integer'   =>  'total_qty',
     ];
 

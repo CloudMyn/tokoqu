@@ -7,6 +7,7 @@ use App\Filament\Resources\StoreDashboard\StoreAssetResource;
 use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Widgets\TrxSaleChart;
 use App\Filament\Widgets\AssetsOverview;
 use Filament\Actions;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Components\Tab;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Resources\Pages\ListRecords;
@@ -21,7 +22,25 @@ class ListStoreAssets extends ListRecords
     {
         return [
             Actions\CreateAction::make()->label('Input Kas'),
-            Actions\ExportAction::make()->exporter(StoreAssetExporter::class)->label('Eksport Data'),
+
+
+            ActionGroup::make([
+
+                Actions\Action::make('export_laporan')
+                    ->label('Laporan Kas Toko')
+                    ->icon('heroicon-o-document-text')
+                    ->url(route('report.assets'), true),
+
+                Actions\ExportAction::make()
+                    ->exporter(StoreAssetExporter::class)
+                    ->modifyQueryUsing(fn(Builder $query) => $query->where('store_code', get_context_store()->code))
+                    ->icon('heroicon-o-document-chart-bar')
+                    ->label('Eksport Data'),
+            ])
+                ->label('Laporan')
+                ->icon('heroicon-o-arrow-up-on-square-stack')
+                ->color('info')
+                ->button()
         ];
     }
 

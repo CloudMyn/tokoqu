@@ -121,7 +121,6 @@ class TransactionSaleResource extends Resource
                     ->schema([
                         Select::make('product_id')
                             ->label('Pilih Produk')
-                            ->unique()
                             ->options(get_product_list(get_have_stock: true))
                             ->searchable()
                             ->columnSpanFull()
@@ -153,8 +152,8 @@ class TransactionSaleResource extends Resource
                     ])
                     ->collapsible()
                     ->cloneable()
-                    ->dehydrateStateUsing(function (Get $get, Set $set) {})
                     ->columnSpanFull()
+                    ->dehydrateStateUsing(function (Get $get, Set $set) {})
                     ->itemLabel(function (array $state, Set $set, Get $get) {
 
                         $qty    =   intval($state['product_qty'] ?? 0);
@@ -169,24 +168,19 @@ class TransactionSaleResource extends Resource
 
                         $gross_trx      =   (($product?->sale_price ?? 0) * $qty - $potongan_per_product) - $potongan_per_qty;
 
-
                         if ($get('is_deliver')) {
-
                             $onkir      =   $product->delivery_fee ?? 0;
-                            $gross_trx =   $gross_trx + ($product->delivery_fee ?? 0);
+                            $gross_trx  +=  $onkir;
                         } else {
-
                             $onkir      =   0;
-                            $gross_trx  =   ($product?->sale_price ?? 0);
                         }
 
                         $profit         =   ubah_angka_int_ke_rupiah($gross_trx - ($product?->product_cost ?? 0) * $qty);
 
                         $trx_ammount    =   ubah_angka_int_ke_rupiah($gross_trx);
 
-
-
                         return  "$product_name | Transaksi Rp. $trx_ammount | Profit Rp. $profit | Onkir Rp." . ubah_angka_int_ke_rupiah($onkir);
+
                     })
                     ->live(false, 20)
                     ->reactive()

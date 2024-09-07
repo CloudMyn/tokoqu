@@ -7,6 +7,7 @@ use App\Models\Debtor;
 use App\Models\TransactionSale;
 use App\Models\TransactionSaleItem;
 use Filament\Actions;
+use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -34,10 +35,13 @@ class CreateTransactionSale extends CreateRecord
             $products       =   $data['products'];
             $trx_discount   =   doubleval($data['discount']) / count($products);
 
-            $in_debt    =    $data['in_debt'];
+            $in_debt        =    $data['in_debt'];
+
+            $is_deliver     =    $data['is_deliver'];
 
             $debtor_data    =   $data['debtor_data'];
 
+            unset($data['is_deliver']);
             unset($data['products']);
             unset($data['discount']);
             unset($data['in_debt']);
@@ -59,7 +63,13 @@ class CreateTransactionSale extends CreateRecord
 
                 $qty    =   intval($product['product_qty']);
 
+                $onkir  =   0;
+
                 $product_model  =    $store->products()->find($product['product_id']);
+
+                if($is_deliver) {
+                    $onkir  =   $product_model->delivery_fee;
+                }
 
                 $product_discount   =   doubleval($product['product_discount']);
 
@@ -68,7 +78,7 @@ class CreateTransactionSale extends CreateRecord
                 $product_trx_model->product()->associate($product_model);
                 $product_trx_model->store()->associate($store);
 
-                $product_trx_model->sale_product($product_model, $qty, $product_discount + $trx_discount, intval($product['product_discount_per_qty']));
+                $product_trx_model->sale_product($product_model, $qty, $product_discount + $trx_discount, intval($product['product_discount_per_qty']), $onkir);
 
                 $product_trx_model->product_sku     =   $product_model->sku;
                 $product_trx_model->product_name    =   $product_model->name;
@@ -81,11 +91,11 @@ class CreateTransactionSale extends CreateRecord
                 $product_trx_models[]   =   $product_trx_model;
             }
 
-            if($data['total_amount'] < 0) {
+            if ($data['total_amount'] < 0) {
                 throw new \Exception("Transaksi yang anda lakukan tidak dapat diproses, dikarnakan nominal transaksi kurang dari 0");
             }
 
-            if($data['total_profit'] < 0) {
+            if ($data['total_profit'] < 0) {
                 throw new \Exception("Transaksi yang anda lakukan tidak dapat diproses, dikarnakan nominal transaksi kurang dari 0");
             }
 
@@ -98,8 +108,23 @@ class CreateTransactionSale extends CreateRecord
             }
 
 
-            if($in_debt) {
+            if ($in_debt) {
+
+                if ($transaction->total_amount < intval($debtor_data['amount'])) {
+
+                    throw new \Exception("Transaksi yang anda lakukan tidak dapat diproses, dikarnakan nominal pinjaman melebihi total transaksi Rp " . ubah_angka_int_ke_rupiah($transaction->total_amount));
+                }
+
+                $debtor_data['paid']    =   0;
+
                 Debtor::create($debtor_data);
+            }
+
+            if (
+                static::getResource()::isScopedToTenant() &&
+                ($tenant = Filament::getTenant())
+            ) {
+                return $this->associateRecordWithTenant($transaction, $tenant);
             }
 
             DB::commit();

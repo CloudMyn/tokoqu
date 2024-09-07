@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone')->nullable();
             $table->integer('amount');
-            $table->integer('paid');
+            $table->integer('paid')->default(0);
             $table->foreignId('transaction_id')->nullable();
             $table->foreignId('asset_id')->nullable();
             $table->enum('status', ['paid', 'unpaid', 'overdue'])->default('unpaid');

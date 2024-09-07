@@ -182,8 +182,11 @@
                 @foreach ($data['data'] as $table_val)
                     <tr>
                         @foreach ($table_val as $key => $value)
-                            @if ($key == 'created_at')
-                                <td style="font-size: 11px">{{ \Carbon\Carbon::parse($value)->format('d-m-Y') }}</td>
+                            @if ($key == 'amount' || $key == 'total_cost' || $key == 'total_price' || $key == 'paid')
+                                <td style="font-size: 11px">Rp. {{ ubah_angka_int_ke_rupiah($value) }}</td>
+                            @elseif ($key == 'created_at')
+                                <td style="font-size: 11px">{{ \Carbon\Carbon::parse($value)->format('d-m-Y') }}
+                                </td>
                             @else
                                 <td style="font-size: 11px">{{ $value ?? '-' }}</td>
                             @endif

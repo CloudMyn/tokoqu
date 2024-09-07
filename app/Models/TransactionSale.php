@@ -13,8 +13,8 @@ class TransactionSale extends Model
 
     protected $casts = [
         'total_qty'     => 'integer',
-        'total_profit'  => 'double',
-        'total_amount'  => 'double',
+        'total_profit'  => 'integer',
+        'total_amount'  => 'integer',
     ];
 
     protected static function booted()

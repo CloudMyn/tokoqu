@@ -24,6 +24,7 @@ class ListProducts extends ListRecords
                 ->label('Tambah Produk'),
             ExportAction::make()
                 ->exporter(ProductExporter::class)
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('store_code', get_context_store()->code))
                 ->label('Eksport Produk'),
         ];
     }

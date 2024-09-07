@@ -20,7 +20,10 @@ class ListAdjustStocks extends ListRecords
     {
         return [
             Actions\CreateAction::make()->label('Input Penyesuaian'),
-            Actions\ExportAction::make()->exporter(AdjustStockExporter::class)->label('Eksport Data'),
+            Actions\ExportAction::make()
+                ->exporter(AdjustStockExporter::class)
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('store_code', get_context_store()->code))
+                ->label('Eksport Data'),
         ];
     }
 

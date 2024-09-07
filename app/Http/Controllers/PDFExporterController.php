@@ -116,7 +116,7 @@ class PDFExporterController extends Controller
 
         $query_builder  =   $store->debtors();
 
-        $tot_all     =   $query_builder->where('status', '!=', 'paid')->sum('amount');
+        $tot_all     =   $query_builder->sum('amount');
         $tot_paid    =   $query_builder->sum('paid');
 
         $data_repot['TOTAL PINJAMAN ( BELUM LUNAS )']     =   "Rp. " . ubah_angka_int_ke_rupiah($tot_all - $tot_paid);
@@ -149,6 +149,59 @@ class PDFExporterController extends Controller
                 'email'     =>  $user->email,
             ];
         }
+
+        $pdf = Pdf::loadView('reporting.template_list', $data)
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream();
+    }
+    public function export_assets_report()
+    {
+        $store  =   get_context_store();
+
+        $start_date  =   now()->startOfMonth();
+        $end_date    =   now()->endOfMonth();
+
+        $tot_in     =   $store->store_assets()->whereBetween('created_at', [$start_date, $end_date])->where('type', 'in')->sum('amount');
+        $tot_out    =   $store->store_assets()->whereBetween('created_at', [$start_date, $end_date])->where('type', 'out')->sum('amount');
+
+
+        $data_repot['TOTAL KAS TOKO']       =   "Rp. " . ubah_angka_int_ke_rupiah($store->assets);
+        $data_repot['TOTAL KAS MASUK']      =   "Rp. " . ubah_angka_int_ke_rupiah($tot_in);
+        $data_repot['TOTAL KAS KELUAR']     =   "Rp. " . ubah_angka_int_ke_rupiah($tot_out);
+
+
+        $data_tables_in =   $store->store_assets()
+            ->whereBetween('created_at', [$start_date, $end_date])
+            ->select('id', 'title', 'amount', 'type', 'created_at')
+            ->where('type', 'in')
+            ->get()
+            ->toArray();
+
+        $data_tables_out =   $store->store_assets()
+            ->whereBetween('created_at', [$start_date, $end_date])
+            ->select('id', 'title', 'amount', 'type', 'created_at')
+            ->where('type', 'out')
+            ->get()
+            ->toArray();
+
+        $data   =   [
+            'store_name'    =>  $store->name,
+            'title'         =>  'Laporan Bulanan Periode ' . now()->format('F Y'),
+            'content'       =>  [
+                'Laporan Kas Toko'   =>  $data_repot,
+            ],
+            'tables'        =>  [
+                'Laporan Pemasukan'    =>  [
+                    "kolom"     =>  ['ID', 'Judul', 'Jumlah', 'Tipe', 'Tanggal'],
+                    "data"      =>  $data_tables_in,
+                ],
+                'Laporan Pengeluaran'    =>  [
+                    "kolom"     =>  ['ID', 'Judul', 'Jumlah', 'Tipe', 'Tanggal'],
+                    "data"      =>  $data_tables_out,
+                ],
+            ]
+        ];
 
         $pdf = Pdf::loadView('reporting.template_list', $data)
             ->setPaper('a4', 'portrait');

@@ -7,9 +7,7 @@ use App\Filament\Resources\StoreDashboard\TransactionSaleResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use App\Filament\Widgets\TrxSaleOverview;
-use App\Models\TransactionSale;
 use Filament\Actions\ActionGroup;
-use Filament\Actions\CreateAction;
 use Filament\Resources\Components\Tab;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -35,6 +33,7 @@ class ListTransactionSales extends ListRecords
 
                 Actions\ExportAction::make()
                     ->exporter(TransactionSaleExporter::class)
+                    ->modifyQueryUsing(fn(Builder $query) => $query->where('store_code', get_context_store()->code))
                     ->icon('heroicon-o-document-chart-bar')
                     ->label('Eksport Data'),
             ])

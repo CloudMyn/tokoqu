@@ -13,6 +13,11 @@ class EditDebtor extends EditRecord
 
     protected static ?string $title = 'Edit Data Debitur';
 
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
+
     protected function getHeaderActions(): array
     {
         return [
@@ -20,23 +25,32 @@ class EditDebtor extends EditRecord
         ];
     }
 
-
     /**
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        if ($data['paid'] != $data['amount'] && $data['status'] == 'paid') {
+        if ($data['status'] == 'paid') {
+            $data['paid'] = $data['amount'];
+        }
+
+        if ($data['paid'] === $data['amount'] && $data['status'] != 'paid') {
+
+            $data['status'] = 'paid';
+        }
+
+        if(intval($data['paid']) > intval($data['amount'])) {
 
             Notification::make()
-                ->title('Penyelesaian Peminjaman!')
-                ->body('Jumlah pembayaran yang diinputkan tidak sama dengan jumlah peminjaman. Silahkan cek kembali.')
+                ->title('Peringatan')
+                ->body('Jumlah yang dibayarkan melebihi nominal peminjaman')
                 ->danger()
                 ->send();
 
             $this->halt();
         }
+
 
         return $data;
     }
