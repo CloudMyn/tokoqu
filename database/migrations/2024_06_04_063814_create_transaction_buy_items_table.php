@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('product_sku');
             $table->string('product_name');
             $table->integer('total_qty');
-            $table->decimal('product_cost', 15, 2);
+            $table->integer('product_cost');
             $table->foreignId('product_id')->nullable();
             $table->foreignId('transaction_id')->references('id')->on('transaction_buys')->cascadeOnDelete();
             $table->string('store_code');

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title', 100);
             $table->string('message', 244);
-            $table->decimal('amount', 15, 2);
+            $table->integer('amount');
             $table->enum('type', ['in', 'out', 'hold']);
             $table->string('store_code');
             $table->timestamps();

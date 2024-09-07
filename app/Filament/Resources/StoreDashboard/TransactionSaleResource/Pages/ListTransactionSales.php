@@ -8,6 +8,7 @@ use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use App\Filament\Widgets\TrxSaleOverview;
 use App\Models\TransactionSale;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Components\Tab;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,7 +25,23 @@ class ListTransactionSales extends ListRecords
             Actions\CreateAction::make()
                 ->label('Input Penjualan'),
 
-            Actions\ExportAction::make()->exporter(TransactionSaleExporter::class)->label('Eksport Data'),
+
+            ActionGroup::make([
+
+                Actions\Action::make('export_laporan')
+                    ->label('Laporan Penjualan')
+                    ->icon('heroicon-o-document-text')
+                    ->url(route('report.sale'), true),
+
+                Actions\ExportAction::make()
+                    ->exporter(TransactionSaleExporter::class)
+                    ->icon('heroicon-o-document-chart-bar')
+                    ->label('Eksport Data'),
+            ])
+                ->label('Laporan')
+                ->icon('heroicon-o-arrow-up-on-square-stack')
+                ->color('info')
+                ->button()
         ];
     }
 

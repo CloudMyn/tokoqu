@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('image')->nullable();
             $table->string('title');
-            $table->decimal('total_amount', 15, 2);
+            $table->integer('total_amount');
             $table->integer('total_qty');
-            $table->decimal('total_profit', 15, 2);
+            $table->integer('total_profit');
             $table->foreignId('admin_id')->nullable();
             $table->string('admin_name');
             $table->string('store_code');

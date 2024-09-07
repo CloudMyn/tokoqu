@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('store_code');
             $table->string('title');
             $table->string('supplier');
-            $table->decimal('total_cost', 15, 2);
+            $table->integer('total_cost');
             $table->integer('total_qty');
             $table->foreignId('admin_id')->nullable();
             $table->string('admin_name');

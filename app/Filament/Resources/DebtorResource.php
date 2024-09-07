@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -40,12 +41,67 @@ class DebtorResource extends Resource
         return true;
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        parent::getEloquentQuery();
+
+        if (cek_admin_role()) return parent::getEloquentQuery();
+
+        $store   =   get_context_store();
+
+        return parent::getEloquentQuery()->where('store_code', $store?->code)->orderBy('created_at', 'DESC');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->label('Nama')
+                    ->required(),
+
+                Forms\Components\TextInput::make('phone')
+                    ->label('No. Telp')
+                    ->numeric()
+                    ->prefix('+62')
+                    ->nullable(),
+
+                Forms\Components\TextInput::make('amount')
+                    ->label('Jumlah')
+                    ->mask(RawJs::make('$money($input)'))
+                    ->stripCharacters(',')
+                    ->inputMode('integer')
+                    ->required()
+                    ->prefix('Rp'),
+
+                Forms\Components\TextInput::make('paid')
+                    ->label('Terbayar')
+                    ->mask(RawJs::make('$money($input)'))
+                    ->stripCharacters(',')
+                    ->inputMode('integer')
+                    ->required()
+                    ->prefix('Rp'),
+
+                Forms\Components\Select::make('status')
+                    ->label('Status')
+                    ->default('unpaid')
+                    ->options([
+                        'paid' => 'Terbayar',
+                        'unpaid' => 'Belum Terbayar',
+                        'overdue' => 'Terlambat',
+                    ]),
+
+                Forms\Components\DatePicker::make('due_date')
+                    ->label('Tanggal Jatuh Tempo')
+                    ->required()
+                    ->minDate(function ($record) {
+                        return $record ? null : now();
+                    }),
+
+                Forms\Components\Textarea::make('note')
+                    ->label('Catatan')
+                    ->columnSpanFull()
+                    ->nullable(),
             ]);
     }
 
@@ -89,7 +145,6 @@ class DebtorResource extends Resource
                     ->label('Jatuh Tempo')
                     ->date('Y-m-d')
                     ->sortable(),
-
 
                 TextColumn::make('updated_at')
                     ->label('Tanggal Diubah')

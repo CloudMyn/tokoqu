@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('image')->nullable();
             $table->string('sku');
-            $table->decimal('sale_price', 15, 2); // 15 total digits, 2 decimal places
-            $table->decimal('delivery_fee', 15, 2)->default(0);
-            $table->decimal('product_cost', 15, 2);
+            $table->integer('sale_price'); // 15 total digits, 2 decimal places
+            $table->integer('delivery_fee')->default(0);
+            $table->integer('product_cost');
             $table->string('store_code');
             $table->integer('stock')->default(0);
             $table->integer('fraction');

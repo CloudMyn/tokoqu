@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('adjust_stocks', function (Blueprint $table) {
             $table->id();
             $table->text('message');
-            $table->decimal('total_amount', 15, 2);
+            $table->integer('total_amount');
             $table->integer('total_qty');
             $table->enum('type', ['plus', 'minus']);
             $table->string('admin_name');

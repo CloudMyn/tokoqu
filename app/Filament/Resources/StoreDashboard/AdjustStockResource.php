@@ -54,6 +54,17 @@ class AdjustStockResource extends Resource
         abort(403, 'Unauthorized');
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        parent::getEloquentQuery();
+
+        if (cek_admin_role()) return parent::getEloquentQuery();
+
+        $store   =   get_context_store();
+
+        return parent::getEloquentQuery()->where('store_code', $store?->code)->orderBy('created_at', 'DESC');
+    }
+
     public static function form(Form $form): Form
     {
         return $form

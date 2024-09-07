@@ -27,10 +27,9 @@ class AssetsOverview extends BaseWidget
 
         $q_out  =   $model_toko->store_assets()->whereBetween('created_at', $scope)->where('type', 'out');
 
-        $q_hold  =   $model_toko->store_assets()->where('type', 'hold');
+        $amount  =  $model_toko->debtors()->where('status', '!=', 'paid')->sum('amount');
 
-        $amount  =   Debtor::where('status', '!=', 'paid')->sum('amount');
-        $paid  =   Debtor::where('status', '!=', 'paid')->sum('paid');
+        $paid  =  $model_toko->debtors()->where('status', '!=', 'paid')->sum('paid');
 
         $asset_in_this_mounth      =   $q_in->sum('amount');
 

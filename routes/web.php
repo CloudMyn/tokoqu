@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PDFExporterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,3 +22,8 @@ Route::get('/', function () {
 
     return redirect()->route('filament.store.pages.dashboard');
 });
+
+
+Route::get('/pdf-report/sale', [PDFExporterController::class, 'export_sale_report'])->name('report.sale');
+Route::get('/pdf-report/buy', [PDFExporterController::class, 'export_buy_report'])->name('report.buy');
+Route::get('/pdf-report/debtor', [PDFExporterController::class, 'export_debtor_report'])->name('report.debtor');

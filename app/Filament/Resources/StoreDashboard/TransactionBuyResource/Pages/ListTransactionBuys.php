@@ -6,6 +6,7 @@ use App\Filament\Exports\TransactionBuyExporter;
 use App\Filament\Resources\StoreDashboard\TransactionBuyResource;
 use App\Filament\Widgets\TrxBuyOverview;
 use Filament\Actions;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Components\Tab;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,7 +22,25 @@ class ListTransactionBuys extends ListRecords
         return [
             Actions\CreateAction::make()
                 ->label('Input Pembelian'),
-            Actions\ExportAction::make()->exporter(TransactionBuyExporter::class)->label('Eksport Data'),
+
+
+            ActionGroup::make([
+
+                Actions\Action::make('export_laporan')
+                    ->label('Laporan Pembelian')
+                    ->icon('heroicon-o-document-text')
+                    ->url(route('report.buy'), true),
+
+                Actions\ExportAction::make()
+                    ->exporter(TransactionBuyExporter::class)
+                    ->icon('heroicon-o-document-chart-bar')
+                    ->label('Eksport Data'),
+
+            ])
+                ->label('Laporan')
+                ->icon('heroicon-o-arrow-up-on-square-stack')
+                ->color('info')
+                ->button()
         ];
     }
 

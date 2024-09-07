@@ -21,9 +21,7 @@ class Store extends Model
 
     protected static function booted()
     {
-        static::created(function ($store) {
-
-        });
+        static::created(function ($store) {});
     }
 
     public function employees()
@@ -59,6 +57,11 @@ class Store extends Model
     public function adjusts_stock()
     {
         return $this->hasMany(AdjustStock::class, 'store_code', 'code');
+    }
+
+    public function debtors()
+    {
+        return $this->hasMany(Debtor::class, 'store_code', 'code');
     }
 
     public function getSalesAndProfits($period = 'monthly')

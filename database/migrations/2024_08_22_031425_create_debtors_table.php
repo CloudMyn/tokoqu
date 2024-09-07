@@ -15,16 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone')->nullable();
-            $table->decimal('amount', 15, 2)->default(0);
-            $table->decimal('paid', 15, 2)->default(0);
+            $table->integer('amount');
+            $table->integer('paid');
             $table->foreignId('transaction_id')->nullable();
             $table->foreignId('asset_id')->nullable();
             $table->enum('status', ['paid', 'unpaid', 'overdue'])->default('unpaid');
             $table->date('due_date');
             $table->text('note')->nullable();
+            $table->string('store_code');
             $table->timestamps();
 
 
+            $table->foreign('store_code')->on('stores')->references('code')->cascadeOnDelete();
             $table->foreign('transaction_id')->on('transaction_sales')->references('id')->onDelete('set null');
             $table->foreign('asset_id')->on('store_assets')->references('id')->restrictOnDelete();
         });
