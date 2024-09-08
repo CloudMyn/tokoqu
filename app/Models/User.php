@@ -61,7 +61,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         if ($panel->getId() === 'admin') {
             return cek_admin_role();
         } else if ($panel->getId() === 'store') {
-            return cek_store_role();
+            return cek_store_role() || cek_store_employee_role();
         }
 
         return false;

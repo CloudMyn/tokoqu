@@ -88,16 +88,18 @@ class EmployeeResource extends Resource
                         TextInput::make('password')
                             ->label('Kata Sandi')
                             ->password()
-                            ->confirmed()->autocomplete(false)
+                            ->confirmed()
+                            ->autocomplete(false)
                             ->required(fn ($record) => $record === null)
                             ->minLength(3)
+                            ->revealable()
                             ->maxLength(199),
 
                         TextInput::make('password_confirmation')
                             ->label('Konfirmasi Kata Sandi')
                             ->password()
-                            ->autocomplete(false)
-                            ->required(fn ($record) => $record === null)
+                            ->revealable()
+                            ->autocomplete(false),
 
                     ])->columns(1)->hiddenOn('view'),
 

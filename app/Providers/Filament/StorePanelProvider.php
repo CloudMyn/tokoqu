@@ -40,6 +40,8 @@ class StorePanelProvider extends PanelProvider
             ->id('store')
             ->path('store')
             ->login()
+            ->passwordReset()
+            ->emailVerification()
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -101,7 +103,8 @@ class StorePanelProvider extends PanelProvider
                 'Inventori',
                 'Utilitas',
             ])
-            ->navigationItems([])->globalSearch(false)
+            ->navigationItems([])
+            ->globalSearch(false)
             ->databaseNotifications()
             ->spa()
             ->emailVerification();
