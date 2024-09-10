@@ -106,15 +106,15 @@ class TransactionSaleResource extends Resource
                     ->inputMode('double')
                     ->prefix('RP'),
 
-                TextInput::make('total_amount')->label('Total Transaksi')
-                    ->disabled()
-                    ->default(0)
-                    ->prefix('RP'),
+                // TextInput::make('total_amount')->label('Total Transaksi')
+                //     ->disabled()
+                //     ->default(0)
+                //     ->prefix('RP'),
 
-                TextInput::make('total_profit')->label('Total Keuntungan')
-                    ->disabled()
-                    ->default(0)
-                    ->prefix('RP'),
+                // TextInput::make('total_profit')->label('Total Keuntungan')
+                //     ->disabled()
+                //     ->default(0)
+                //     ->prefix('RP'),
 
                 Repeater::make('products')->label('Daftar Produk')
                     ->hiddenOn('view')

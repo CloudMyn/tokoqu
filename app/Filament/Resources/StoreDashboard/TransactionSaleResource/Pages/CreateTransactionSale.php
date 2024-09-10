@@ -28,23 +28,25 @@ class CreateTransactionSale extends CreateRecord
         try {
             DB::beginTransaction();
 
-            $user = get_auth_user();
-
+            $user   =   get_auth_user();
             $store  =   get_context_store();
 
             $products       =   $data['products'];
             $trx_discount   =   doubleval($data['discount']) / count($products);
 
             $in_debt        =    $data['is_debt'];
-
             $is_deliver     =    $data['is_deliver'];
 
-            $debtor_data    =   $data['debtor_data'];
+            $debtor_data    =   [];
+
+            if($in_debt) {
+                $debtor_data    =   $data['debtor_data'];
+                unset($data['debtor_data']);
+            }
 
             unset($data['is_deliver']);
             unset($data['products']);
             unset($data['discount']);
-            unset($data['debtor_data']);
 
             $data['store_code']     =   $store->code;
             $data['admin_name']     =   $user->name;

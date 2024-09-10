@@ -20,8 +20,8 @@ class AdjustStock extends Model
     protected static function booted()
     {
 
-        static::creating(function (Debtor $debtor) {
-            $debtor->store()->associate(get_context_store());
+        static::creating(function ($model) {
+            $model->store()->associate(get_context_store());
         });
 
         static::deleting(function ($adjustStock) {
