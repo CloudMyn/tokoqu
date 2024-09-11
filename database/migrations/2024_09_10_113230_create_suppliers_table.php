@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Creating suppliers table
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -19,12 +20,15 @@ return new class extends Migration
             $table->string('store_code');
             $table->timestamps();
 
-            $table->foreign('store_code')->on('stores')->references('code')->cascadeOnDelete();
+            $table->foreign('store_code')->references('code')->on('stores')->cascadeOnDelete();
         });
 
-
+        // Updating transaction_buys table
         Schema::table('transaction_buys', function (Blueprint $table) {
+            // First, drop the existing supplier column if it exists
             $table->dropColumn('supplier');
+
+            // Then, add the foreign key constraint for supplier_id
             $table->foreignId('supplier_id')->after('title')->constrained('suppliers')->cascadeOnDelete();
         });
     }
