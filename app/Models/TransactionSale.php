@@ -27,6 +27,7 @@ class TransactionSale extends Model
             delete_store_asset(title: 'Transaksi Penjualan #' . $transaction->id);
 
             $transaction->debt()->delete();
+            $transaction->transactionSaleItems()->delete();
         });
     }
 

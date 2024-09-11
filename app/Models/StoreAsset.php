@@ -18,6 +18,7 @@ class StoreAsset extends Model
         });
 
         static::deleting(function ($storeAsset) {
+            $storeAsset->debt()->delete();
             sync_store_assets();
         });
     }
@@ -25,5 +26,10 @@ class StoreAsset extends Model
     public function store()
     {
         return $this->belongsTo(Store::class, 'store_code', 'code');
+    }
+
+    public function debt()
+    {
+        return $this->hasMany(Debtor::class, 'asset_id');
     }
 }

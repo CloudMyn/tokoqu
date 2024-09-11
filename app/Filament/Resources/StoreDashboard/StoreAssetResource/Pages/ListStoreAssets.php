@@ -8,6 +8,7 @@ use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Widgets\TrxSal
 use App\Filament\Widgets\AssetsOverview;
 use Filament\Actions;
 use Filament\Actions\ActionGroup;
+use Filament\Notifications\Notification;
 use Filament\Resources\Components\Tab;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Resources\Pages\ListRecords;
@@ -21,7 +22,23 @@ class ListStoreAssets extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->label('Input Kas'),
+
+            Actions\Action::make('sync_assets')
+                ->label('Sinkronisasi Kas')
+                ->icon('heroicon-o-arrow-path')
+                ->action(function () {
+                    sync_store_assets();
+
+                    Notification::make()
+                        ->success()
+                        ->title('Sinkroniasasi Berhasil!')
+                        ->body('Kas toko telah disinkronkan.')
+                        ->send();
+                }),
+
+            Actions\CreateAction::make()
+                ->icon('heroicon-o-document-plus')
+                ->label('Input Kas'),
 
 
             ActionGroup::make([

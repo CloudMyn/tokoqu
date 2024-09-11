@@ -20,17 +20,17 @@ class SupplierResource extends Resource
 {
     protected static ?string $model = Supplier::class;
 
-    protected static ?string $modelLabel = 'Penyuplai';
+    protected static ?string $modelLabel = 'Supplier';
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static ?string $navigationIcon = 'heroicon-o-truck';
 
     protected static ?int $navigationSort = 3;
 
     public static function getNavigationLabel(): string
     {
-        return 'Penyuplai';
+        return 'Supplier';
     }
 
     public static function getNavigationGroup(): ?string

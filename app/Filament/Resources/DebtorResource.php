@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DebtorResource\Pages;
 use App\Filament\Resources\DebtorResource\RelationManagers;
 use App\Models\Debtor;
+use App\Traits\Ownership;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Form;
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class DebtorResource extends Resource
 {
+    use Ownership;
+
     protected static ?string $model = Debtor::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
@@ -45,17 +48,6 @@ class DebtorResource extends Resource
     public static function canEdit(Model $record): bool
     {
         return true;
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        parent::getEloquentQuery();
-
-        if (cek_admin_role()) return parent::getEloquentQuery();
-
-        $store   =   get_context_store();
-
-        return parent::getEloquentQuery()->where('store_code', $store?->code)->orderBy('created_at', 'DESC');
     }
 
     public static function form(Form $form): Form

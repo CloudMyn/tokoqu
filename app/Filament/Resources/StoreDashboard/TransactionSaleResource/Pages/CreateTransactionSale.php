@@ -39,7 +39,7 @@ class CreateTransactionSale extends CreateRecord
 
             $debtor_data    =   [];
 
-            if($in_debt) {
+            if ($in_debt) {
                 $debtor_data    =   $data['debtor_data'];
                 unset($data['debtor_data']);
             }
@@ -108,15 +108,6 @@ class CreateTransactionSale extends CreateRecord
                 $product_trx_model->save();
             }
 
-            $asset = add_store_asset(
-                store: $transaction->store,
-                title: 'Transaksi Penjualan #' . $transaction->id,
-                message: "Transaksi penjualan ID #{$transaction->id} : Rp. " .  ubah_angka_int_ke_rupiah($transaction->total_amount) . " ( " . $transaction->total_qty . " )",
-                type: $transaction->is_debt ? 'hold' : 'in',
-                amount: $transaction->total_amount,
-            );
-
-
             if ($in_debt) {
 
                 if ($transaction->total_amount < intval($debtor_data['amount'])) {
@@ -124,11 +115,46 @@ class CreateTransactionSale extends CreateRecord
                     throw new \Exception("Transaksi yang anda lakukan tidak dapat diproses, dikarnakan nominal pinjaman melebihi total transaksi Rp " . ubah_angka_int_ke_rupiah($transaction->total_amount));
                 }
 
+                if ($debtor_data['amount'] < 0) {
+                    throw new \Exception("Transaksi yang anda lakukan tidak dapat diproses, dikarnakan nominal pinjaman kurang dari 0");
+                }
+
+                $selisih    = $transaction->total_amount - intval($debtor_data['amount']);
+
+                if ($selisih > 0) {
+
+                    add_store_asset(
+                        store: $transaction->store,
+                        title: 'Transaksi Penjualan #' . $transaction->id,
+                        message: "Transaksi penjualan ID #{$transaction->id} : Rp. " .  ubah_angka_int_ke_rupiah($selisih) . " ( " . $transaction->total_qty . " )",
+                        type: 'in',
+                        amount: $selisih,
+                    );
+                }
+
+                $asset = add_store_asset(
+                    store: $transaction->store,
+                    title: 'Transaksi Penjualan #' . $transaction->id,
+                    message: "Transaksi penjualan ID #{$transaction->id} : Rp. " .  ubah_angka_int_ke_rupiah($transaction->total_amount) . " ( " . $transaction->total_qty . " )",
+                    type: 'hold',
+                    amount: $debtor_data['amount'],
+                );
+
                 $debtor_data['paid']            =   0;
                 $debtor_data['transaction_id']  =   $transaction->id;
                 $debtor_data['asset_id']        =   $asset->id;
 
                 Debtor::create($debtor_data);
+            } else {
+
+
+                $asset = add_store_asset(
+                    store: $transaction->store,
+                    title: 'Transaksi Penjualan #' . $transaction->id,
+                    message: "Transaksi penjualan ID #{$transaction->id} : Rp. " .  ubah_angka_int_ke_rupiah($transaction->total_amount) . " ( " . $transaction->total_qty . " )",
+                    type: 'in',
+                    amount: $transaction->total_amount,
+                );
             }
 
             if (
