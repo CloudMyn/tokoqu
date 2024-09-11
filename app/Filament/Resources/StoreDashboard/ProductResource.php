@@ -110,7 +110,7 @@ class ProductResource extends Resource
                     ->required()
                     ->minValue(0)
                     ->maxValue(config('rules.stock.max_input'))
-                    ->readOnly(function ($record) {
+                    ->disabled(function ($record) {
                         return $record;
                     }),
 
@@ -170,7 +170,10 @@ class ProductResource extends Resource
 
                 TextColumn::make('name')->label('Nama')->searchable(),
 
-                TextColumn::make('stock')->label('Stok')->searchable()->sortable(),
+                TextColumn::make('stock')
+                    ->label('Stok')
+                    ->searchable()
+                    ->sortable(),
 
                 TextColumn::make('fraction')
                     ->label('Unit')

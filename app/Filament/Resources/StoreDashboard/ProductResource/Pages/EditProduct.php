@@ -33,7 +33,6 @@ class EditProduct extends EditRecord
             $product->name          = $data['name'];
             $product->sku           = strtoupper($data['sku']);
             $product->image         = $data['image'];
-            $product->stock         = intval($data['stock']);
             $product->sale_price    = ubah_angka_rupiah_ke_int($data['sale_price']);
             $product->product_cost  = ubah_angka_rupiah_ke_int($data['product_cost']);
             $product->fraction      = $data['fraction'];
