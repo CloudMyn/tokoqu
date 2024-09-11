@@ -29,12 +29,6 @@ class TransactionBuy extends Model
         });
 
         static::deleting(function ($transaction) {
-            $items      =   $transaction->transactionBuyItems;
-
-            foreach ($items as $item) {
-                $item->delete();
-            }
-
             delete_store_asset(title: 'Transaksi Pembelian #' . $transaction->id);
         });
     }

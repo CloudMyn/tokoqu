@@ -20,8 +20,8 @@ class Debtor extends Model
     {
         parent::boot();
 
-        static::deleting(function (Debtor $debtor) {
-            $debtor->asset->delete();
+        static::deleted(function (Debtor $debtor) {
+            $debtor->asset()->delete();
         });
 
         static::creating(function (Debtor $debtor) {

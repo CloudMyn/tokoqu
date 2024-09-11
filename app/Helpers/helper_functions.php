@@ -266,22 +266,24 @@ if (!function_exists('get_unit_list')) {
 
         foreach (
             [
-                'carton',
-                'pack',
-                'piece',
-                'box',
-                'bag',
+                'karton',
+                'bungkus',
+                'pcs',
+                'kotak',
+                'kantong',
                 'set',
-                'bottle',
-                'jar',
-                'roll',
-                'case',
+                'botol',
+                'toples',
+                'kardus',
                 'pallet',
                 'bundle',
                 'liter',
-                'milliliter',
+                'mililiter',
                 'kilogram',
-                'gram'
+                'gram',
+                'lembar',
+                'sak',
+                'roll',
             ] as  $unit
         ) {
 

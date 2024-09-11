@@ -26,19 +26,13 @@ class CreateProduct extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-
-        $user = get_auth_user();
-
-        $owner  =   $user->owner_store;
-
-        $store  =   $owner->store()->first();
+        $store  =   get_context_store();
 
         $product = new Product();
 
         $product->store()->associate($store);
 
         $product->name          = $data['name'];
-        $product->supplier      = $data['supplier'];
         $product->sku           = strtoupper($data['sku']);
         $product->image         = $data['image'] ?? null;
         $product->stock         = $data['stock'];

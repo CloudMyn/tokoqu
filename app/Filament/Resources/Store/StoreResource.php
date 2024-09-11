@@ -32,7 +32,13 @@ class StoreResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->orderBy('created_at', 'desc');
+    }
+
     public static function getNavigationLabel(): string
     {
         if (cek_store_role()) {
@@ -44,11 +50,7 @@ class StoreResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        if (cek_admin_role() || cek_store_role()) {
-            return 'Data Toko';
-        }
-
-        return 'Tabel Pengguna';
+        return 'Data Toko';
     }
 
 

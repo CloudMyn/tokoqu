@@ -85,13 +85,22 @@ class ProductResource extends Resource
                     ->directory(get_user_directory('/products'))
                     ->columnSpanFull(),
 
-                TextInput::make('name')->label('Nama Produk')->required()->maxLength(100),
+                TextInput::make('name')
+                    ->label('Nama Produk')
+                    ->columnSpanFull()
+                    ->required()
+                    ->maxLength(100),
 
-                TextInput::make('supplier')->label('Penyuplai Barang')->required()->maxLength(100),
-
-                TextInput::make('sku')->label('SKU produk')->required()->length(6)->unique('products', 'sku', function ($record) {
-                    return $record;
-                }),
+                TextInput::make('sku')
+                    ->label('SKU produk')
+                    ->required()
+                    ->length(6)
+                    ->default(function ($state) {
+                        return strtoupper(\Illuminate\Support\Str::random(3) . rand(100, 999));
+                    })
+                    ->unique('products', 'sku', function ($record) {
+                        return $record;
+                    }),
 
                 \LaraZeus\Quantity\Components\Quantity::make('stock')
                     ->default(0)
@@ -102,6 +111,10 @@ class ProductResource extends Resource
                     ->readOnly(function ($record) {
                         return $record;
                     }),
+
+                TextInput::make('fraction')->label('Fraction')->required()->numeric()->minValue(1)->maxValue(99999999),
+
+                Select::make('unit')->label('Satuan')->required()->options(get_unit_list()),
 
                 ComponentsFieldset::make('')
                     ->columns(3)
@@ -125,14 +138,6 @@ class ProductResource extends Resource
                             ->inputMode('double')
                             ->prefix('RP'),
                     ]),
-
-                Select::make('store_code')->label('Pilih Toko')
-                    ->options(get_store_list())
-                    ->required()->columnSpanFull(),
-
-                TextInput::make('fraction')->label('Fraction')->required()->numeric()->minValue(1)->maxValue(99999999),
-
-                Select::make('unit')->label('Satuan')->required()->options(get_unit_list()),
 
             ]);
     }
@@ -192,6 +197,18 @@ class ProductResource extends Resource
                     ->default(function ($record) {
                         return "number_format($record->prouct_cost, 0, ',', '.')";
                     }),
+
+                TextColumn::make('updated_at')
+                    ->label('Tanggal Diubah')
+                    ->date('Y-m-d')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
+
+                TextColumn::make('created_at')
+                    ->label('Tanggal Dibuat')
+                    ->date('Y-m-d')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()->label('Tampilkan'),

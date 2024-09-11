@@ -11,6 +11,8 @@ class TransactionSale extends Model
 
     protected $guarded = [];
 
+    protected $with = ['transactionSaleItems', 'store', 'debt'];
+
     protected $casts = [
         'total_qty'     => 'integer',
         'total_profit'  => 'integer',
@@ -22,13 +24,9 @@ class TransactionSale extends Model
         static::created(function ($transaction) {});
 
         static::deleting(function ($transaction) {
-            $items      =   $transaction->transactionBuyItems;
-
-            foreach ($items as $item) {
-                $item->delete();
-            }
-
             delete_store_asset(title: 'Transaksi Penjualan #' . $transaction->id);
+
+            $transaction->debt()->delete();
         });
     }
 
@@ -40,5 +38,10 @@ class TransactionSale extends Model
     public function store()
     {
         return $this->belongsTo(Store::class, 'store_code', 'code');
+    }
+
+    public function debt()
+    {
+        return $this->hasOne(Debtor::class, 'transaction_id');
     }
 }

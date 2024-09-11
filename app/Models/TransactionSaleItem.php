@@ -19,7 +19,6 @@ class TransactionSaleItem extends Model
 
     protected $with =   [
         'product',
-        'transaction'
     ];
 
     protected static function booted()

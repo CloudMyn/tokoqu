@@ -9,6 +9,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use App\Filament\Resources\StoreDashboard\TransactionSaleResource\Pages;
+use App\Models\Debtor;
 use App\Models\Product;
 use App\Traits\Ownership;
 use Filament\Forms\Components\{
@@ -180,7 +181,6 @@ class TransactionSaleResource extends Resource
                         $trx_ammount    =   ubah_angka_int_ke_rupiah($gross_trx);
 
                         return  "$product_name | Transaksi Rp. $trx_ammount | Profit Rp. $profit | Onkir Rp." . ubah_angka_int_ke_rupiah($onkir);
-
                     })
                     ->live(false, 20)
                     ->reactive()
@@ -306,6 +306,18 @@ class TransactionSaleResource extends Resource
                     ->label('Nama Admin')
                     ->sortable()
                     ->searchable(),
+
+                TextColumn::make('updated_at')
+                    ->label('Tanggal Diubah')
+                    ->date('Y-m-d')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
+
+                TextColumn::make('created_at')
+                    ->label('Tanggal Dibuat')
+                    ->date('Y-m-d')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
             ])
             ->filters([
                 \Filament\Tables\Filters\Filter::make('created_at')
