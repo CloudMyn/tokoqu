@@ -47,7 +47,7 @@ class CreateTransactionBuy extends CreateRecord
             $data['store_code']     =   $store->code;
             $data['admin_name']     =   $user->name;
             $data['admin_id']       =   $user->id;
-            $data['supplier']       =   $supplier->name;
+            $data['supplier_id']    =   $supplier->id;
             $data['total_qty'] = array_reduce($products, function ($acc, $item) {
                 return $acc + intval($item['product_qty']);
             }, 0);

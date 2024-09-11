@@ -302,33 +302,20 @@ if (!function_exists('get_context_store')) {
      *
      * @return Store|null
      */
-    function get_context_store(): Store|null
+    function get_context_store(bool $clear_cache = false): Store|null
     {
         $auth_user  =   get_auth_user();
 
-        $store_code =   null;
-
+        // Buat cache key berdasarkan ID pengguna
         if (cek_store_role()) {
-            $store_code = $auth_user->owner_store->code;
-        } else if (cek_store_employee_role()) {
-            $store_code = $auth_user->employee?->store_code ?? null;
+            return $auth_user->owner_store->store()->first();
         }
 
-        // Buat cache key berdasarkan ID pengguna
-        $cacheKey = 'context_store_' . $store_code;
+        if (cek_store_employee_role()) {
+            return $auth_user->employee?->store()?->first();
+        }
 
-        // Cek apakah hasil sudah ada di cache
-        return Cache::remember($cacheKey, 60 * 10, function () use ($auth_user) { // Cache untuk 10 menit
-            if (cek_store_role()) {
-                return $auth_user->owner_store->store()->first();
-            }
-
-            if (cek_store_employee_role()) {
-                return $auth_user->employee?->store()?->first();
-            }
-
-            abort(404, 'Perizinan Gagal');
-        });
+        abort(404, 'Perizinan Gagal');
     }
 }
 
@@ -423,8 +410,6 @@ if (!function_exists('sync_store_assets')) {
         $store->update([
             'assets'   =>  $store->store_assets()->where('type', 'in')->sum('amount') - $store->store_assets()->where('type', 'out')->sum('amount')
         ]);
-
-        Cache::forget('store_assets_' . $store->id);
     }
 }
 

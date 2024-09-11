@@ -16,7 +16,7 @@ class CreateStoreAsset extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['store_code'] = get_context_store()->code;
+        $data['store_code'] = get_context_store(true)->code;
 
         return $data;
     }
