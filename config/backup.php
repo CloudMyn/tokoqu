@@ -95,7 +95,7 @@ return [
         'database_dump_compressor' => null,
 
         /*
-         * If specified, the database dumped file name will contain a timestamp (e.g.: 'Y-m-d-H-i-s').
+         * If specified, the database dumped file name will contain a timestamp (e.g.: 'D d-m-Y-H-i-s').
          */
         'database_dump_file_timestamp_format' => null,
 

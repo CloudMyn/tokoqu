@@ -4,6 +4,7 @@ namespace App\Filament\Resources\StoreDashboard;
 
 use App\Filament\Resources\StoreDashboard\SupplierResource\Pages;
 use App\Filament\Resources\StoreDashboard\SupplierResource\RelationManagers;
+use App\Filament\Resources\SupplierResource\RelationManagers\ProductsRelationManager;
 use App\Models\Supplier;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
@@ -55,6 +56,7 @@ class SupplierResource extends Resource
 
                 TextInput::make('code')
                     ->label('Kode Supplier')
+                    ->disabledOn('edit')
                     ->unique('suppliers', 'code')
                     ->required()
                     ->default(function ($state) {
@@ -74,6 +76,7 @@ class SupplierResource extends Resource
     {
         return $table
             ->columns([
+
                 TextColumn::make('name')
                     ->label('Nama')
                     ->searchable()
@@ -91,13 +94,13 @@ class SupplierResource extends Resource
 
                 TextColumn::make('updated_at')
                     ->label('Tanggal Diubah')
-                    ->date('Y-m-d')
+                    ->date('D d-m-Y')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
 
                 TextColumn::make('created_at')
                     ->label('Tanggal Dibuat')
-                    ->date('Y-m-d')
+                    ->date('D d-m-Y')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
             ])
@@ -118,7 +121,7 @@ class SupplierResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ProductsRelationManager::class,
         ];
     }
 

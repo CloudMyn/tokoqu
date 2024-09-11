@@ -64,6 +64,11 @@ class Store extends Model
         return $this->hasMany(Debtor::class, 'store_code', 'code');
     }
 
+    public function suppliers()
+    {
+        return $this->hasMany(Supplier::class, 'store_code', 'code');
+    }
+
     public function getSalesAndProfits($period = 'monthly')
     {
         $query = $this->transaction_sales()

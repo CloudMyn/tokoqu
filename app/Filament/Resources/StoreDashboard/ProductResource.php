@@ -11,6 +11,7 @@ use App\Traits\Ownership;
 use Filament\Actions\SelectAction;
 use Filament\Forms\Components\Fieldset as ComponentsFieldset;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -18,6 +19,7 @@ use Filament\Forms\Form;
 use Filament\Infolists\Components\Actions;
 use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Components\Fieldset;
+use Filament\Infolists\Components\Grid;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\KeyValueEntry;
 use Filament\Infolists\Components\RepeatableEntry;
@@ -445,10 +447,66 @@ class ProductResource extends Resource
                                 ])->from('md')->columns(2)
                             ]),
 
+                        Tab::make('PENYUPLAI')
+                            ->columns(1)
+                            ->schema([
+
+                                RepeatableEntry::make('product_suppliers')
+                                    ->label('')
+                                    ->columns(2)
+                                    ->grid([
+                                        'default' => 1,
+                                        'sm' => 2,
+                                        'md' => 3,
+                                        'lg' => 3,
+                                        'xl' => 3,
+                                        '2xl' => 3,
+                                    ])
+                                    ->schema([
+
+                                        // ImageEntry::make('product.image')
+                                        //     ->square()
+                                        //     ->label('')
+                                        //     ->inlineLabel()
+                                        //     ->defaultImageUrl('/images/no-product.png'),
+
+                                        TextEntry::make('supplier.name')
+                                            ->label('Nama Supplier'),
+
+                                        TextEntry::make('supplier.code')
+                                            ->label('Kode Supplier')
+                                            ->prefix('#'),
+
+                                        TextEntry::make('product.sku')
+                                            ->label('SKU')
+                                            ->prefix('#'),
+
+                                        TextEntry::make('name')
+                                            ->label('Nama Produk'),
+
+                                        TextEntry::make('price')
+                                            ->label('Harga')
+                                            ->money('IDR'),
+
+                                        TextEntry::make('created_at')
+                                            ->label('Tanggal Buat')
+                                            ->date('D d-m-Y'),
+
+                                        Actions::make([
+                                            Action::make('Lihat Supplier')
+                                                ->icon('heroicon-o-link')
+                                                ->requiresConfirmation()
+                                                ->url(function ($record): string {
+                                                    return route('filament.store.resources.store-dashboard.suppliers.edit', $record->supplier->id);
+                                                }),
+                                        ])->alignJustify(),
+
+                                    ])
+
+                            ]),
 
                     ])
                     ->contained(false)
-                    ->persistTab()
                     ->id('product_tab'),
 
             ])->columns(1);

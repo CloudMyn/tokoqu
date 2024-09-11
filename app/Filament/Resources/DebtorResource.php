@@ -157,18 +157,18 @@ class DebtorResource extends Resource
 
                 TextColumn::make('due_date')
                     ->label('Jatuh Tempo')
-                    ->date('Y-m-d')
+                    ->date('D d-m-Y')
                     ->sortable(),
 
                 TextColumn::make('updated_at')
                     ->label('Tanggal Diubah')
-                    ->date('Y-m-d')
+                    ->date('D d-m-Y')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
 
                 TextColumn::make('created_at')
                     ->label('Tanggal Dibuat')
-                    ->date('Y-m-d')
+                    ->date('D d-m-Y')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
 

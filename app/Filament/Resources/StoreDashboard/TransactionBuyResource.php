@@ -73,7 +73,10 @@ class TransactionBuyResource extends Resource
                     return ucwords("Transaksi Pembelian oleh " . get_auth_user()->name);
                 })->autocapitalize('words'),
 
-                TextInput::make('supplier')->label('Penyuplai Barang')->required()->maxLength(100)->autocapitalize('words'),
+                Select::make('supplier_id')
+                    ->label('Penyuplai Barang')
+                    ->required()
+                    ->options(get_suppliers()),
 
                 TextInput::make('total_cost')->label('Jumlah transaksi')
                     ->mask(RawJs::make('$money($input)'))
@@ -172,7 +175,7 @@ class TransactionBuyResource extends Resource
         return $table
             ->headerActions([])
             ->columns([
-                TextColumn::make('supplier')
+                TextColumn::make('supplier.name')
                     ->label('Supplier')
                     ->searchable()
                     ->sortable(),

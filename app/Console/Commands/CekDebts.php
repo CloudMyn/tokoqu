@@ -33,7 +33,7 @@ class CekDebts extends Command
         foreach ($debts as $debt) {
             if (\Carbon\Carbon::parse($debt->due_date)->isPast()) {
 
-                $this->info($debt->name . " " . 'due at : '. \Carbon\Carbon::parse($debt->due_date)->format('Y-m-d'));
+                $this->info($debt->name . " " . 'due at : '. \Carbon\Carbon::parse($debt->due_date)->format('D d-m-Y'));
 
                 $debt->update([
                     'status' => 'overdue'

@@ -21,6 +21,12 @@ return new class extends Migration
 
             $table->foreign('store_code')->on('stores')->references('code')->cascadeOnDelete();
         });
+
+
+        Schema::table('transaction_buys', function (Blueprint $table) {
+            $table->dropColumn('supplier');
+            $table->foreignId('supplier_id')->after('title')->constrained('suppliers')->cascadeOnDelete();
+        });
     }
 
     /**
@@ -29,5 +35,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('suppliers');
+
+
+        Schema::table('transaction_buys', function (Blueprint $table) {
+            $table->string('supplier')->after('title')->nullable();
+            $table->dropForeign('transaction_buys_supplier_id_foreign');
+            $table->dropColumn('supplier_id');
+        });
     }
 };

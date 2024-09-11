@@ -53,4 +53,9 @@ class Product extends Model
     {
         return $this->hasMany(TransactionSaleItem::class, 'product_id', 'id');
     }
+
+    public function product_suppliers()
+    {
+        return $this->hasMany(SupplierProduct::class, 'product_id', 'id');
+    }
 }

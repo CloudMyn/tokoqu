@@ -309,13 +309,13 @@ class TransactionSaleResource extends Resource
 
                 TextColumn::make('updated_at')
                     ->label('Tanggal Diubah')
-                    ->date('Y-m-d')
+                    ->date('D d-m-Y')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
 
                 TextColumn::make('created_at')
                     ->label('Tanggal Dibuat')
-                    ->date('Y-m-d')
+                    ->date('D d-m-Y')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
             ])

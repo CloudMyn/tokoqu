@@ -17,8 +17,11 @@ return new class extends Migration
             $table->integer('price');
             $table->foreignId('supplier_id');
             $table->foreignId('product_id');
+            $table->string('store_code');
             $table->timestamps();
 
+            $table->unique(['supplier_id', 'product_id']);
+            $table->foreign('store_code')->on('stores')->references('code')->cascadeOnDelete();
             $table->foreign('supplier_id')->references('id')->on('suppliers')->cascadeOnDelete();
             $table->foreign('product_id')->references('id')->on('products')->cascadeOnDelete();
         });

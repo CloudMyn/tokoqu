@@ -11,6 +11,15 @@ class SupplierProduct extends Model
 
     protected $guarded = [];
 
+    protected $with =   ['product'];
+
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            $model->store_code    =   get_context_store()->code;
+        });
+    }
+
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);

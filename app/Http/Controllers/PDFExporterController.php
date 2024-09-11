@@ -12,8 +12,8 @@ class PDFExporterController extends Controller
     {
         $user   =   get_auth_user();
 
-        // $start_date  =   now()->startOfMonth()->format('Y-m-d');
-        // $end_date    =   now()->endOfMonth()->format('Y-m-d');
+        // $start_date  =   now()->startOfMonth()->format('D d-m-Y');
+        // $end_date    =   now()->endOfMonth()->format('D d-m-Y');
 
         $store  =   get_context_store();
 

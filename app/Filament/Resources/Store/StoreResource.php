@@ -34,11 +34,6 @@ class StoreResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
 
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()->orderBy('created_at', 'desc');
-    }
-
     public static function getNavigationLabel(): string
     {
         if (cek_store_role()) {

@@ -14,33 +14,11 @@ class StoreAsset extends Model
     protected static function booted()
     {
         static::created(function ($storeAsset) {
-
-            $store  =   $storeAsset->store;
-
-            if ($storeAsset->type == 'in') {
-                $store->update([
-                    'assets'    =>  $store->assets + $storeAsset->amount
-                ]);
-            } else if ($storeAsset->type == 'out') {
-                $store->update([
-                    'assets'    =>  $store->assets - $storeAsset->amount
-                ]);
-            }
+            sync_store_assets();
         });
 
         static::deleting(function ($storeAsset) {
-
-            $store  =   $storeAsset->store;
-
-            if ($storeAsset->type == 'in') {
-                $store->update([
-                    'assets'    =>  $store->assets - $storeAsset->amount
-                ]);
-            } else if ($storeAsset->type == 'out') {
-                $store->update([
-                    'assets'    =>  $store->assets + $storeAsset->amount
-                ]);
-            }
+            sync_store_assets();
         });
     }
 

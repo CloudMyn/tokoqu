@@ -35,6 +35,8 @@ class ViewProduct extends ViewRecord
 
         $product->yearly_report     =   $yearly_report;
 
+        $product->product_suppliers =   $product->product_suppliers()->orderBy('price', 'ASC')->get();
+
         $this->getInfolist('infolist')->record($product);
     }
 

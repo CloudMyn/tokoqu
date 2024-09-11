@@ -15,6 +15,8 @@ class TransactionBuy extends Model
         'total_qty' => 'integer',
     ];
 
+    protected $with = ['supplier'];
+
     protected static function booted()
     {
         static::created(function ($transaction) {
@@ -41,5 +43,10 @@ class TransactionBuy extends Model
     public function store()
     {
         return $this->belongsTo(Store::class, 'store_code', 'code');
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id');
     }
 }

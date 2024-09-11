@@ -3,6 +3,7 @@
 use App\Models\Store;
 use App\Models\StoreAsset;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 
 if (!function_exists('format_rupiah')) {
     /**
@@ -297,27 +298,37 @@ if (!function_exists('get_unit_list')) {
 
 if (!function_exists('get_context_store')) {
     /**
-     * Dapatkan product toko pengguna
+     * Dapatkan product toko pengguna dengan cache
      *
-     * @return
+     * @return Store|null
      */
     function get_context_store(): Store|null
     {
-        $auth_user = get_auth_user();
+        $auth_user  =   get_auth_user();
+
+        $store_code =   null;
 
         if (cek_store_role()) {
-
-            return  $auth_user->owner_store->store()->first();
+            $store_code = $auth_user->owner_store->code;
+        } else if (cek_store_employee_role()) {
+            $store_code = $auth_user->employee?->store_code ?? null;
         }
 
-        if (cek_store_employee_role()) {
+        // Buat cache key berdasarkan ID pengguna
+        $cacheKey = 'context_store_' . $store_code;
 
+        // Cek apakah hasil sudah ada di cache
+        return Cache::remember($cacheKey, 60 * 10, function () use ($auth_user) { // Cache untuk 10 menit
+            if (cek_store_role()) {
+                return $auth_user->owner_store->store()->first();
+            }
 
-            return $auth_user->employee?->store()?->first();
-        }
+            if (cek_store_employee_role()) {
+                return $auth_user->employee?->store()?->first();
+            }
 
-
-        abort(404, 'Perizinan Gagal');
+            abort(404, 'Perizinan Gagal');
+        });
     }
 }
 
@@ -385,6 +396,20 @@ if (!function_exists('delete_store_asset')) {
     }
 }
 
+if (!function_exists('get_suppliers')) {
+    /**
+     * sync store assets
+     *
+     * @return array
+     */
+    function get_suppliers(): array
+    {
+        $store  =   get_context_store();
+
+        return $store->suppliers()->pluck('name', 'id')->toArray();
+    }
+}
+
 if (!function_exists('sync_store_assets')) {
     /**
      * sync store assets
@@ -396,8 +421,10 @@ if (!function_exists('sync_store_assets')) {
         $store  =   get_context_store();
 
         $store->update([
-            'assets'   =>  $store->store_assets()->where('type', 'in')->sum('amount')
+            'assets'   =>  $store->store_assets()->where('type', 'in')->sum('amount') - $store->store_assets()->where('type', 'out')->sum('amount')
         ]);
+
+        Cache::forget('store_assets_' . $store->id);
     }
 }
 
@@ -433,7 +460,6 @@ function ubah_angka_int_ke_rupiah(int $angka = null, bool $with_format = true): 
         return number_format($angka, 0, '.', ',');
     }
 
-
     if ($angka >= 1_000_000_000_000) {
         // Jika angka lebih dari atau sama dengan 1 triliun
         $angka_triliun = $angka / 1_000_000_000_000;
@@ -445,7 +471,7 @@ function ubah_angka_int_ke_rupiah(int $angka = null, bool $with_format = true): 
     } elseif ($angka >= 100_000_000) {
         // Jika angka lebih dari atau sama dengan 100 juta
         $angka_juta = $angka / 1_000_000;
-        return number_format($angka_juta, 2, '.', ',') . ' JT';
+        return number_format($angka_juta, 0, '.', ',') . ' JT';
     }
 
     // Jika angka kurang dari 100 juta
