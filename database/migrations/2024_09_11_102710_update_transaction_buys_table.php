@@ -17,7 +17,8 @@ return new class extends Migration
             $table->dropColumn('supplier');
 
             // Then, add the foreign key constraint for supplier_id
-            $table->foreignId('supplier_id')->after('title')->constrained('suppliers')->cascadeOnDelete();
+            $table->foreignId('supplier_id')->after('title');
+            $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
         });
     }
 
