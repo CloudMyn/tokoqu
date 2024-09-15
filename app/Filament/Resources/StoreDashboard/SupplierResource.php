@@ -6,6 +6,7 @@ use App\Filament\Resources\StoreDashboard\SupplierResource\Pages;
 use App\Filament\Resources\StoreDashboard\SupplierResource\RelationManagers;
 use App\Filament\Resources\SupplierResource\RelationManagers\ProductsRelationManager;
 use App\Models\Supplier;
+use App\Traits\Ownership;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -18,6 +19,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SupplierResource extends Resource
 {
+    use Ownership;
+
     protected static ?string $model = Supplier::class;
 
     protected static ?string $modelLabel = 'Supplier';
