@@ -17,7 +17,7 @@ class PDFExporterController extends Controller
 
         $store  =   get_context_store();
 
-        $query_builder  =   $store->transaction_sales()->whereDate('created_at', today())->without('transactionSaleItems');
+        $query_builder  =   $store->transaction_sales()->whereDate('created_at', today())->without('transactionSaleItems', 'store', 'debt');
 
         $data_repot['TOTAL KEUTUNGAN PENJUALAN']    =   "Rp. " . ubah_angka_int_ke_rupiah($query_builder->sum('total_profit'));
         $data_repot['AVG KEUTUNGAN PENJUALAN']      =   "Rp. " . ubah_angka_int_ke_rupiah($query_builder->avg('total_profit'));
